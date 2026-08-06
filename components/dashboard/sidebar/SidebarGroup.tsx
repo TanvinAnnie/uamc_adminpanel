@@ -1,21 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown, LucideIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
 
 import SidebarItem from "./SidebarItem";
 
-interface ChildItem {
+interface SidebarGroupItem {
   title: string;
   href: string;
 }
 
 interface SidebarGroupProps {
   title: string;
-  icon: React.ElementType;
-  items: ChildItem[];
+  icon: LucideIcon;
+  items: SidebarGroupItem[];
   defaultOpen?: boolean;
+  onItemClick?: () => void;
 }
 
 export default function SidebarGroup({
@@ -23,27 +25,127 @@ export default function SidebarGroup({
   icon: Icon,
   items,
   defaultOpen = false,
+  onItemClick,
 }: SidebarGroupProps) {
-  const [open, setOpen] = useState(defaultOpen);
+  const pathname = usePathname();
+
+  const hasActiveChild = items.some(
+    (item) =>
+      pathname === item.href ||
+      pathname.startsWith(`${item.href}/`)
+  );
+
+  const [manualOpen, setManualOpen] =
+    useState(defaultOpen);
+
+  const open = hasActiveChild || manualOpen;
 
   return (
     <div className="mb-2">
-      {/* Group Button */}
+      {/* Group Header */}
 
-      <button
-        onClick={() => setOpen(!open)}
-        className="group flex w-full items-center justify-between rounded-xl px-4 py-3 transition-all duration-300 hover:bg-slate-100"
+      <motion.button
+        type="button"
+        whileHover={{ scale: 1.01 }}
+        whileTap={{ scale: 0.98 }}
+        onClick={() =>
+          setManualOpen((prev) => !prev)
+        }
+        className={`
+          relative
+          flex
+          w-full
+          items-center
+          justify-between
+          overflow-hidden
+          rounded-2xl
+          border
+          px-4
+          py-3.5
+          transition-all
+          duration-300
+
+          ${
+            open
+              ? `
+                border-cyan-500/30
+                bg-gradient-to-r
+                from-cyan-500/20
+                via-sky-500/15
+                to-indigo-500/20
+                shadow-[0_10px_30px_rgba(6,182,212,0.18)]
+              `
+              : `
+                border-transparent
+                hover:border-slate-700
+                hover:bg-slate-800/60
+              `
+          }
+        `}
       >
-        <div className="flex items-center gap-3">
-          <Icon
-            size={20}
-            className="text-slate-500 transition group-hover:text-teal-600"
-          />
+        {/* Glow */}
 
-          <span className="font-medium text-slate-700">
-            {title}
-          </span>
+        {open && (
+          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-sky-500/5 to-indigo-500/5" />
+        )}
+
+        {/* Left */}
+
+        <div className="relative flex min-w-0 items-center gap-3">
+          <div
+            className={`
+              flex
+              h-10
+              w-10
+              shrink-0
+              items-center
+              justify-center
+              rounded-xl
+              transition-all
+              duration-300
+
+              ${
+                open
+                  ? "bg-gradient-to-br from-cyan-500 to-indigo-600 shadow-lg shadow-cyan-500/30"
+                  : "bg-slate-800 group-hover:bg-slate-700"
+              }
+            `}
+          >
+            <Icon
+              size={18}
+              className={
+                open
+                  ? "text-white"
+                  : "text-slate-400 group-hover:text-cyan-400"
+              }
+            />
+          </div>
+
+          <div className="min-w-0">
+            <h3
+              className={`
+                truncate
+                text-sm
+                font-semibold
+                tracking-wide
+
+                ${
+                  open
+                    ? "text-white"
+                    : "text-slate-300"
+                }
+              `}
+            >
+              {title}
+            </h3>
+
+            <p className="text-xs text-slate-500">
+              {items.length} Sections
+            </p>
+          </div>
         </div>
+
+        {/* Arrow */}
 
         <motion.div
           animate={{
@@ -52,13 +154,24 @@ export default function SidebarGroup({
           transition={{
             duration: 0.25,
           }}
+          className={`
+            flex
+            h-8
+            w-8
+            items-center
+            justify-center
+            rounded-lg
+
+            ${
+              open
+                ? "bg-cyan-500/20 text-cyan-400"
+                : "text-slate-500"
+            }
+          `}
         >
-          <ChevronDown
-            size={18}
-            className="text-slate-500"
-          />
+          <ChevronDown size={18} />
         </motion.div>
-      </button>
+      </motion.button>
 
       {/* Children */}
 
@@ -66,30 +179,43 @@ export default function SidebarGroup({
         {open && (
           <motion.div
             initial={{
-              opacity: 0,
               height: 0,
+              opacity: 0,
             }}
             animate={{
-              opacity: 1,
               height: "auto",
+              opacity: 1,
             }}
             exit={{
-              opacity: 0,
               height: 0,
+              opacity: 0,
             }}
             transition={{
-              duration: 0.25,
+              duration: 0.3,
             }}
             className="overflow-hidden"
           >
-            <div className="mt-2 ml-6 border-l-2 border-slate-200 pl-3 space-y-1">
+            <div className="relative ml-6 mt-3 space-y-2 pl-6">
+              {/* Timeline */}
+
+              <div className="absolute left-0 top-0 h-full w-px bg-gradient-to-b from-cyan-500 via-sky-500 to-transparent" />
+
               {items.map((item) => (
-                <SidebarItem
+                <div
                   key={item.href}
-                  title={item.title}
-                  href={item.href}
-                  isChild
-                />
+                  className="relative"
+                  onClick={onItemClick}
+                >
+                  {/* Dot */}
+
+                  <div className="absolute -left-[27px] top-5 h-2.5 w-2.5 rounded-full border-2 border-slate-900 bg-cyan-400" />
+
+                  <SidebarItem
+                    title={item.title}
+                    href={item.href}
+                    isChild
+                  />
+                </div>
               ))}
             </div>
           </motion.div>

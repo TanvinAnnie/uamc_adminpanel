@@ -2,25 +2,30 @@ import type { ReactNode } from "react";
 
 import Sidebar from "@/components/dashboard/sidebar/Sidebar";
 import Navbar from "@/components/dashboard/navbar/Navbar";
+import MobileSidebar from "@/components/dashboard/sidebar/MobileSidebar";
 
-interface DashboardLayoutProps {
-  children: ReactNode;
-}
+import { DashboardProvider } from "@/context/DashboardContext";
 
 export default function DashboardLayout({
   children,
-}: DashboardLayoutProps) {
+}: {
+  children: ReactNode;
+}) {
   return (
-    <div className="min-h-screen bg-slate-100">
-      <Sidebar />
+    <DashboardProvider>
+      <div className="min-h-screen bg-slate-100">
+        <Sidebar />
 
-      <div className="ml-72 min-h-screen">
-        <Navbar />
+        <MobileSidebar />
 
-        <main className="px-8 pb-8 pt-24">
-          {children}
-        </main>
+        <div className="min-h-screen lg:ml-72">
+          <Navbar />
+
+          <main className="px-4 pt-24 pb-6 sm:px-6 lg:px-8">
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
+    </DashboardProvider>
   );
 }
