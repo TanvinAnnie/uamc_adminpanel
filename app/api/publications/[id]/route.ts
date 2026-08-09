@@ -82,13 +82,16 @@ export async function PATCH(
         status: 200,
       }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
 
     return NextResponse.json(
       {
         success: false,
-        message: error?.message || "Failed to update publication.",
+       message:
+  error instanceof Error
+    ? error.message
+    : "Failed to update publication.",
       },
       {
         status: 400,

@@ -37,8 +37,8 @@ export const sidebarMenu: SidebarMenuItem[] = [
         href: "/dashboard/home/hero",
       },
       {
-        title: "Chairman Message",
-        href: "/dashboard/home/chairman-message",
+        title: "Notice",
+        href: "/dashboard/home/notices",
       },
       {
         title: "Principal Message",
@@ -56,10 +56,7 @@ export const sidebarMenu: SidebarMenuItem[] = [
         title: "Gallery",
         href: "/dashboard/home/gallery",
       },
-      {
-        title: "Notice",
-        href: "/dashboard/home/notice",
-      },
+      
       {
         title: "Contact",
         href: "/dashboard/home/contact",

@@ -1,27 +1,21 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import { connectToDB } from "@/lib/connectToDB";
+import { NoticeModel } from "@/lib/models/Notice";
 
-import {
-  deleteNotice,
-  getNoticeById,
-  updateNotice,
-} from "@/lib/services/notice.service";
-
-import { NoticeSchema } from "@/lib/validations/notice.validation";
-
-interface Props {
-  params: Promise<{
-    id: string;
-  }>;
-}
+// ==========================
+// GET SINGLE NOTICE
+// ==========================
 
 export async function GET(
-  request: NextRequest,
-  { params }: Props
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    await connectToDB();
+
     const { id } = await params;
 
-    const notice = await getNoticeById(id);
+    const notice = await NoticeModel.findById(id);
 
     if (!notice) {
       return NextResponse.json(
@@ -45,7 +39,7 @@ export async function GET(
       }
     );
   } catch (error) {
-    console.error(error);
+    console.error("GET SINGLE NOTICE ERROR:", error);
 
     return NextResponse.json(
       {
@@ -59,52 +53,93 @@ export async function GET(
   }
 }
 
+// ==========================
+// UPDATE NOTICE
+// ==========================
+
 export async function PATCH(
-  request: NextRequest,
-  { params }: Props
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    await connectToDB();
+
     const { id } = await params;
 
-    const body = await request.json();
+    const body = await req.json();
 
-    const validatedData = NoticeSchema.partial().parse(body);
+    const notice = await NoticeModel.findByIdAndUpdate(
+      id,
+      body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
-    const updated = await updateNotice(id, validatedData);
+    if (!notice) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Notice not found.",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
 
     return NextResponse.json(
       {
         success: true,
         message: "Notice updated successfully.",
-        data: updated,
+        data: notice,
       },
       {
         status: 200,
       }
     );
-  } catch (error: any) {
-    console.error(error);
+  } catch (error) {
+    console.error("UPDATE NOTICE ERROR:", error);
 
     return NextResponse.json(
       {
         success: false,
-        message: error?.message || "Failed to update notice.",
+        message: "Failed to update notice.",
       },
       {
-        status: 400,
+        status: 500,
       }
     );
   }
 }
 
+// ==========================
+// DELETE NOTICE
+// ==========================
+
 export async function DELETE(
-  request: NextRequest,
-  { params }: Props
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    await connectToDB();
+
     const { id } = await params;
 
-    await deleteNotice(id);
+    const notice = await NoticeModel.findByIdAndDelete(id);
+
+    if (!notice) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Notice not found.",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
 
     return NextResponse.json(
       {
@@ -116,7 +151,7 @@ export async function DELETE(
       }
     );
   } catch (error) {
-    console.error(error);
+    console.error("DELETE NOTICE ERROR:", error);
 
     return NextResponse.json(
       {

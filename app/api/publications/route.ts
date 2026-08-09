@@ -65,13 +65,16 @@ export async function POST(request: NextRequest) {
         status: 201,
       }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
 
     return NextResponse.json(
       {
         success: false,
-        message: error?.message || "Failed to create publication.",
+        message:
+  error instanceof Error
+    ? error.message
+    : "Failed to create publication.",
       },
       {
         status: 400,

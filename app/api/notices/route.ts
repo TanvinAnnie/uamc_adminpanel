@@ -1,44 +1,38 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import { connectToDB } from "@/lib/connectToDB";
+import { NoticeModel } from "@/lib/models/Notice";
 
-import {
-  createNotice,
-  getAllNotices,
-  getPublishedNotices,
-} from "@/lib/services/notice.service";
+// ==========================
+// GET ALL NOTICE
+// ==========================
 
-import { NoticeSchema } from "@/lib/validations/notice.validation";
-
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(request.url);
+    await connectToDB();
 
-    const published = searchParams.get("published");
+    const notices = await NoticeModel.find().sort({
+      order: 1,
+      createdAt: -1,
+    });
 
-    let notices;
+    const response = NextResponse.json({
+      success: true,
+      data: notices,
+    });
 
-    if (published === "true") {
-      notices = await getPublishedNotices();
-    } else {
-      notices = await getAllNotices();
-    }
-
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Notices fetched successfully.",
-        data: notices,
-      },
-      {
-        status: 200,
-      }
+    response.headers.set(
+      "Access-Control-Allow-Origin",
+      "*"
     );
+
+    return response;
   } catch (error) {
-    console.error(error);
+    console.error("GET NOTICE ERROR:", error);
 
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to fetch notices.",
+        message: "Failed to fetch notice data.",
       },
       {
         status: 500,
@@ -47,13 +41,17 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+// ==========================
+// CREATE NOTICE
+// ==========================
+
+export async function POST(req: Request) {
   try {
-    const body = await request.json();
+    await connectToDB();
 
-    const validatedData = NoticeSchema.parse(body);
+    const body = await req.json();
 
-    const notice = await createNotice(validatedData);
+    const notice = await NoticeModel.create(body);
 
     return NextResponse.json(
       {
@@ -65,16 +63,16 @@ export async function POST(request: NextRequest) {
         status: 201,
       }
     );
-  } catch (error: any) {
-    console.error(error);
+  } catch (error) {
+    console.error("CREATE NOTICE ERROR:", error);
 
     return NextResponse.json(
       {
         success: false,
-        message: error?.message || "Failed to create notice.",
+        message: "Failed to create notice.",
       },
       {
-        status: 400,
+        status: 500,
       }
     );
   }

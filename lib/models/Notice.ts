@@ -1,23 +1,6 @@
-import mongoose, { Document, Model, Schema } from "mongoose";
+import { Schema, model, models } from "mongoose";
 
-export interface INotice extends Document {
-  title: string;
-  slug: string;
-  category:
-    | "General Notice"
-    | "Admission Notice"
-    | "Reports"
-    | "Job Circular";
-  pdf: string;
-  date: string;
-  time: string;
-  isPublished: boolean;
-  order: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const NoticeSchema = new Schema<INotice>(
+const NoticeSchema = new Schema(
   {
     title: {
       type: String,
@@ -30,18 +13,23 @@ const NoticeSchema = new Schema<INotice>(
       required: true,
       unique: true,
       trim: true,
-      lowercase: true,
     },
 
     category: {
       type: String,
+      required: true,
       enum: [
         "General Notice",
         "Admission Notice",
         "Reports",
         "Job Circular",
       ],
+    },
+
+    description: {
+      type: String,
       required: true,
+      trim: true,
     },
 
     pdf: {
@@ -51,13 +39,14 @@ const NoticeSchema = new Schema<INotice>(
     },
 
     date: {
-      type: String,
+      type: Date,
       required: true,
     },
 
     time: {
       type: String,
       required: true,
+      trim: true,
     },
 
     isPublished: {
@@ -68,6 +57,7 @@ const NoticeSchema = new Schema<INotice>(
     order: {
       type: Number,
       default: 0,
+      min: 0,
     },
   },
   {
@@ -75,8 +65,5 @@ const NoticeSchema = new Schema<INotice>(
   }
 );
 
-const Notice: Model<INotice> =
-  mongoose.models.Notice ||
-  mongoose.model<INotice>("Notice", NoticeSchema);
-
-export default Notice;
+export const NoticeModel =
+  models.NoticeModel || model("NoticeModel", NoticeSchema);
