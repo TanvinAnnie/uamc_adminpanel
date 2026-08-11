@@ -1,33 +1,35 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import { connectToDB } from "@/lib/connectToDB";
+import { PublicationModel } from "@/lib/models/Publication";
 
-import {
-  deletePublication,
-  getPublicationById,
-  updatePublication,
-} from "@/lib/services/publication.service";
-
-import { PublicationSchema } from "@/lib/validations/publication.validation";
-
-interface Props {
-  params: Promise<{
-    id: string;
-  }>;
-}
+// ==========================
+// GET SINGLE PUBLICATION
+// ==========================
 
 export async function GET(
-  request: NextRequest,
-  { params }: Props
+  req: Request,
+  {
+    params,
+  }: {
+    params: Promise<{
+      id: string;
+    }>;
+  }
 ) {
   try {
+    await connectToDB();
+
     const { id } = await params;
 
-    const publication = await getPublicationById(id);
+    const publication =
+      await PublicationModel.findById(id);
 
     if (!publication) {
       return NextResponse.json(
         {
           success: false,
-          message: "Publication not found.",
+          message:
+            "Publication not found.",
         },
         {
           status: 404,
@@ -45,12 +47,16 @@ export async function GET(
       }
     );
   } catch (error) {
-    console.error(error);
+    console.error(
+      "GET PUBLICATION ERROR:",
+      error
+    );
 
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to fetch publication.",
+        message:
+          "Failed to fetch publication.",
       },
       {
         status: 500,
@@ -59,72 +65,138 @@ export async function GET(
   }
 }
 
+// ==========================
+// UPDATE PUBLICATION
+// ==========================
+
 export async function PATCH(
-  request: NextRequest,
-  { params }: Props
-) {
-  try {
-    const { id } = await params;
-
-    const body = await request.json();
-
-    const validatedData = PublicationSchema.partial().parse(body);
-
-    const updated = await updatePublication(id, validatedData);
-
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Publication updated successfully.",
-        data: updated,
-      },
-      {
-        status: 200,
-      }
-    );
-  } catch (error: unknown) {
-    console.error(error);
-
-    return NextResponse.json(
-      {
-        success: false,
-       message:
-  error instanceof Error
-    ? error.message
-    : "Failed to update publication.",
-      },
-      {
-        status: 400,
-      }
-    );
+  req: Request,
+  {
+    params,
+  }: {
+    params: Promise<{
+      id: string;
+    }>;
   }
-}
-
-export async function DELETE(
-  request: NextRequest,
-  { params }: Props
 ) {
   try {
+    await connectToDB();
+
     const { id } = await params;
 
-    await deletePublication(id);
+    const body = await req.json();
+
+    const publication =
+      await PublicationModel.findByIdAndUpdate(
+        id,
+        body,
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+
+    if (!publication) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Publication not found.",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
 
     return NextResponse.json(
       {
         success: true,
-        message: "Publication deleted successfully.",
+        message:
+          "Publication updated successfully.",
+        data: publication,
       },
       {
         status: 200,
       }
     );
   } catch (error) {
-    console.error(error);
+    console.error(
+      "UPDATE PUBLICATION ERROR:",
+      error
+    );
 
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to delete publication.",
+        message:
+          "Failed to update publication.",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}
+
+// ==========================
+// DELETE PUBLICATION
+// ==========================
+
+export async function DELETE(
+  req: Request,
+  {
+    params,
+  }: {
+    params: Promise<{
+      id: string;
+    }>;
+  }
+) {
+  try {
+    await connectToDB();
+
+    const { id } = await params;
+
+    const publication =
+      await PublicationModel.findByIdAndDelete(
+        id
+      );
+
+    if (!publication) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Publication not found.",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        message:
+          "Publication deleted successfully.",
+      },
+      {
+        status: 200,
+      }
+    );
+  } catch (error) {
+    console.error(
+      "DELETE PUBLICATION ERROR:",
+      error
+    );
+
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          "Failed to delete publication.",
       },
       {
         status: 500,

@@ -1,44 +1,40 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import { connectToDB } from "@/lib/connectToDB";
+import { PublicationModel } from "@/lib/models/Publication";
 
-import {
-  createPublication,
-  getAllPublications,
-  getPublishedPublications,
-} from "@/lib/services/publication.service";
+// ==========================
+// GET ALL PUBLICATIONS
+// ==========================
 
-import { PublicationSchema } from "@/lib/validations/publication.validation";
-
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(request.url);
+    await connectToDB();
 
-    const published = searchParams.get("published");
+    const publications =
+      await PublicationModel.find().sort({
+        order: 1,
+      });
 
-    let publications;
+    const response =
+      NextResponse.json(publications);
 
-    if (published === "true") {
-      publications = await getPublishedPublications();
-    } else {
-      publications = await getAllPublications();
-    }
-
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Publications fetched successfully.",
-        data: publications,
-      },
-      {
-        status: 200,
-      }
+    response.headers.set(
+      "Access-Control-Allow-Origin",
+      "*"
     );
+
+    return response;
   } catch (error) {
-    console.error(error);
+    console.error(
+      "GET PUBLICATIONS ERROR:",
+      error
+    );
 
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to fetch publications.",
+        message:
+          "Failed to fetch publications.",
       },
       {
         status: 500,
@@ -47,37 +43,48 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+// ==========================
+// CREATE PUBLICATION
+// ==========================
+
+export async function POST(
+  req: Request
+) {
   try {
-    const body = await request.json();
+    await connectToDB();
 
-    const validatedData = PublicationSchema.parse(body);
+    const body = await req.json();
 
-    const publication = await createPublication(validatedData);
+    const publication =
+      await PublicationModel.create(
+        body
+      );
 
     return NextResponse.json(
       {
         success: true,
-        message: "Publication created successfully.",
+        message:
+          "Publication created successfully.",
         data: publication,
       },
       {
         status: 201,
       }
     );
-  } catch (error: unknown) {
-    console.error(error);
+  } catch (error) {
+    console.error(
+      "CREATE PUBLICATION ERROR:",
+      error
+    );
 
     return NextResponse.json(
       {
         success: false,
         message:
-  error instanceof Error
-    ? error.message
-    : "Failed to create publication.",
+          "Failed to create publication.",
       },
       {
-        status: 400,
+        status: 500,
       }
     );
   }

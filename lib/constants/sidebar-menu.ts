@@ -41,12 +41,12 @@ export const sidebarMenu: SidebarMenuItem[] = [
         href: "/dashboard/home/notices",
       },
       {
-        title: "Principal Message",
-        href: "/dashboard/home/principal-message",
+        title: "Publications",
+        href: "/dashboard/home/publications",
       },
       {
-        title: "Why Choose UAMC",
-        href: "/dashboard/home/why-uamc",
+        title: "About",
+        href: "/dashboard/home/about",
       },
       {
         title: "Statistics",
