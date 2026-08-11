@@ -1,157 +1,310 @@
 "use client";
 
+
 import DepartmentTableRow, {
   DepartmentData,
 } from "./DepartmentTableRow";
+
+
+
 
 // =========================================================
 // PROPS
 // =========================================================
 
+
 interface DepartmentTableProps {
+
   departments: DepartmentData[];
 
-  onDelete: (id: string) => void;
+  onDelete: (id:string)=>void;
+
 }
+
+
+
+
+
 
 // =========================================================
 // COMPONENT
 // =========================================================
 
+
 export default function DepartmentTable({
+
   departments,
+
   onDelete,
-}: DepartmentTableProps) {
-  return (
-    <div
-      className="
-        w-full
-        overflow-hidden
-        rounded-2xl
-        border
-        border-slate-200
-        bg-white
-        shadow-sm
-      "
-    >
-      {/* =====================================================
-          DESKTOP TABLE HEADER
-      ===================================================== */}
 
-      <div
-        className="
-          hidden
-          grid-cols-[80px_minmax(220px,1fr)_140px_120px_120px_120px]
-          items-center
-          gap-4
-          border-b
-          border-slate-200
-          bg-slate-50
-          px-6
-          py-4
-          lg:grid
-        "
-      >
-        {/* IMAGE */}
+}:DepartmentTableProps){
 
-        <div
-          className="
-            text-xs
-            font-bold
-            uppercase
-            tracking-wide
-            text-slate-500
-          "
-        >
-          Image
-        </div>
 
-        {/* DEPARTMENT */}
 
-        <div
-          className="
-            text-xs
-            font-bold
-            uppercase
-            tracking-wide
-            text-slate-500
-          "
-        >
-          Department
-        </div>
+return(
 
-        {/* POPULAR */}
 
-        <div
-          className="
-            text-xs
-            font-bold
-            uppercase
-            tracking-wide
-            text-slate-500
-          "
-        >
-          Popular
-        </div>
+<div
 
-        {/* STATUS */}
+className="
+w-full
+overflow-hidden
+rounded-2xl
+border
+border-slate-800
+bg-[#080f24]
+shadow-xl
+"
 
-        <div
-          className="
-            text-xs
-            font-bold
-            uppercase
-            tracking-wide
-            text-slate-500
-          "
-        >
-          Status
-        </div>
+>
 
-        {/* ORDER */}
 
-        <div
-          className="
-            text-xs
-            font-bold
-            uppercase
-            tracking-wide
-            text-slate-500
-          "
-        >
-          Order
-        </div>
 
-        {/* ACTIONS */}
+{/* =========================================
+    SEARCH AREA
+========================================= */}
 
-        <div
-          className="
-            text-xs
-            font-bold
-            uppercase
-            tracking-wide
-            text-slate-500
-          "
-        >
-          Actions
-        </div>
-      </div>
 
-      {/* =====================================================
-          TABLE ROWS
-      ===================================================== */}
 
-      <div>
-        {departments.map(
-          (department) => (
-            <DepartmentTableRow
-              key={department._id}
-              department={department}
-              onDelete={onDelete}
-            />
-          )
-        )}
-      </div>
-    </div>
-  );
+<div
+
+className="
+border-b
+border-slate-800
+p-5
+"
+
+>
+
+
+<input
+
+type="text"
+
+placeholder="Search Department..."
+
+className="
+h-11
+w-full
+max-w-md
+rounded-xl
+border
+border-slate-700
+bg-[#0b142d]
+px-4
+text-sm
+text-white
+placeholder:text-slate-500
+outline-none
+
+focus:border-emerald-400
+"
+
+/>
+
+
+</div>
+
+
+
+
+
+
+
+{/* =========================================
+    DESKTOP HEADER
+========================================= */}
+
+
+
+<div
+
+className="
+hidden
+border-b
+border-slate-800
+
+lg:grid
+
+grid-cols-[90px_minmax(220px,1fr)_150px_150px_100px_140px]
+
+items-center
+
+gap-4
+
+bg-[#101a36]
+
+px-6
+
+py-4
+
+"
+
+>
+
+
+
+<div
+className="
+text-xs
+font-semibold
+uppercase
+tracking-wide
+text-slate-400
+"
+>
+
+Image
+
+</div>
+
+
+
+
+<div
+className="
+text-xs
+font-semibold
+uppercase
+tracking-wide
+text-slate-400
+"
+>
+
+Department
+
+</div>
+
+
+
+
+
+<div
+className="
+text-xs
+font-semibold
+uppercase
+tracking-wide
+text-slate-400
+"
+>
+
+Popular
+
+</div>
+
+
+
+
+
+<div
+className="
+text-xs
+font-semibold
+uppercase
+tracking-wide
+text-slate-400
+"
+>
+
+Status
+
+</div>
+
+
+
+
+
+<div
+className="
+text-xs
+font-semibold
+uppercase
+tracking-wide
+text-slate-400
+"
+>
+
+Order
+
+</div>
+
+
+
+
+
+<div
+className="
+text-xs
+font-semibold
+uppercase
+tracking-wide
+text-slate-400
+"
+>
+
+Actions
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+{/* =========================================
+    ROWS
+========================================= */}
+
+
+
+<div>
+
+
+{
+
+departments.map(
+
+(department)=>(
+
+
+<DepartmentTableRow
+
+key={department._id}
+
+department={department}
+
+onDelete={onDelete}
+
+/>
+
+
+)
+
+
+)
+
+
+}
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+);
+
+
 }

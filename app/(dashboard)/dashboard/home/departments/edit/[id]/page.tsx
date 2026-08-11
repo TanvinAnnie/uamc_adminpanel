@@ -1,320 +1,490 @@
 "use client";
 
+
 import {
   ArrowLeft,
   Building2,
   Loader2,
 } from "lucide-react";
 
+
 import {
   useParams,
   useRouter,
 } from "next/navigation";
+
 
 import {
   useEffect,
   useState,
 } from "react";
 
-import { toast } from "sonner";
+
+import {
+  toast,
+} from "sonner";
+
+
 
 import DepartmentForm, {
   DepartmentFormData,
 } from "@/components/dashboard/home/departments/DepartmentForm";
 
+
 import DepartmentPreview from "@/components/dashboard/home/departments/DepartmentPreview";
+
 
 import type {
   DepartmentData,
 } from "@/components/dashboard/home/departments/DepartmentTableRow";
 
-// =========================================================
-// PAGE
-// =========================================================
 
-export default function EditDepartmentPage() {
+
+
+
+
+
+
+export default function EditDepartmentPage(){
+
+
   const router = useRouter();
+
 
   const params = useParams();
 
-  const id = params.id as string;
 
-  // =======================================================
-  // DEPARTMENT
-  // =======================================================
+  const id =
+    typeof params.id === "string"
+    ?
+    params.id
+    :
+    "";
+
+
+
+
+
+
 
   const [
     department,
     setDepartment,
-  ] = useState<DepartmentData | null>(
-    null
-  );
+  ] =
+  useState<DepartmentData | null>(null);
 
-  // =======================================================
-  // PREVIEW DATA
-  // =======================================================
+
+
+
 
   const [
     previewData,
     setPreviewData,
-  ] = useState<DepartmentFormData>({
-    name: "",
+  ] =
+  useState<DepartmentFormData>({
 
-    slug: "",
+    name:"",
 
-    image: "",
+    slug:"",
 
-    description: "",
+    image:"",
 
-    isPopular: false,
+    description:"",
 
-    isActive: true,
+    isPopular:false,
 
-    order: 0,
+    isActive:true,
+
+    order:0,
+
   });
 
-  // =======================================================
-  // LOADING
-  // =======================================================
+
+
+
+
+
 
   const [
     loading,
     setLoading,
-  ] = useState(true);
+  ] =
+  useState(true);
 
-  // =======================================================
+
+
+
+
+
+
+
+
+
+  // =====================================================
   // FETCH DEPARTMENT
-  // =======================================================
+  // =====================================================
 
-  useEffect(() => {
-    let cancelled = false;
 
-    const loadDepartment =
-      async () => {
-        try {
-          const response =
-            await fetch(
-              `/api/departments/${id}`,
-              {
-                cache: "no-store",
-              }
-            );
+  useEffect(()=>{
 
-          const data =
-            await response.json();
 
-          if (cancelled) {
-            return;
-          }
+    if(!id){
 
-          if (
-            !response.ok ||
-            !data.success
-          ) {
-            throw new Error(
-              data.message ||
-                "Failed to fetch Department."
-            );
-          }
+      return;
 
-          const departmentData =
-            data.data as DepartmentData;
-
-          setDepartment(
-            departmentData
-          );
-
-          setPreviewData({
-            name:
-              departmentData.name ||
-              "",
-
-            slug:
-              departmentData.slug ||
-              "",
-
-            image:
-              departmentData.image ||
-              "",
-
-            description:
-              departmentData.description ||
-              "",
-
-            isPopular:
-              departmentData.isPopular ??
-              false,
-
-            isActive:
-              departmentData.isActive ??
-              true,
-
-            order:
-              departmentData.order ??
-              0,
-          });
-
-          setLoading(false);
-        } catch (error) {
-          if (cancelled) {
-            return;
-          }
-
-          console.error(
-            "FETCH DEPARTMENT ERROR:",
-            error
-          );
-
-          toast.error(
-            error instanceof Error
-              ? error.message
-              : "Failed to fetch Department."
-          );
-
-          setLoading(false);
-        }
-      };
-
-    if (id) {
-      loadDepartment();
     }
 
-    return () => {
-      cancelled = true;
+
+
+
+    let cancelled=false;
+
+
+
+    const loadDepartment=async()=>{
+
+
+      try{
+
+
+        const response =
+          await fetch(
+
+            `/api/departments/${id}`,
+
+            {
+              cache:"no-store",
+            }
+
+          );
+
+
+
+
+        const data =
+          await response.json();
+
+
+
+
+        if(cancelled){
+
+          return;
+
+        }
+
+
+
+
+
+        if(
+          !response.ok ||
+          !data.success
+        ){
+
+          throw new Error(
+
+            data.message ||
+            "Failed to load department."
+
+          );
+
+        }
+
+
+
+
+
+        const item =
+          data.data as DepartmentData;
+
+
+
+
+        setDepartment(item);
+
+
+
+        setPreviewData({
+
+          name:item.name || "",
+
+          slug:item.slug || "",
+
+          image:item.image || "",
+
+          description:item.description || "",
+
+          isPopular:item.isPopular ?? false,
+
+          isActive:item.isActive ?? true,
+
+          order:item.order ?? 0,
+
+        });
+
+
+
+      }
+
+      catch(error){
+
+
+
+        console.error(
+          "LOAD DEPARTMENT ERROR:",
+          error
+        );
+
+
+
+        toast.error(
+
+          error instanceof Error
+
+          ?
+
+          error.message
+
+          :
+
+          "Failed to load department."
+
+        );
+
+
+      }
+
+
+      finally{
+
+
+        if(!cancelled){
+
+          setLoading(false);
+
+        }
+
+
+      }
+
+
     };
-  }, [id]);
 
-  // =======================================================
-  // UPDATE PREVIEW DATA
-  // =======================================================
 
-  const handleDataChange = (
-    data: DepartmentFormData
-  ) => {
+
+
+    loadDepartment();
+
+
+
+
+    return()=>{
+
+      cancelled=true;
+
+    };
+
+
+  },[id]);
+
+
+
+
+
+
+
+
+
+
+
+
+  // =====================================================
+  // PREVIEW UPDATE
+  // =====================================================
+
+
+  const handlePreviewChange = (
+    data:DepartmentFormData
+  )=>{
+
+
     setPreviewData(data);
+
+
   };
 
-  // =======================================================
+
+
+
+
+
+
+
+
+  // =====================================================
   // UPDATE SUCCESS
-  // =======================================================
+  // =====================================================
+
 
   const handleSuccess = (
-    updatedData: DepartmentData
-  ) => {
-    setDepartment(
-      updatedData
-    );
+    updated:DepartmentData
+  )=>{
+
+
+    setDepartment(updated);
+
+
 
     setPreviewData({
-      name:
-        updatedData.name ||
-        "",
 
-      slug:
-        updatedData.slug ||
-        "",
+      name:updated.name || "",
 
-      image:
-        updatedData.image ||
-        "",
+      slug:updated.slug || "",
 
-      description:
-        updatedData.description ||
-        "",
+      image:updated.image || "",
 
-      isPopular:
-        updatedData.isPopular ??
-        false,
+      description:updated.description || "",
 
-      isActive:
-        updatedData.isActive ??
-        true,
+      isPopular:updated.isPopular ?? false,
 
-      order:
-        updatedData.order ??
-        0,
+      isActive:updated.isActive ?? true,
+
+      order:updated.order ?? 0,
+
     });
+
+
+
+    toast.success(
+      "Department updated successfully."
+    );
+
+
 
     router.push(
       "/dashboard/home/departments"
     );
 
+
     router.refresh();
+
+
   };
 
-  // =======================================================
-  // LOADING
-  // =======================================================
 
-  if (loading) {
-    return (
+
+
+
+
+
+
+
+  // =====================================================
+  // LOADING
+  // =====================================================
+
+
+  if(loading){
+
+
+    return(
+
       <div
         className="
           flex
           min-h-[500px]
-          w-full
           items-center
           justify-center
-          p-6
         "
       >
-        <div className="text-center">
+
+
+        <div
+          className="
+            text-center
+          "
+        >
+
+
           <Loader2
+
             size={38}
+
             className="
               mx-auto
               animate-spin
               text-[#008B45]
             "
+
           />
+
+
 
           <p
             className="
               mt-4
               text-sm
-              font-medium
               text-slate-500
             "
           >
+
             Loading Department...
+
           </p>
+
+
+
         </div>
+
+
+
       </div>
+
     );
+
+
   }
 
-  // =======================================================
-  // NOT FOUND
-  // =======================================================
 
-  if (!department) {
-    return (
+
+
+
+
+
+
+
+  // =====================================================
+  // NOT FOUND
+  // =====================================================
+
+
+  if(!department){
+
+
+    return(
+
       <div
         className="
           flex
           min-h-[500px]
-          w-full
           flex-col
           items-center
           justify-center
-          p-6
           text-center
+          px-6
         "
       >
-        <div
+
+
+        <Building2
+          size={42}
           className="
-            flex
-            h-16
-            w-16
-            items-center
-            justify-center
-            rounded-2xl
-            bg-red-50
-            text-red-500
+            text-red-400
           "
-        >
-          <Building2 size={30} />
-        </div>
+        />
+
+
 
         <h2
           className="
@@ -324,33 +494,25 @@ export default function EditDepartmentPage() {
             text-slate-800
           "
         >
+
           Department Not Found
+
         </h2>
 
-        <p
-          className="
-            mt-2
-            max-w-md
-            text-sm
-            leading-6
-            text-slate-500
-          "
-        >
-          The Department you are trying
-          to edit could not be found.
-        </p>
+
+
 
         <button
+
           type="button"
-          onClick={() =>
-            router.push(
-              "/dashboard/home/departments"
-            )
-          }
+
+          onClick={()=>router.push(
+            "/dashboard/home/departments"
+          )}
+
           className="
             mt-6
             inline-flex
-            min-h-11
             items-center
             gap-2
             rounded-xl
@@ -360,46 +522,71 @@ export default function EditDepartmentPage() {
             text-sm
             font-semibold
             text-white
-            transition
             hover:bg-[#00763B]
           "
+
         >
-          <ArrowLeft size={17} />
+
+          <ArrowLeft size={17}/>
 
           Back to Departments
+
+
         </button>
+
+
+
       </div>
+
+
     );
+
+
   }
 
-  // =======================================================
-  // PAGE
-  // =======================================================
 
-  return (
+
+
+
+
+
+
+
+  return(
+
+
     <div
       className="
         w-full
         space-y-6
         p-4
+
         sm:p-6
+
         lg:p-8
       "
     >
-      {/* ===================================================
-          HEADER
-      =================================================== */}
+
+
+
+
+
+
+
+      {/* HEADER */}
+
 
       <div>
-        {/* BACK */}
+
 
         <button
+
           type="button"
-          onClick={() =>
-            router.push(
-              "/dashboard/home/departments"
-            )
-          }
+
+          onClick={()=>router.push(
+            "/dashboard/home/departments"
+          )}
+
           className="
             inline-flex
             items-center
@@ -407,18 +594,32 @@ export default function EditDepartmentPage() {
             text-sm
             font-medium
             text-slate-600
-            transition
             hover:text-[#008B45]
           "
+
         >
-          <ArrowLeft size={17} />
+
+          <ArrowLeft size={17}/>
 
           Back to Departments
+
+
         </button>
 
-        {/* TITLE */}
 
-        <div className="mt-5 flex items-center gap-3">
+
+
+
+        <div
+          className="
+            mt-5
+            flex
+            items-center
+            gap-3
+          "
+        >
+
+
           <div
             className="
               flex
@@ -431,10 +632,15 @@ export default function EditDepartmentPage() {
               text-[#008B45]
             "
           >
-            <Building2 size={22} />
+
+            <Building2 size={22}/>
+
           </div>
 
+
+
           <div>
+
             <h1
               className="
                 text-2xl
@@ -443,8 +649,12 @@ export default function EditDepartmentPage() {
                 sm:text-3xl
               "
             >
+
               Edit Department
+
             </h1>
+
+
 
             <p
               className="
@@ -453,60 +663,94 @@ export default function EditDepartmentPage() {
                 text-slate-500
               "
             >
-              Update the information and
-              settings for this department.
+
+              Update department information.
+
             </p>
+
+
           </div>
+
+
+
         </div>
+
+
+
       </div>
 
-      {/* ===================================================
-          FORM + LIVE PREVIEW
-      =================================================== */}
+
+
+
+
+
+
+
+
+
+      {/* FORM + PREVIEW */}
+
+
 
       <div
         className="
           grid
-          grid-cols-1
           gap-6
           xl:grid-cols-[minmax(0,1fr)_minmax(420px,0.9fr)]
           xl:items-start
         "
       >
-        {/* =================================================
-            FORM
-        ================================================= */}
 
-        <div className="min-w-0">
+
+
+        <div>
+
           <DepartmentForm
-            initialData={
-              department
-            }
-            onDataChange={
-              handleDataChange
-            }
-            onSuccess={
-              handleSuccess
-            }
+
+            initialData={department}
+
+            onDataChange={handlePreviewChange}
+
+            onSuccess={handleSuccess}
+
           />
+
         </div>
 
-        {/* =================================================
-            LIVE PREVIEW
-        ================================================= */}
+
+
+
+
 
         <div
           className="
-            min-w-0
             xl:sticky
             xl:top-6
           "
         >
+
           <DepartmentPreview
+
             data={previewData}
+
           />
+
         </div>
+
+
+
+
+
       </div>
+
+
+
+
+
     </div>
+
+
   );
+
+
 }

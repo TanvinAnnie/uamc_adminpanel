@@ -1,74 +1,141 @@
 "use client";
 
+
 import {
   BarChart3,
   Plus,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+
+import {
+  useRouter,
+} from "next/navigation";
+
+
+
+
 
 export default function StatisticsEmpty() {
+
+
   const router = useRouter();
 
+
+
+
   return (
+
     <div
       className="
         flex
-        min-h-[420px]
+        min-h-[430px]
         w-full
         flex-col
         items-center
         justify-center
-        rounded-2xl
+        rounded-3xl
         border
-        border-dashed
-        border-slate-300
-        bg-white
+        border-white/10
+        bg-slate-900/70
         px-6
         py-12
         text-center
-        shadow-sm
+        shadow-xl
+        backdrop-blur-xl
       "
     >
-      {/* =========================================
+
+
+
+      {/* ================================
           ICON
-      ========================================= */}
+      ================================= */}
+
 
       <div
         className="
           flex
-          h-16
-          w-16
+          h-20
+          w-20
           items-center
           justify-center
           rounded-2xl
-          bg-[#E8F7F0]
-          text-[#008B45]
+          bg-emerald-500/10
+          text-emerald-400
+          shadow-inner
         "
       >
-        <BarChart3 size={32} />
+
+        <BarChart3
+          size={38}
+          strokeWidth={1.8}
+        />
+
       </div>
 
-      {/* =========================================
-          TITLE
-      ========================================= */}
 
-      <h2 className="mt-6 text-xl font-bold text-slate-800 sm:text-2xl">
+
+
+
+
+      {/* ================================
+          TITLE
+      ================================= */}
+
+
+      <h2
+        className="
+          mt-7
+          text-2xl
+          font-bold
+          text-white
+          sm:text-3xl
+        "
+      >
+
         No Statistics Found
+
       </h2>
 
-      {/* =========================================
-          DESCRIPTION
-      ========================================= */}
 
-      <p className="mt-2 max-w-md text-sm leading-6 text-slate-500 sm:text-base">
-        Create the Statistics section to
-        display your achievements and key
-        statistics on the website.
+
+
+
+
+
+      {/* ================================
+          DESCRIPTION
+      ================================= */}
+
+
+      <p
+        className="
+          mt-3
+          max-w-md
+          text-sm
+          leading-7
+          text-slate-400
+          sm:text-base
+        "
+      >
+
+        No statistics data has been created yet.
+        Create the Statistics section to display
+        achievements, numbers, and important
+        information on the homepage.
+
       </p>
 
-      {/* =========================================
-          CREATE BUTTON
-      ========================================= */}
+
+
+
+
+
+
+      {/* ================================
+          BUTTON
+      ================================= */}
+
+
 
       <button
         type="button"
@@ -78,29 +145,41 @@ export default function StatisticsEmpty() {
           )
         }
         className="
-          mt-7
+          mt-8
           inline-flex
           min-h-11
           items-center
           justify-center
           gap-2
           rounded-xl
-          bg-[#008B45]
-          px-5
+          bg-gradient-to-r
+          from-emerald-500
+          to-cyan-500
+          px-6
           py-3
           text-sm
-          font-semibold
+          font-bold
           text-white
-          shadow-sm
+          shadow-lg
           transition
-          hover:bg-[#00763B]
-          hover:shadow-md
+          hover:scale-[1.02]
+          hover:shadow-emerald-500/20
         "
       >
-        <Plus size={18} />
+
+        <Plus size={18}/>
 
         Create Statistics
+
+
       </button>
+
+
+
+
     </div>
+
   );
+
+
 }

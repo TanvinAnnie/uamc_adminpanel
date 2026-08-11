@@ -1,592 +1,1019 @@
 "use client";
 
+
 import {
   Edit3,
-  Eye,
   Trash2,
 } from "lucide-react";
 
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+
+import Image from "next/image";
+
+
+import {
+  useRouter,
+} from "next/navigation";
+
+
+import {
+  toast,
+} from "sonner";
+
+
+
 
 // =========================================================
-// TYPE
+// TYPES
 // =========================================================
+
 
 export interface DepartmentData {
-  _id: string;
 
-  name: string;
 
-  slug: string;
+  _id:string;
 
-  image: string;
 
-  description?: string;
+  name:string;
 
-  isPopular: boolean;
 
-  isActive: boolean;
+  slug:string;
 
-  order: number;
 
-  createdAt: string;
+  image:string;
 
-  updatedAt: string;
+
+  description:string;
+
+
+  isPopular:boolean;
+
+
+  isActive:boolean;
+
+
+  order:number;
+
+
+  createdAt?:string;
+
+
+  updatedAt?:string;
+
+
 }
 
-// =========================================================
-// PROPS
-// =========================================================
 
-interface DepartmentTableRowProps {
-  department: DepartmentData;
 
-  onDelete: (
-    id: string
-  ) => void;
+
+
+
+interface DepartmentTableRowProps{
+
+
+department:DepartmentData;
+
+
+onDelete:(id:string)=>void;
+
+
 }
+
+
+
+
+
+
+
+
 
 // =========================================================
 // COMPONENT
 // =========================================================
 
+
 export default function DepartmentTableRow({
-  department,
-  onDelete,
-}: DepartmentTableRowProps) {
-  const router = useRouter();
 
-  // =========================================================
-  // DELETE
-  // =========================================================
 
-  const handleDelete = async () => {
-    const confirmed =
-      window.confirm(
-        `Are you sure you want to delete "${department.name}"?`
-      );
+department,
 
-    if (!confirmed) {
-      return;
-    }
 
-    try {
-      const response =
-        await fetch(
-          `/api/departments/${department._id}`,
-          {
-            method: "DELETE",
-          }
-        );
+onDelete,
 
-      const data =
-        await response.json();
 
-      if (
-        !response.ok ||
-        !data.success
-      ) {
-        throw new Error(
-          data.message ||
-            "Failed to delete Department."
-        );
-      }
+}:DepartmentTableRowProps){
 
-      toast.success(
-        "Department deleted successfully."
-      );
 
-      onDelete(
-        department._id
-      );
-    } catch (error) {
-      console.error(
-        "DELETE DEPARTMENT ERROR:",
-        error
-      );
 
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Failed to delete Department."
-      );
-    }
-  };
+const router = useRouter();
 
-  // =========================================================
-  // RENDER
-  // =========================================================
 
-  return (
-    <>
-      {/* =====================================================
-          DESKTOP ROW
-      ===================================================== */}
 
-      <div
-        className="
-          hidden
-          grid-cols-[80px_minmax(220px,1fr)_140px_120px_120px_120px]
-          items-center
-          gap-4
-          border-b
-          border-slate-100
-          px-6
-          py-4
-          transition
-          hover:bg-slate-50
-          lg:grid
-        "
-      >
-        {/* IMAGE */}
 
-        <div
-          className="
-            h-14
-            w-20
-            overflow-hidden
-            rounded-lg
-            border
-            border-slate-200
-            bg-slate-100
-          "
-        >
-          <img
-            src={department.image}
-            alt={department.name}
-            className="
-              h-full
-              w-full
-              object-cover
-            "
-          />
-        </div>
 
-        {/* NAME */}
+// =====================================================
+// DELETE
+// =====================================================
 
-        <div className="min-w-0">
-          <h3
-            className="
-              truncate
-              text-sm
-              font-semibold
-              text-slate-800
-            "
-          >
-            {department.name}
-          </h3>
 
-          <p
-            className="
-              mt-1
-              truncate
-              text-xs
-              text-slate-400
-            "
-          >
-            /{department.slug}
-          </p>
-        </div>
+const handleDelete=async()=>{
 
-        {/* POPULAR */}
 
-        <div>
-          {department.isPopular ? (
-            <span
-              className="
-                inline-flex
-                rounded-full
-                bg-amber-50
-                px-3
-                py-1
-                text-xs
-                font-semibold
-                text-amber-600
-              "
-            >
-              Popular
-            </span>
-          ) : (
-            <span
-              className="
-                inline-flex
-                rounded-full
-                bg-slate-100
-                px-3
-                py-1
-                text-xs
-                font-semibold
-                text-slate-500
-              "
-            >
-              Regular
-            </span>
-          )}
-        </div>
 
-        {/* ACTIVE */}
+const confirmDelete =
+window.confirm(
+"Are you sure you want to delete this department?"
+);
 
-        <div>
-          {department.isActive ? (
-            <span
-              className="
-                inline-flex
-                rounded-full
-                bg-emerald-50
-                px-3
-                py-1
-                text-xs
-                font-semibold
-                text-emerald-600
-              "
-            >
-              Active
-            </span>
-          ) : (
-            <span
-              className="
-                inline-flex
-                rounded-full
-                bg-red-50
-                px-3
-                py-1
-                text-xs
-                font-semibold
-                text-red-500
-              "
-            >
-              Inactive
-            </span>
-          )}
-        </div>
 
-        {/* ORDER */}
 
-        <div>
-          <span
-            className="
-              text-sm
-              font-medium
-              text-slate-600
-            "
-          >
-            {department.order}
-          </span>
-        </div>
+if(!confirmDelete){
 
-        {/* ACTIONS */}
+return;
 
-        <div className="flex items-center gap-2">
-          {/* VIEW */}
+}
 
-          <button
-            type="button"
-            onClick={() =>
-              router.push(
-                `/dashboard/home/departments/${department._id}`
-              )
-            }
-            className="
-              flex
-              h-9
-              w-9
-              items-center
-              justify-center
-              rounded-lg
-              border
-              border-slate-200
-              bg-white
-              text-slate-500
-              transition
-              hover:border-[#008B45]
-              hover:text-[#008B45]
-            "
-            title="View Department"
-          >
-            <Eye size={16} />
-          </button>
 
-          {/* EDIT */}
 
-          <button
-            type="button"
-            onClick={() =>
-              router.push(
-                `/dashboard/home/departments/edit/${department._id}`
-              )
-            }
-            className="
-              flex
-              h-9
-              w-9
-              items-center
-              justify-center
-              rounded-lg
-              border
-              border-slate-200
-              bg-white
-              text-slate-500
-              transition
-              hover:border-[#008B45]
-              hover:text-[#008B45]
-            "
-            title="Edit Department"
-          >
-            <Edit3 size={16} />
-          </button>
 
-          {/* DELETE */}
+try{
 
-          <button
-            type="button"
-            onClick={handleDelete}
-            className="
-              flex
-              h-9
-              w-9
-              items-center
-              justify-center
-              rounded-lg
-              border
-              border-red-100
-              bg-red-50
-              text-red-500
-              transition
-              hover:bg-red-100
-            "
-            title="Delete Department"
-          >
-            <Trash2 size={16} />
-          </button>
-        </div>
-      </div>
 
-      {/* =====================================================
-          MOBILE / TABLET CARD
-      ===================================================== */}
+const response =
+await fetch(
 
-      <div
-        className="
-          border-b
-          border-slate-100
-          p-5
-          transition
-          hover:bg-slate-50
-          lg:hidden
-        "
-      >
-        <div className="flex gap-4">
-          {/* IMAGE */}
+`/api/departments/${department._id}`,
 
-          <div
-            className="
-              h-20
-              w-24
-              shrink-0
-              overflow-hidden
-              rounded-xl
-              border
-              border-slate-200
-              bg-slate-100
-            "
-          >
-            <img
-              src={department.image}
-              alt={department.name}
-              className="
-                h-full
-                w-full
-                object-cover
-              "
-            />
-          </div>
+{
 
-          {/* CONTENT */}
+method:"DELETE",
 
-          <div className="min-w-0 flex-1">
-            <h3
-              className="
-                truncate
-                text-sm
-                font-semibold
-                text-slate-800
-              "
-            >
-              {department.name}
-            </h3>
+}
 
-            <p
-              className="
-                mt-1
-                truncate
-                text-xs
-                text-slate-400
-              "
-            >
-              /{department.slug}
-            </p>
+);
 
-            <div className="mt-3 flex flex-wrap gap-2">
-              {/* POPULAR */}
 
-              {department.isPopular ? (
-                <span
-                  className="
-                    rounded-full
-                    bg-amber-50
-                    px-2.5
-                    py-1
-                    text-[11px]
-                    font-semibold
-                    text-amber-600
-                  "
-                >
-                  Popular
-                </span>
-              ) : (
-                <span
-                  className="
-                    rounded-full
-                    bg-slate-100
-                    px-2.5
-                    py-1
-                    text-[11px]
-                    font-semibold
-                    text-slate-500
-                  "
-                >
-                  Regular
-                </span>
-              )}
 
-              {/* ACTIVE */}
 
-              {department.isActive ? (
-                <span
-                  className="
-                    rounded-full
-                    bg-emerald-50
-                    px-2.5
-                    py-1
-                    text-[11px]
-                    font-semibold
-                    text-emerald-600
-                  "
-                >
-                  Active
-                </span>
-              ) : (
-                <span
-                  className="
-                    rounded-full
-                    bg-red-50
-                    px-2.5
-                    py-1
-                    text-[11px]
-                    font-semibold
-                    text-red-500
-                  "
-                >
-                  Inactive
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
 
-        {/* MOBILE ACTIONS */}
+const result =
+await response.json();
 
-        <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
-          <span className="text-xs font-medium text-slate-400">
-            Order: {department.order}
-          </span>
 
-          <div className="flex items-center gap-2">
-            {/* VIEW */}
 
-            <button
-              type="button"
-              onClick={() =>
-                router.push(
-                  `/dashboard/home/departments/${department._id}`
-                )
-              }
-              className="
-                flex
-                h-9
-                w-9
-                items-center
-                justify-center
-                rounded-lg
-                border
-                border-slate-200
-                bg-white
-                text-slate-500
-                transition
-                hover:border-[#008B45]
-                hover:text-[#008B45]
-              "
-              title="View Department"
-            >
-              <Eye size={16} />
-            </button>
 
-            {/* EDIT */}
 
-            <button
-              type="button"
-              onClick={() =>
-                router.push(
-                  `/dashboard/home/departments/edit/${department._id}`
-                )
-              }
-              className="
-                flex
-                h-9
-                w-9
-                items-center
-                justify-center
-                rounded-lg
-                border
-                border-slate-200
-                bg-white
-                text-slate-500
-                transition
-                hover:border-[#008B45]
-                hover:text-[#008B45]
-              "
-              title="Edit Department"
-            >
-              <Edit3 size={16} />
-            </button>
+if(
 
-            {/* DELETE */}
+!response.ok ||
 
-            <button
-              type="button"
-              onClick={handleDelete}
-              className="
-                flex
-                h-9
-                w-9
-                items-center
-                justify-center
-                rounded-lg
-                border
-                border-red-100
-                bg-red-50
-                text-red-500
-                transition
-                hover:bg-red-100
-              "
-              title="Delete Department"
-            >
-              <Trash2 size={16} />
-            </button>
-          </div>
-        </div>
-      </div>
-    </>
-  );
+!result.success
+
+){
+
+
+throw new Error(
+
+result.message ||
+
+"Delete failed."
+
+);
+
+
+}
+
+
+
+
+toast.success(
+"Department deleted successfully."
+);
+
+
+
+onDelete(
+department._id
+);
+
+
+
+}
+
+catch(error){
+
+
+console.error(
+error
+);
+
+
+
+toast.error(
+
+error instanceof Error
+
+?
+
+error.message
+
+:
+
+"Delete failed."
+
+);
+
+
+}
+
+
+
+};
+
+
+
+
+
+
+
+
+return(
+
+
+
+<div
+
+className="
+
+border-b
+
+border-slate-800
+
+transition
+
+hover:bg-white/[0.03]
+
+"
+
+>
+
+
+
+
+
+
+
+{/* =================================================
+    DESKTOP ROW
+================================================= */}
+
+
+
+<div
+
+className="
+
+hidden
+
+lg:grid
+
+grid-cols-[90px_minmax(220px,1fr)_150px_150px_100px_140px]
+
+items-center
+
+gap-4
+
+px-6
+
+py-5
+
+"
+
+>
+
+
+
+
+
+
+
+{/* IMAGE */}
+
+
+
+<div
+
+className="
+
+relative
+
+h-16
+
+w-20
+
+overflow-hidden
+
+rounded-xl
+
+border
+
+border-slate-700
+
+bg-slate-900
+
+"
+
+>
+
+
+{
+
+department.image
+
+?
+
+<Image
+
+src={department.image}
+
+alt={department.name}
+
+fill
+
+sizes="80px"
+
+className="object-cover"
+
+/>
+
+
+:
+
+<div
+
+className="
+
+flex
+
+h-full
+
+items-center
+
+justify-center
+
+text-xs
+
+text-slate-500
+
+"
+
+>
+
+No Image
+
+</div>
+
+
+}
+
+
+</div>
+
+
+
+
+
+
+
+
+{/* NAME */}
+
+
+
+<div>
+
+
+<h3
+
+className="
+
+font-semibold
+
+text-white
+
+"
+
+>
+
+{department.name}
+
+</h3>
+
+
+
+<p
+
+className="
+
+mt-1
+
+text-sm
+
+text-slate-400
+
+line-clamp-1
+
+"
+
+>
+
+{department.description}
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+
+{/* POPULAR */}
+
+
+
+<div>
+
+
+<span
+
+className={
+
+`
+
+inline-flex
+
+rounded-full
+
+px-3
+
+py-1
+
+text-xs
+
+font-semibold
+
+
+${
+
+department.isPopular
+
+?
+
+"bg-emerald-400/10 text-emerald-400 border border-emerald-400/20"
+
+:
+
+"bg-slate-700 text-slate-300"
+
+}
+
+`
+
+}
+
+>
+
+{
+
+department.isPopular
+
+?
+
+"Popular"
+
+:
+
+"Normal"
+
+}
+
+
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+
+{/* STATUS */}
+
+
+
+<div>
+
+
+<span
+
+className={
+
+`
+
+inline-flex
+
+rounded-full
+
+px-3
+
+py-1
+
+text-xs
+
+font-semibold
+
+
+${
+
+department.isActive
+
+?
+
+"bg-blue-400/10 text-blue-400 border border-blue-400/20"
+
+:
+
+"bg-slate-700 text-slate-300"
+
+}
+
+`
+
+}
+
+>
+
+
+{
+
+department.isActive
+
+?
+
+"Active"
+
+:
+
+"Inactive"
+
+}
+
+
+
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+
+{/* ORDER */}
+
+
+
+<div
+
+className="
+
+text-white
+
+font-semibold
+
+"
+
+>
+
+{department.order}
+
+
+</div>
+
+
+
+
+
+
+
+
+{/* ACTION */}
+
+
+
+<div
+
+className="
+
+flex
+
+gap-2
+
+"
+
+>
+
+
+<button
+
+
+type="button"
+
+
+onClick={()=>
+
+
+router.push(
+
+`/dashboard/home/departments/edit/${department._id}`
+
+)
+
+}
+
+
+className="
+
+flex
+
+h-9
+
+items-center
+
+gap-2
+
+rounded-lg
+
+border
+
+border-blue-400/20
+
+bg-blue-400/10
+
+px-3
+
+text-xs
+
+font-semibold
+
+text-blue-400
+
+hover:bg-blue-400/20
+
+"
+
+>
+
+
+<Edit3 size={15}/>
+
+
+Edit
+
+
+</button>
+
+
+
+
+
+
+
+<button
+
+
+type="button"
+
+
+onClick={handleDelete}
+
+
+className="
+
+flex
+
+h-9
+
+items-center
+
+gap-2
+
+rounded-lg
+
+border
+
+border-red-400/20
+
+bg-red-400/10
+
+px-3
+
+text-xs
+
+font-semibold
+
+text-red-400
+
+hover:bg-red-400/20
+
+"
+
+>
+
+
+<Trash2 size={15}/>
+
+
+Delete
+
+
+</button>
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* =================================================
+    MOBILE CARD
+================================================= */}
+
+
+
+<div
+
+className="
+
+space-y-4
+
+p-5
+
+lg:hidden
+
+"
+
+>
+
+
+
+
+
+
+<div
+
+className="
+
+flex
+
+gap-4
+
+"
+
+>
+
+
+
+<div
+
+className="
+
+relative
+
+h-20
+
+w-24
+
+shrink-0
+
+overflow-hidden
+
+rounded-xl
+
+border
+
+border-slate-700
+
+"
+
+>
+
+
+{
+
+department.image &&
+
+<Image
+
+src={department.image}
+
+alt={department.name}
+
+fill
+
+className="object-cover"
+
+/>
+
+
+}
+
+
+</div>
+
+
+
+
+<div>
+
+
+<h3
+
+className="
+
+font-semibold
+
+text-white
+
+"
+
+>
+
+{department.name}
+
+</h3>
+
+
+
+<p
+
+className="
+
+mt-1
+
+text-sm
+
+text-slate-400
+
+"
+
+>
+
+{department.description}
+
+</p>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div
+
+className="
+
+flex
+
+flex-wrap
+
+gap-2
+
+"
+
+>
+
+
+<span className="rounded-full bg-emerald-400/10 px-3 py-1 text-xs text-emerald-400">
+
+{department.isPopular ? "Popular":"Normal"}
+
+</span>
+
+
+
+<span className="rounded-full bg-blue-400/10 px-3 py-1 text-xs text-blue-400">
+
+{department.isActive ? "Active":"Inactive"}
+
+</span>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div
+
+className="
+
+flex
+
+gap-2
+
+"
+
+>
+
+
+<button
+
+onClick={()=>router.push(
+
+`/dashboard/home/departments/edit/${department._id}`
+
+)}
+
+className="flex-1 rounded-xl bg-blue-400/10 py-2 text-sm text-blue-400"
+
+>
+
+Edit
+
+</button>
+
+
+
+
+<button
+
+onClick={handleDelete}
+
+className="flex-1 rounded-xl bg-red-400/10 py-2 text-sm text-red-400"
+
+>
+
+Delete
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+);
+
+
+
 }

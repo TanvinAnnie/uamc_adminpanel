@@ -1,263 +1,583 @@
 "use client";
 
+
 import {
   Edit3,
   Trash2,
 } from "lucide-react";
+
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+
+
 export interface StatisticsData {
-  _id: string;
 
-  backgroundImage: string;
+  _id:string;
 
-  statisticOneValue: string;
-  statisticOneTitle: string;
+  backgroundImage:string;
 
-  statisticTwoValue: string;
-  statisticTwoTitle: string;
 
-  statisticThreeValue: string;
-  statisticThreeTitle: string;
+  statisticOneValue:string;
+  statisticOneTitle:string;
 
-  isActive: boolean;
 
-  createdAt?: string;
-  updatedAt?: string;
+  statisticTwoValue:string;
+  statisticTwoTitle:string;
+
+
+  statisticThreeValue:string;
+  statisticThreeTitle:string;
+
+
+  isActive:boolean;
+
+
+  createdAt?:string;
+  updatedAt?:string;
+
 }
+
+
+
 
 interface StatisticsTableRowProps {
-  statistics: StatisticsData;
-  onDelete: () => void;
+
+  statistics:StatisticsData;
+
+  onDelete:()=>void;
+
 }
 
+
+
+
+
 export default function StatisticsTableRow({
+
   statistics,
+
   onDelete,
-}: StatisticsTableRowProps) {
-  const router = useRouter();
 
-  // =========================================
-  // DELETE STATISTICS
-  // =========================================
+}:StatisticsTableRowProps){
 
-  const handleDelete = async () => {
-    const confirmed =
-      window.confirm(
-        "Are you sure you want to delete the Statistics section?"
-      );
 
-    if (!confirmed) {
-      return;
-    }
 
-    try {
-      const response = await fetch(
-        "/api/statistics",
-        {
-          method: "DELETE",
-        }
-      );
+const router = useRouter();
 
-      const data =
-        await response.json();
 
-      if (!response.ok || !data.success) {
-        throw new Error(
-          data.message ||
-            "Failed to delete Statistics section."
-        );
-      }
 
-      toast.success(
-        "Statistics section deleted successfully."
-      );
 
-      onDelete();
-    } catch (error) {
-      console.error(
-        "DELETE STATISTICS ERROR:",
-        error
-      );
+// DELETE
 
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Failed to delete Statistics section."
-      );
-    }
-  };
+const handleDelete = async()=>{
 
-  return (
-    <tr className="border-b border-slate-200 transition hover:bg-slate-50/70">
-      {/* =========================================
-          BACKGROUND IMAGE
-      ========================================= */}
 
-      <td className="px-4 py-5 sm:px-6">
-        <div className="relative h-20 w-32 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
-          {statistics.backgroundImage ? (
-            <Image
-              src={
-                statistics.backgroundImage
-              }
-              alt="Statistics background"
-              fill
-              sizes="128px"
-              className="object-cover"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center text-xs text-slate-400">
-              No Image
-            </div>
-          )}
-        </div>
-      </td>
+const confirmDelete =
+window.confirm(
+"Are you sure you want to delete Statistics section?"
+);
 
-      {/* =========================================
-          STATISTIC ONE
-      ========================================= */}
 
-      <td className="px-4 py-5 sm:px-6">
-        <div className="min-w-[150px]">
-          <p className="text-xl font-bold text-[#008B45]">
-            {statistics.statisticOneValue}
-          </p>
 
-          <p className="mt-1 text-sm leading-5 text-slate-600">
-            {statistics.statisticOneTitle}
-          </p>
-        </div>
-      </td>
+if(!confirmDelete){
 
-      {/* =========================================
-          STATISTIC TWO
-      ========================================= */}
+return;
 
-      <td className="px-4 py-5 sm:px-6">
-        <div className="min-w-[150px]">
-          <p className="text-xl font-bold text-[#008B45]">
-            {statistics.statisticTwoValue}
-          </p>
+}
 
-          <p className="mt-1 text-sm leading-5 text-slate-600">
-            {statistics.statisticTwoTitle}
-          </p>
-        </div>
-      </td>
 
-      {/* =========================================
-          STATISTIC THREE
-      ========================================= */}
 
-      <td className="px-4 py-5 sm:px-6">
-        <div className="min-w-[150px]">
-          <p className="text-xl font-bold text-[#008B45]">
-            {statistics.statisticThreeValue}
-          </p>
+try{
 
-          <p className="mt-1 text-sm leading-5 text-slate-600">
-            {statistics.statisticThreeTitle}
-          </p>
-        </div>
-      </td>
 
-      {/* =========================================
-          STATUS
-      ========================================= */}
+const response = await fetch(
+"/api/statistics",
+{
+method:"DELETE"
+}
+);
 
-      <td className="px-4 py-5 sm:px-6">
-        <span
-          className={`
-            inline-flex
-            rounded-full
-            px-3
-            py-1
-            text-xs
-            font-semibold
-            ${
-              statistics.isActive
-                ? "bg-emerald-100 text-emerald-700"
-                : "bg-slate-100 text-slate-600"
-            }
-          `}
-        >
-          {statistics.isActive
-            ? "Published"
-            : "Draft"}
-        </span>
-      </td>
 
-      {/* =========================================
-          ACTIONS
-      ========================================= */}
 
-      <td className="px-4 py-5 sm:px-6">
-        <div className="flex items-center justify-end gap-2">
-          {/* EDIT */}
+const data =
+await response.json();
 
-          <button
-            type="button"
-            onClick={() =>
-              router.push(
-                `/dashboard/home/statistics/edit/${statistics._id}`
-              )
-            }
-            className="
-              inline-flex
-              h-9
-              items-center
-              justify-center
-              gap-1.5
-              rounded-lg
-              border
-              border-slate-200
-              bg-white
-              px-3
-              text-xs
-              font-semibold
-              text-slate-600
-              transition
-              hover:border-[#008B45]
-              hover:text-[#008B45]
-            "
-          >
-            <Edit3 size={15} />
 
-            Edit
-          </button>
 
-          {/* DELETE */}
+if(!response.ok || !data.success){
 
-          <button
-            type="button"
-            onClick={handleDelete}
-            className="
-              inline-flex
-              h-9
-              items-center
-              justify-center
-              gap-1.5
-              rounded-lg
-              border
-              border-red-100
-              bg-red-50
-              px-3
-              text-xs
-              font-semibold
-              text-red-600
-              transition
-              hover:bg-red-100
-            "
-          >
-            <Trash2 size={15} />
+throw new Error(
+data.message ||
+"Failed to delete Statistics"
+);
 
-            Delete
-          </button>
-        </div>
-      </td>
-    </tr>
-  );
+}
+
+
+
+toast.success(
+"Statistics deleted successfully"
+);
+
+
+
+onDelete();
+
+
+
+}
+
+catch(error){
+
+
+console.error(
+error
+);
+
+
+
+toast.error(
+
+error instanceof Error
+?
+error.message
+:
+"Delete failed"
+
+);
+
+
+
+}
+
+
+
+};
+
+
+
+
+
+return(
+
+
+<tr
+
+className="
+border-b
+border-white/10
+transition
+hover:bg-white/[0.04]
+"
+
+
+>
+
+
+
+{/* IMAGE */}
+
+<td className="px-6 py-5">
+
+
+<div
+
+className="
+relative
+h-16
+w-24
+overflow-hidden
+rounded-xl
+border
+border-white/10
+bg-[#111a35]
+"
+
+>
+
+
+{
+
+statistics.backgroundImage ?
+
+<Image
+
+src={statistics.backgroundImage}
+
+alt="Statistics"
+
+fill
+
+sizes="96px"
+
+className="
+object-cover
+"
+
+/>
+
+
+:
+
+<div
+
+className="
+flex
+h-full
+items-center
+justify-center
+text-xs
+text-slate-500
+"
+
+>
+
+No Image
+
+</div>
+
+}
+
+
+</div>
+
+
+</td>
+
+
+
+
+
+
+
+
+{/* STAT ONE */}
+
+<td className="px-6 py-5">
+
+
+<div>
+
+
+<h3
+
+className="
+text-xl
+font-bold
+text-cyan-400
+"
+
+>
+
+{statistics.statisticOneValue || "--"}
+
+</h3>
+
+
+
+<p
+
+className="
+mt-1
+max-w-[180px]
+text-sm
+text-slate-400
+"
+
+>
+
+{statistics.statisticOneTitle || "No title"}
+
+</p>
+
+
+</div>
+
+
+</td>
+
+
+
+
+
+
+
+
+{/* STAT TWO */}
+
+<td className="px-6 py-5">
+
+
+<div>
+
+
+<h3
+
+className="
+text-xl
+font-bold
+text-cyan-400
+"
+
+>
+
+{statistics.statisticTwoValue || "--"}
+
+</h3>
+
+
+
+<p
+
+className="
+mt-1
+max-w-[180px]
+text-sm
+text-slate-400
+"
+
+>
+
+{statistics.statisticTwoTitle || "No title"}
+
+</p>
+
+
+</div>
+
+
+</td>
+
+
+
+
+
+
+
+
+{/* STAT THREE */}
+
+<td className="px-6 py-5">
+
+
+<div>
+
+
+<h3
+
+className="
+text-xl
+font-bold
+text-cyan-400
+"
+
+>
+
+{statistics.statisticThreeValue || "--"}
+
+</h3>
+
+
+
+<p
+
+className="
+mt-1
+max-w-[180px]
+text-sm
+text-slate-400
+"
+
+>
+
+{statistics.statisticThreeTitle || "No title"}
+
+</p>
+
+
+</div>
+
+
+</td>
+
+
+
+
+
+
+
+
+{/* STATUS */}
+
+<td className="px-6 py-5">
+
+
+<span
+
+className={`
+inline-flex
+rounded-full
+border
+px-4
+py-1.5
+text-xs
+font-semibold
+
+
+${
+statistics.isActive
+
+?
+
+"border-emerald-400/30 bg-emerald-400/10 text-emerald-300"
+
+:
+
+"border-white/20 bg-white/10 text-slate-400"
+
+}
+
+`}
+
+>
+
+
+{statistics.isActive
+?
+"Published"
+:
+"Draft"
+}
+
+
+</span>
+
+
+</td>
+
+
+
+
+
+
+
+
+{/* ACTION */}
+
+<td className="px-6 py-5">
+
+
+<div
+
+className="
+flex
+justify-end
+gap-3
+
+"
+
+>
+
+
+<button
+
+type="button"
+
+onClick={()=>
+
+
+router.push(
+
+`/dashboard/home/statistics/edit/${statistics._id}`
+
+)
+
+
+}
+
+
+className="
+flex
+h-9
+items-center
+gap-2
+rounded-xl
+border
+border-cyan-400/20
+bg-cyan-400/10
+px-4
+text-sm
+font-semibold
+text-cyan-300
+transition
+hover:bg-cyan-400/20
+
+"
+
+>
+
+
+<Edit3 size={15}/>
+
+Edit
+
+
+</button>
+
+
+
+
+
+<button
+
+type="button"
+
+onClick={handleDelete}
+
+
+className="
+flex
+h-9
+items-center
+gap-2
+rounded-xl
+border
+border-red-400/20
+bg-red-400/10
+px-4
+text-sm
+font-semibold
+text-red-300
+transition
+hover:bg-red-400/20
+
+"
+
+>
+
+
+<Trash2 size={15}/>
+
+Delete
+
+
+</button>
+
+
+
+</div>
+
+
+</td>
+
+
+
+</tr>
+
+
+);
+
+
 }

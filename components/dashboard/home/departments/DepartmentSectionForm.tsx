@@ -17,6 +17,7 @@ import {
 
 import { toast } from "sonner";
 
+
 // =========================================================
 // FORM DATA
 // =========================================================
@@ -41,50 +42,75 @@ export interface DepartmentSectionFormData {
   isActive: boolean;
 }
 
+
 // =========================================================
 // DEFAULT DATA
 // =========================================================
 
 const defaultFormData: DepartmentSectionFormData = {
   title: "",
+
   description: "",
+
   searchPlaceholder: "",
+
   popularSearches: [],
+
   imageOne: "",
+
   imageTwo: "",
+
   studentCount: "",
+
   studentCountText: "",
+
   isActive: true,
 };
+
 
 // =========================================================
 // PROPS
 // =========================================================
 
 interface DepartmentSectionFormProps {
-  initialData?: DepartmentSectionFormData | null;
+
+  initialData?: DepartmentSectionFormData;
+
 
   sectionId?: string;
 
-  onDataChange?: (
-    data: DepartmentSectionFormData
-  ) => void;
 
-  onSuccess?: (
-    data: unknown
-  ) => void;
+  onDataChange:
+  (
+    data: DepartmentSectionFormData
+  )=>void;
+
+
+  onSuccess:
+  (
+    data:any
+  )=>void;
+
 }
+
 
 // =========================================================
 // COMPONENT
 // =========================================================
 
 export default function DepartmentSectionForm({
-  initialData = null,
+
+  initialData,
+
   sectionId,
+
   onDataChange,
+
   onSuccess,
+
 }: DepartmentSectionFormProps) {
+
+
   const [formData, setFormData] =
     useState<DepartmentSectionFormData>(
       initialData
@@ -96,12 +122,10 @@ export default function DepartmentSectionForm({
               initialData.description || "",
 
             searchPlaceholder:
-              initialData.searchPlaceholder ||
-              "",
+              initialData.searchPlaceholder || "",
 
             popularSearches:
-              initialData.popularSearches ||
-              [],
+              initialData.popularSearches || [],
 
             imageOne:
               initialData.imageOne || "",
@@ -113,1396 +137,1693 @@ export default function DepartmentSectionForm({
               initialData.studentCount || "",
 
             studentCountText:
-              initialData.studentCountText ||
-              "",
+              initialData.studentCountText || "",
 
             isActive:
-              initialData.isActive ??
-              true,
+              initialData.isActive ?? true,
           }
         : defaultFormData
     );
 
+
   const [saving, setSaving] =
     useState(false);
+
 
   const [
     uploadingImageOne,
     setUploadingImageOne,
   ] = useState(false);
 
+
   const [
     uploadingImageTwo,
     setUploadingImageTwo,
   ] = useState(false);
+
 
   const [
     popularSearchInput,
     setPopularSearchInput,
   ] = useState("");
 
+
+
   // =======================================================
-  // UPDATE FORM
+  // UPDATE FORM DATA
   // =======================================================
 
   const updateFormData = (
     updatedData: DepartmentSectionFormData
   ) => {
-    setFormData(
-      updatedData
-    );
+
+    setFormData(updatedData);
 
     onDataChange?.(
       updatedData
     );
   };
 
+
+
   // =======================================================
-  // TEXT CHANGE
+  // HANDLE TEXT CHANGE
   // =======================================================
 
   const handleChange = (
     event: ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement
+      HTMLInputElement |
+      HTMLTextAreaElement
     >
   ) => {
+
     const {
       name,
       value,
     } = event.target;
 
+
     updateFormData({
       ...formData,
 
       [name]: value,
+
     } as DepartmentSectionFormData);
+
   };
 
+
+
   // =======================================================
-  // ACTIVE
+  // ACTIVE TOGGLE
   // =======================================================
 
   const handleActiveToggle = () => {
+
     updateFormData({
+
       ...formData,
 
       isActive:
         !formData.isActive,
-    });
-  };
 
-  // =======================================================
-  // POPULAR SEARCH
-  // =======================================================
-
-  const addPopularSearch = () => {
-    const value =
-      popularSearchInput.trim();
-
-    if (!value) {
-      toast.error(
-        "Please enter a search term."
-      );
-
-      return;
-    }
-
-    const exists =
-      formData.popularSearches.some(
-        (item) =>
-          item.toLowerCase() ===
-          value.toLowerCase()
-      );
-
-    if (exists) {
-      toast.error(
-        "This search term already exists."
-      );
-
-      return;
-    }
-
-    updateFormData({
-      ...formData,
-
-      popularSearches: [
-        ...formData.popularSearches,
-        value,
-      ],
     });
 
-    setPopularSearchInput("");
   };
 
-  const removePopularSearch = (
-    index: number
-  ) => {
-    updateFormData({
-      ...formData,
 
-      popularSearches:
-        formData.popularSearches.filter(
-          (_, itemIndex) =>
-            itemIndex !== index
-        ),
-    });
-  };
+// =======================================================
+// POPULAR SEARCH ADD
+// =======================================================
 
-  const handlePopularSearchKeyDown = (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (
-      event.key === "Enter"
-    ) {
-      event.preventDefault();
+const addPopularSearch = () => {
 
-      addPopularSearch();
-    }
-  };
+  const value =
+    popularSearchInput.trim();
 
-  // =======================================================
-  // IMAGE UPLOAD
-  // =======================================================
 
-  const uploadImage = async (
-    file: File,
-    imageField:
-      | "imageOne"
-      | "imageTwo"
-  ) => {
-    if (
-      !file.type.startsWith(
-        "image/"
-      )
-    ) {
-      toast.error(
-        "Please select a valid image file."
-      );
+  if (!value) {
+    return;
+  }
 
-      return;
-    }
 
-    if (
-      file.size >
-      5 * 1024 * 1024
-    ) {
-      toast.error(
-        "Image size must be less than 5MB."
-      );
+  if (
+    formData.popularSearches.includes(value)
+  ) {
 
-      return;
-    }
-
-    try {
-      if (
-        imageField ===
-        "imageOne"
-      ) {
-        setUploadingImageOne(
-          true
-        );
-      } else {
-        setUploadingImageTwo(
-          true
-        );
-      }
-
-      const uploadData =
-        new FormData();
-
-      uploadData.append(
-        "file",
-        file
-      );
-
-      uploadData.append(
-        "type",
-        "image"
-      );
-
-      const response =
-        await fetch(
-          "/api/upload",
-          {
-            method: "POST",
-            body: uploadData,
-          }
-        );
-
-      const data =
-        await response.json();
-
-      if (
-        !response.ok ||
-        !data.success
-      ) {
-        throw new Error(
-          data.message ||
-            "Image upload failed."
-        );
-      }
-
-      const imageUrl =
-        data.url ||
-        data.data?.url ||
-        "";
-
-      if (!imageUrl) {
-        throw new Error(
-          "Image URL was not returned by the upload API."
-        );
-      }
-
-      updateFormData({
-        ...formData,
-
-        [imageField]:
-          imageUrl,
-      });
-
-      toast.success(
-        imageField ===
-          "imageOne"
-          ? "First image uploaded successfully."
-          : "Second image uploaded successfully."
-      );
-    } catch (error) {
-      console.error(
-        "IMAGE UPLOAD ERROR:",
-        error
-      );
-
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Image upload failed."
-      );
-    } finally {
-      if (
-        imageField ===
-        "imageOne"
-      ) {
-        setUploadingImageOne(
-          false
-        );
-      } else {
-        setUploadingImageTwo(
-          false
-        );
-      }
-    }
-  };
-
-  const handleImageChange = async (
-    event: ChangeEvent<HTMLInputElement>,
-    imageField:
-      | "imageOne"
-      | "imageTwo"
-  ) => {
-    const file =
-      event.target.files?.[0];
-
-    if (!file) {
-      return;
-    }
-
-    await uploadImage(
-      file,
-      imageField
+    toast.error(
+      "This search already exists."
     );
 
-    event.target.value = "";
-  };
+    return;
+  }
 
-  const removeImage = (
-    imageField:
-      | "imageOne"
-      | "imageTwo"
-  ) => {
-    updateFormData({
-      ...formData,
 
-      [imageField]: "",
-    });
-  };
 
-  // =======================================================
-  // VALIDATION
-  // =======================================================
+  updateFormData({
 
-  const validateForm =
-    () => {
-      if (
-        !formData.title.trim()
-      ) {
-        toast.error(
-          "Please enter the section title."
-        );
+    ...formData,
 
-        return false;
-      }
+    popularSearches: [
 
-      if (
-        !formData.description.trim()
-      ) {
-        toast.error(
-          "Please enter the section description."
-        );
+      ...formData.popularSearches,
 
-        return false;
-      }
+      value,
 
-      if (
-        !formData.searchPlaceholder.trim()
-      ) {
-        toast.error(
-          "Please enter the search placeholder."
-        );
+    ],
 
-        return false;
-      }
+  });
 
-      if (
-        !formData.imageOne
-      ) {
-        toast.error(
-          "Please upload the first image."
-        );
 
-        return false;
-      }
 
-      if (
-        !formData.imageTwo
-      ) {
-        toast.error(
-          "Please upload the second image."
-        );
+  setPopularSearchInput("");
 
-        return false;
-      }
+};
 
-      if (
-        !formData.studentCount.trim()
-      ) {
-        toast.error(
-          "Please enter the student count."
-        );
 
-        return false;
-      }
 
-      if (
-        !formData.studentCountText.trim()
-      ) {
-        toast.error(
-          "Please enter the student count text."
-        );
 
-        return false;
-      }
+// =======================================================
+// REMOVE POPULAR SEARCH
+// =======================================================
 
-      return true;
-    };
+const removePopularSearch = (
+  index: number
+) => {
 
-  // =======================================================
-  // SUBMIT
-  // =======================================================
 
-  const handleSubmit = async (
-    event: FormEvent<HTMLFormElement>
-  ) => {
-    event.preventDefault();
+  updateFormData({
 
-    if (saving) {
-      return;
+    ...formData,
+
+
+    popularSearches:
+
+      formData.popularSearches.filter(
+        (_, itemIndex) =>
+          itemIndex !== index
+      ),
+
+  });
+
+
+};
+
+
+
+
+// =======================================================
+// IMAGE UPLOAD
+// =======================================================
+
+
+const uploadImage = async (
+
+  file: File,
+
+  type: "imageOne" | "imageTwo"
+
+) => {
+
+
+
+  if (
+    !file.type.startsWith("image/")
+  ) {
+
+    toast.error(
+      "Please select an image file."
+    );
+
+    return;
+
+  }
+
+
+
+
+  if (
+    file.size >
+    5 * 1024 * 1024
+  ) {
+
+    toast.error(
+      "Image size must be less than 5MB."
+    );
+
+    return;
+
+  }
+
+
+
+
+
+  try {
+
+
+    if (
+      type === "imageOne"
+    ) {
+
+      setUploadingImageOne(true);
+
+    } else {
+
+      setUploadingImageTwo(true);
+
     }
 
-    if (!validateForm()) {
-      return;
-    }
 
-    const isEdit =
-      Boolean(sectionId);
 
-    const payload: DepartmentSectionFormData = {
-      title:
-        formData.title.trim(),
 
-      description:
-        formData.description.trim(),
 
-      searchPlaceholder:
-        formData.searchPlaceholder.trim(),
 
-      popularSearches:
-        formData.popularSearches
-          .map(
-            (item) =>
-              item.trim()
-          )
-          .filter(
-            Boolean
-          ),
+    const uploadData =
+      new FormData();
 
-      imageOne:
-        formData.imageOne.trim(),
 
-      imageTwo:
-        formData.imageTwo.trim(),
 
-      studentCount:
-        formData.studentCount.trim(),
+    uploadData.append(
+      "file",
+      file
+    );
 
-      studentCountText:
-        formData.studentCountText.trim(),
 
-      isActive:
-        Boolean(
-          formData.isActive
-        ),
-    };
 
-    try {
-      setSaving(true);
-
-      // ===================================================
-      // IMPORTANT:
-      // BOTH CREATE AND UPDATE USE SAME API ROUTE
-      // ===================================================
-
-      const endpoint =
-        "/api/department-section";
-
-      const method =
-        isEdit
-          ? "PUT"
-          : "POST";
-
-      console.log(
-        "DEPARTMENT SECTION REQUEST:",
+    const response =
+      await fetch(
+        "/api/upload",
         {
-          endpoint,
-          method,
-          sectionId,
-          payload,
+
+          method: "POST",
+
+          body: uploadData,
+
         }
       );
 
-      const response =
-        await fetch(
-          endpoint,
-          {
-            method,
 
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
 
-            body: JSON.stringify(
-              payload
-            ),
-          }
-        );
 
-      const responseText =
-        await response.text();
 
-      console.log(
-        "DEPARTMENT SECTION STATUS:",
-        response.status
+
+    const result =
+      await response.json();
+
+
+
+
+
+
+    if (
+      !response.ok ||
+      !result.success
+    ) {
+
+      throw new Error(
+
+        result.message ||
+
+        "Image upload failed."
+
       );
 
-      console.log(
-        "DEPARTMENT SECTION RESPONSE:",
-        responseText
-      );
-
-      let data:
-        | {
-            success?: boolean;
-            message?: string;
-            data?: unknown;
-            missingFields?: string[];
-            errors?: Array<{
-              field?: string;
-              message?: string;
-            }>;
-          }
-        | null = null;
-
-      try {
-        data =
-          JSON.parse(
-            responseText
-          );
-      } catch {
-        throw new Error(
-          `API returned an invalid response. HTTP ${response.status}`
-        );
-      }
-
-      // ===================================================
-      // ERROR
-      // ===================================================
-
-      if (
-        !response.ok
-      ) {
-        if (
-          response.status ===
-          409
-        ) {
-          throw new Error(
-            data?.message ||
-              "Department section already exists."
-          );
-        }
-
-        if (
-          data?.missingFields &&
-          data.missingFields.length
-        ) {
-          throw new Error(
-            `Missing fields: ${data.missingFields.join(
-              ", "
-            )}`
-          );
-        }
-
-        if (
-          data?.errors &&
-          data.errors.length
-        ) {
-          throw new Error(
-            data.errors
-              .map(
-                (item) =>
-                  `${item.field}: ${
-                    item.message ||
-                    "Invalid value"
-                  }`
-              )
-              .join(
-                " | "
-              )
-          );
-        }
-
-        throw new Error(
-          data?.message ||
-            `Request failed with status ${response.status}.`
-        );
-      }
-
-      // ===================================================
-      // SUCCESS
-      // ===================================================
-
-      if (
-        !data?.success
-      ) {
-        throw new Error(
-          data?.message ||
-            "Department section could not be saved."
-        );
-      }
-
-      toast.success(
-        isEdit
-          ? "Department section updated successfully."
-          : "Department section created successfully."
-      );
-
-      onSuccess?.(
-        data.data
-      );
-    } catch (error) {
-      console.error(
-        "SAVE DEPARTMENT SECTION ERROR:",
-        error
-      );
-
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Failed to save Department section."
-      );
-    } finally {
-      setSaving(false);
     }
-  };
 
-  // =======================================================
-  // IMAGE UPLOAD BOX
-  // =======================================================
 
-  const renderImageUpload = (
-    imageField:
-      | "imageOne"
-      | "imageTwo",
-    label: string,
-    uploading: boolean
-  ) => {
-    const image =
-      formData[imageField];
 
-    return (
-      <div>
-        <label
-          className="
-            mb-2
-            block
-            text-sm
-            font-semibold
-            text-slate-700
-          "
-        >
-          {label}
-        </label>
 
-        {image ? (
-          <div
-            className="
-              relative
-              overflow-hidden
-              rounded-2xl
-              border
-              border-slate-200
-              bg-slate-50
-            "
-          >
-            <img
-              src={image}
-              alt={label}
-              className="
-                h-[240px]
-                w-full
-                object-cover
-              "
-            />
 
-            <button
-              type="button"
-              onClick={() =>
-                removeImage(
-                  imageField
-                )
-              }
-              className="
-                absolute
-                right-3
-                top-3
-                flex
-                h-9
-                w-9
-                items-center
-                justify-center
-                rounded-full
-                bg-white
-                text-red-500
-                shadow-md
-                transition
-                hover:bg-red-50
-              "
-            >
-              <X size={17} />
-            </button>
-          </div>
-        ) : (
-          <label
-            className="
-              flex
-              min-h-[240px]
-              cursor-pointer
-              flex-col
-              items-center
-              justify-center
-              rounded-2xl
-              border-2
-              border-dashed
-              border-slate-300
-              bg-slate-50
-              px-5
-              text-center
-              transition
-              hover:border-[#008B45]
-              hover:bg-[#E8F7F0]/40
-            "
-          >
-            {uploading ? (
-              <>
-                <Loader2
-                  size={30}
-                  className="
-                    animate-spin
-                    text-[#008B45]
-                  "
-                />
 
-                <p
-                  className="
-                    mt-3
-                    text-sm
-                    font-semibold
-                    text-slate-700
-                  "
-                >
-                  Uploading...
-                </p>
-              </>
-            ) : (
-              <>
-                <div
-                  className="
-                    flex
-                    h-12
-                    w-12
-                    items-center
-                    justify-center
-                    rounded-xl
-                    bg-[#E8F7F0]
-                    text-[#008B45]
-                  "
-                >
-                  <ImageIcon
-                    size={24}
-                  />
-                </div>
+    updateFormData({
 
-                <p
-                  className="
-                    mt-3
-                    text-sm
-                    font-semibold
-                    text-slate-700
-                  "
-                >
-                  Upload Image
-                </p>
+      ...formData,
 
-                <p
-                  className="
-                    mt-1
-                    text-xs
-                    text-slate-400
-                  "
-                >
-                  PNG, JPG, JPEG or WEBP
-                </p>
 
-                <span
-                  className="
-                    mt-4
-                    inline-flex
-                    items-center
-                    gap-2
-                    rounded-xl
-                    bg-[#008B45]
-                    px-4
-                    py-2
-                    text-xs
-                    font-semibold
-                    text-white
-                  "
-                >
-                  <Upload size={15} />
+      [type]:
+        result.url,
 
-                  Choose Image
-                </span>
-              </>
-            )}
+    } as DepartmentSectionFormData);
 
-            <input
-              type="file"
-              accept="image/*"
-              disabled={uploading}
-              onChange={(event) =>
-                handleImageChange(
-                  event,
-                  imageField
-                )
-              }
-              className="hidden"
-            />
-          </label>
-        )}
 
-        <p
-          className="
-            mt-2
-            text-xs
-            text-slate-400
-          "
-        >
-          Maximum image size: 5MB
-        </p>
-      </div>
+
+
+
+
+    toast.success(
+      "Image uploaded successfully."
     );
-  };
 
-  // =======================================================
-  // RENDER
-  // =======================================================
 
-  return (
-    <form
-      onSubmit={
-        handleSubmit
-      }
-      className="space-y-6"
-    >
-      {/* CONTENT */}
 
-      <div
-        className="
-          rounded-2xl
-          border
-          border-slate-200
-          bg-white
-          p-5
-          shadow-sm
-          sm:p-6
-        "
-      >
-        <div className="mb-6">
-          <h2 className="text-lg font-bold text-slate-800">
-            Section Content
-          </h2>
+  }
 
-          <p className="mt-1 text-sm text-slate-500">
-            Configure the Find Your
-            Department section.
-          </p>
-        </div>
+  catch(error){
 
-        <div className="space-y-5">
-          <div>
-            <label
-              htmlFor="section-title"
-              className="mb-2 block text-sm font-semibold text-slate-700"
-            >
-              Section Title
-            </label>
 
-            <input
-              id="section-title"
-              name="title"
-              type="text"
-              value={
-                formData.title
-              }
-              onChange={
-                handleChange
-              }
-              placeholder="Find Your Department"
-              className="
-                h-12
-                w-full
-                rounded-xl
-                border
-                border-slate-200
-                bg-white
-                px-4
-                text-sm
-                text-slate-800
-                outline-none
-                placeholder:text-slate-400
-                focus:border-[#008B45]
-                focus:ring-2
-                focus:ring-[#008B45]/10
-              "
-            />
-          </div>
+    console.error(
+      "IMAGE UPLOAD ERROR:",
+      error
+    );
 
-          <div>
-            <label
-              htmlFor="section-description"
-              className="mb-2 block text-sm font-semibold text-slate-700"
-            >
-              Description
-            </label>
 
-            <textarea
-              id="section-description"
-              name="description"
-              value={
-                formData.description
-              }
-              onChange={
-                handleChange
-              }
-              rows={5}
-              placeholder="Explore our departments and find the right academic program..."
-              className="
-                w-full
-                resize-none
-                rounded-xl
-                border
-                border-slate-200
-                bg-white
-                px-4
-                py-3
-                text-sm
-                leading-6
-                text-slate-800
-                outline-none
-                placeholder:text-slate-400
-                focus:border-[#008B45]
-                focus:ring-2
-                focus:ring-[#008B45]/10
-              "
-            />
-          </div>
 
-          <div>
-            <label
-              htmlFor="search-placeholder"
-              className="mb-2 block text-sm font-semibold text-slate-700"
-            >
-              Search Placeholder
-            </label>
+    toast.error(
 
-            <input
-              id="search-placeholder"
-              name="searchPlaceholder"
-              type="text"
-              value={
-                formData.searchPlaceholder
-              }
-              onChange={
-                handleChange
-              }
-              placeholder="Search for a department..."
-              className="
-                h-12
-                w-full
-                rounded-xl
-                border
-                border-slate-200
-                bg-white
-                px-4
-                text-sm
-                text-slate-800
-                outline-none
-                placeholder:text-slate-400
-                focus:border-[#008B45]
-                focus:ring-2
-                focus:ring-[#008B45]/10
-              "
-            />
-          </div>
-        </div>
-      </div>
+      error instanceof Error
 
-      {/* IMAGES */}
+      ?
 
-      <div
-        className="
-          rounded-2xl
-          border
-          border-slate-200
-          bg-white
-          p-5
-          shadow-sm
-          sm:p-6
-        "
-      >
-        <div className="mb-6">
-          <h2 className="text-lg font-bold text-slate-800">
-            Section Images
-          </h2>
+      error.message
 
-          <p className="mt-1 text-sm text-slate-500">
-            Upload the two images used
-            in the Department section.
-          </p>
-        </div>
+      :
 
-        <div className="grid gap-5 md:grid-cols-2">
-          {renderImageUpload(
-            "imageOne",
-            "Image One",
-            uploadingImageOne
-          )}
+      "Image upload failed."
 
-          {renderImageUpload(
-            "imageTwo",
-            "Image Two",
-            uploadingImageTwo
-          )}
-        </div>
-      </div>
+    );
 
-      {/* POPULAR SEARCHES */}
 
-      <div
-        className="
-          rounded-2xl
-          border
-          border-slate-200
-          bg-white
-          p-5
-          shadow-sm
-          sm:p-6
-        "
-      >
-        <div className="mb-6">
-          <h2 className="text-lg font-bold text-slate-800">
-            Popular Searches
-          </h2>
+  }
 
-          <p className="mt-1 text-sm text-slate-500">
-            Add popular department search
-            terms to display on the website.
-          </p>
-        </div>
 
-        <div className="flex gap-3">
-          <input
-            type="text"
-            value={
-              popularSearchInput
-            }
-            onChange={(event) =>
-              setPopularSearchInput(
-                event.target.value
-              )
-            }
-            onKeyDown={
-              handlePopularSearchKeyDown
-            }
-            placeholder="e.g. Medicine"
-            className="
-              h-12
-              min-w-0
-              flex-1
-              rounded-xl
-              border
-              border-slate-200
-              bg-white
-              px-4
-              text-sm
-              text-slate-800
-              outline-none
-              placeholder:text-slate-400
-              focus:border-[#008B45]
-              focus:ring-2
-              focus:ring-[#008B45]/10
-            "
-          />
+  finally{
 
-          <button
-            type="button"
-            onClick={
-              addPopularSearch
-            }
-            className="
-              inline-flex
-              h-12
-              shrink-0
-              items-center
-              justify-center
-              gap-2
-              rounded-xl
-              bg-[#008B45]
-              px-4
-              text-sm
-              font-semibold
-              text-white
-              hover:bg-[#00763B]
-            "
-          >
-            <Plus size={17} />
 
-            Add
-          </button>
-        </div>
+    if (
+      type === "imageOne"
+    ){
 
-        {formData.popularSearches
-          .length > 0 && (
-          <div className="mt-5 flex flex-wrap gap-2">
-            {formData.popularSearches.map(
-              (
-                search,
-                index
-              ) => (
-                <div
-                  key={`${search}-${index}`}
-                  className="
-                    inline-flex
-                    items-center
-                    gap-2
-                    rounded-full
-                    bg-[#E8F7F0]
-                    px-3
-                    py-2
-                    text-sm
-                    font-medium
-                    text-[#008B45]
-                  "
-                >
-                  <span>
-                    {search}
-                  </span>
+      setUploadingImageOne(false);
 
-                  <button
-                    type="button"
-                    onClick={() =>
-                      removePopularSearch(
-                        index
-                      )
-                    }
-                    className="
-                      flex
-                      h-5
-                      w-5
-                      items-center
-                      justify-center
-                      rounded-full
-                      hover:bg-[#008B45]
-                      hover:text-white
-                    "
-                  >
-                    <X size={13} />
-                  </button>
-                </div>
-              )
-            )}
-          </div>
-        )}
-      </div>
+    }
 
-      {/* STATISTICS */}
+    else{
 
-      <div
-        className="
-          rounded-2xl
-          border
-          border-slate-200
-          bg-white
-          p-5
-          shadow-sm
-          sm:p-6
-        "
-      >
-        <div className="mb-6">
-          <h2 className="text-lg font-bold text-slate-800">
-            Department Statistics
-          </h2>
+      setUploadingImageTwo(false);
 
-          <p className="mt-1 text-sm text-slate-500">
-            Configure the statistics shown
-            beside the section.
-          </p>
-        </div>
+    }
 
-        <div className="grid gap-5 md:grid-cols-2">
-          <div>
-            <label
-              htmlFor="student-count"
-              className="mb-2 block text-sm font-semibold text-slate-700"
-            >
-              Student Count
-            </label>
 
-            <input
-              id="student-count"
-              name="studentCount"
-              type="text"
-              value={
-                formData.studentCount
-              }
-              onChange={
-                handleChange
-              }
-              placeholder="28+"
-              className="
-                h-12
-                w-full
-                rounded-xl
-                border
-                border-slate-200
-                px-4
-                text-sm
-                outline-none
-                focus:border-[#008B45]
-                focus:ring-2
-                focus:ring-[#008B45]/10
-              "
-            />
-          </div>
+  }
 
-          <div>
-            <label
-              htmlFor="student-count-text"
-              className="mb-2 block text-sm font-semibold text-slate-700"
-            >
-              Student Count Text
-            </label>
 
-            <input
-              id="student-count-text"
-              name="studentCountText"
-              type="text"
-              value={
-                formData.studentCountText
-              }
-              onChange={
-                handleChange
-              }
-              placeholder="Departments"
-              className="
-                h-12
-                w-full
-                rounded-xl
-                border
-                border-slate-200
-                px-4
-                text-sm
-                outline-none
-                focus:border-[#008B45]
-                focus:ring-2
-                focus:ring-[#008B45]/10
-              "
-            />
-          </div>
-        </div>
-      </div>
 
-      {/* STATUS */}
+};
 
-      <div
-        className="
-          rounded-2xl
-          border
-          border-slate-200
-          bg-white
-          p-5
-          shadow-sm
-          sm:p-6
-        "
-      >
-        <button
-          type="button"
-          onClick={
-            handleActiveToggle
-          }
-          className="
-            flex
-            w-full
-            items-center
-            justify-between
-            gap-5
-            text-left
-          "
-        >
-          <div>
-            <p className="text-sm font-semibold text-slate-700">
-              Publish Department Section
-            </p>
 
-            <p className="mt-1 text-xs text-slate-400">
-              Make this section visible
-              on the client website.
-            </p>
-          </div>
 
-          <span
-            className={`
-              relative
-              h-6
-              w-11
-              rounded-full
-              ${
-                formData.isActive
-                  ? "bg-[#008B45]"
-                  : "bg-slate-300"
-              }
-            `}
-          >
-            <span
-              className={`
-                absolute
-                top-1
-                h-4
-                w-4
-                rounded-full
-                bg-white
-                transition
-                ${
-                  formData.isActive
-                    ? "left-6"
-                    : "left-1"
-                }
-              `}
-            />
-          </span>
-        </button>
-      </div>
 
-      {/* SUBMIT */}
 
-      <div
-        className="
-          flex
-          justify-end
-          rounded-2xl
-          border
-          border-slate-200
-          bg-white
-          p-5
-          shadow-sm
-          sm:p-6
-        "
-      >
-        <button
-          type="submit"
-          disabled={
-            saving ||
-            uploadingImageOne ||
-            uploadingImageTwo
-          }
-          className="
-            inline-flex
-            min-h-11
-            items-center
-            justify-center
-            gap-2
-            rounded-xl
-            bg-[#008B45]
-            px-6
-            py-3
-            text-sm
-            font-semibold
-            text-white
-            shadow-sm
-            hover:bg-[#00763B]
-            disabled:cursor-not-allowed
-            disabled:opacity-60
-          "
-        >
-          {saving ? (
-            <>
-              <Loader2
-                size={18}
-                className="animate-spin"
-              />
+// =======================================================
+// IMAGE CHANGE
+// =======================================================
 
-              Saving...
-            </>
-          ) : (
-            <>
-              <Save size={18} />
 
-              {sectionId
-                ? "Update Section"
-                : "Create Section"}
-            </>
-          )}
-        </button>
-      </div>
-    </form>
+const handleImageChange = (
+
+  event: ChangeEvent<HTMLInputElement>,
+
+  type: "imageOne" | "imageTwo"
+
+) => {
+
+
+  const file =
+    event.target.files?.[0];
+
+
+
+  if(!file){
+
+    return;
+
+  }
+
+
+
+  uploadImage(
+    file,
+    type
   );
+
+
+};
+
+
+
+
+
+
+// =======================================================
+// FORM SUBMIT
+// =======================================================
+
+
+const handleSubmit = async (
+
+  event: FormEvent<HTMLFormElement>
+
+) => {
+
+
+  event.preventDefault();
+
+
+
+  try {
+
+
+    setSaving(true);
+
+
+
+
+
+    const response =
+      await fetch(
+        "/api/department-section",
+        {
+
+          method:
+
+            sectionId
+
+            ?
+
+            "PUT"
+
+            :
+
+            "POST",
+
+
+
+          headers:{
+
+            "Content-Type":
+              "application/json",
+
+          },
+
+
+
+          body:
+            JSON.stringify({
+
+              ...formData,
+
+              id:
+                sectionId,
+
+            }),
+
+        }
+      );
+
+
+
+
+
+
+
+    const result =
+      await response.json();
+
+
+
+
+
+
+    if(
+
+      !response.ok ||
+
+      !result.success
+
+    ){
+
+      throw new Error(
+
+        result.message ||
+
+        "Failed to save department section."
+
+      );
+
+    }
+
+
+
+
+
+
+    toast.success(
+
+      sectionId
+
+      ?
+
+      "Department section updated successfully."
+
+      :
+
+      "Department section created successfully."
+
+    );
+
+
+
+
+
+
+    onSuccess?.(
+      result.data
+    );
+
+
+
+  }
+
+
+  catch(error){
+
+
+
+    console.error(
+      "SAVE DEPARTMENT SECTION ERROR:",
+      error
+    );
+
+
+
+    toast.error(
+
+      error instanceof Error
+
+      ?
+
+      error.message
+
+      :
+
+      "Something went wrong."
+
+    );
+
+
+  }
+
+
+
+  finally{
+
+
+    setSaving(false);
+
+
+  }
+
+// =======================================================
+// RENDER
+// =======================================================
+
+
+return (
+
+<form
+
+  onSubmit={handleSubmit}
+
+  className="
+    space-y-6
+    rounded-2xl
+    border
+    border-slate-200
+    bg-white
+    p-5
+    shadow-sm
+
+    sm:p-6
+  "
+
+>
+
+
+
+
+
+{/* =====================================================
+    BASIC INFORMATION
+===================================================== */}
+
+
+<div>
+
+
+<h3
+
+className="
+text-lg
+font-bold
+text-slate-800
+"
+
+>
+
+Section Information
+
+</h3>
+
+
+
+<div
+
+className="
+mt-5
+grid
+gap-5
+"
+
+>
+
+
+
+{/* TITLE */}
+
+<div>
+
+
+<label
+
+className="
+mb-2
+block
+text-sm
+font-semibold
+text-slate-700
+"
+
+>
+
+Title
+
+</label>
+
+
+<input
+
+name="title"
+
+value={
+formData.title
 }
+
+onChange={
+handleChange
+}
+
+placeholder="Find Your Department"
+
+className="
+h-12
+w-full
+rounded-xl
+border
+border-slate-200
+px-4
+text-sm
+outline-none
+
+focus:border-[#008B45]
+"
+
+/>
+
+
+</div>
+
+
+
+
+
+{/* DESCRIPTION */}
+
+<div>
+
+
+<label
+
+className="
+mb-2
+block
+text-sm
+font-semibold
+text-slate-700
+"
+
+>
+
+Description
+
+</label>
+
+
+
+<textarea
+
+
+name="description"
+
+
+value={
+formData.description
+}
+
+
+onChange={
+handleChange
+}
+
+
+rows={5}
+
+
+placeholder="Write department description..."
+
+
+className="
+w-full
+resize-none
+rounded-xl
+border
+border-slate-200
+p-4
+text-sm
+outline-none
+
+focus:border-[#008B45]
+"
+
+/>
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* =====================================================
+    SEARCH
+===================================================== */}
+
+
+
+<div>
+
+
+<h3
+
+className="
+text-lg
+font-bold
+text-slate-800
+"
+
+>
+
+Search Settings
+
+</h3>
+
+
+
+<div className="mt-5">
+
+
+<label
+
+className="
+mb-2
+block
+text-sm
+font-semibold
+text-slate-700
+"
+
+>
+
+Search Placeholder
+
+</label>
+
+
+
+<input
+
+
+name="searchPlaceholder"
+
+
+value={
+formData.searchPlaceholder
+}
+
+
+onChange={
+handleChange
+}
+
+
+
+placeholder="Search department..."
+
+
+className="
+h-12
+w-full
+rounded-xl
+border
+border-slate-200
+px-4
+text-sm
+outline-none
+
+focus:border-[#008B45]
+"
+
+
+/>
+
+
+</div>
+
+
+
+
+
+{/* POPULAR SEARCH */}
+
+
+
+<div className="mt-5">
+
+
+<label
+
+className="
+mb-2
+block
+text-sm
+font-semibold
+text-slate-700
+"
+
+>
+
+Popular Searches
+
+</label>
+
+
+
+
+<div
+
+className="
+flex
+gap-2
+"
+
+>
+
+
+<input
+
+
+value={
+popularSearchInput
+}
+
+
+onChange={
+
+(e)=>
+
+setPopularSearchInput(
+e.target.value
+)
+
+}
+
+
+placeholder="Add search keyword"
+
+
+className="
+h-11
+flex-1
+rounded-xl
+border
+border-slate-200
+px-4
+text-sm
+outline-none
+
+focus:border-[#008B45]
+"
+
+
+/>
+
+
+
+
+<button
+
+
+type="button"
+
+
+onClick={
+addPopularSearch
+}
+
+
+className="
+flex
+h-11
+w-11
+items-center
+justify-center
+rounded-xl
+bg-[#008B45]
+text-white
+"
+
+
+>
+
+<Plus size={18}/>
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div
+
+className="
+mt-3
+flex
+flex-wrap
+gap-2
+"
+
+>
+
+
+{
+formData.popularSearches.map(
+(item,index)=>(
+
+
+<span
+
+
+key={index}
+
+
+className="
+inline-flex
+items-center
+gap-2
+rounded-full
+bg-emerald-50
+px-3
+py-1.5
+text-xs
+font-semibold
+text-[#008B45]
+"
+
+
+>
+
+
+{item}
+
+
+
+<button
+
+type="button"
+
+onClick={()=>
+removePopularSearch(index)
+}
+
+
+>
+
+<X size={14}/>
+
+
+</button>
+
+
+
+</span>
+
+
+)
+
+)
+
+}
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+{/* =====================================================
+    IMAGES
+===================================================== */}
+
+
+
+<div>
+
+
+<h3
+
+className="
+text-lg
+font-bold
+text-slate-800
+"
+
+>
+
+Images
+
+</h3>
+
+
+
+
+<div
+
+className="
+mt-5
+grid
+gap-5
+
+md:grid-cols-2
+"
+
+>
+
+
+
+
+
+{
+
+[
+{
+key:"imageOne",
+label:"Main Image",
+value:formData.imageOne,
+loading:uploadingImageOne
+},
+
+{
+key:"imageTwo",
+label:"Secondary Image",
+value:formData.imageTwo,
+loading:uploadingImageTwo
+}
+
+].map((image)=>(
+
+
+<div
+
+key={image.key}
+
+>
+
+
+<label
+
+className="
+mb-2
+block
+text-sm
+font-semibold
+text-slate-700
+"
+
+>
+
+{image.label}
+
+</label>
+
+
+
+
+<div
+
+className="
+relative
+overflow-hidden
+rounded-xl
+border
+border-slate-200
+bg-slate-50
+"
+
+>
+
+
+
+{
+image.value &&
+
+<img
+
+src={image.value}
+
+alt={image.label}
+
+className="
+h-44
+w-full
+object-cover
+"
+
+/>
+
+}
+
+
+
+{
+!image.value &&
+
+<div
+
+className="
+flex
+h-44
+items-center
+justify-center
+text-slate-400
+"
+
+>
+
+<ImageIcon size={32}/>
+
+
+</div>
+
+}
+
+
+
+
+<label
+
+className="
+absolute
+bottom-3
+right-3
+flex
+cursor-pointer
+items-center
+gap-2
+rounded-lg
+bg-[#008B45]
+px-3
+py-2
+text-xs
+font-semibold
+text-white
+"
+
+>
+
+
+{
+image.loading
+
+?
+
+<Loader2
+size={15}
+className="animate-spin"
+/>
+
+:
+
+<Upload
+size={15}
+/>
+
+}
+
+
+Upload
+
+
+
+<input
+
+type="file"
+
+hidden
+
+accept="image/*"
+
+
+onChange={(e)=>
+
+handleImageChange(
+
+e,
+
+image.key as
+"imageOne" |
+"imageTwo"
+
+)
+
+}
+
+
+/>
+
+
+
+</label>
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+))
+
+}
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* =====================================================
+    STUDENT COUNT
+===================================================== */}
+
+
+
+<div>
+
+
+<h3
+
+className="
+text-lg
+font-bold
+text-slate-800
+"
+
+>
+
+Statistics
+
+</h3>
+
+
+
+
+<div
+
+className="
+mt-5
+grid
+gap-5
+
+md:grid-cols-2
+"
+
+>
+
+
+<input
+
+
+name="studentCount"
+
+
+value={
+formData.studentCount
+}
+
+
+onChange={
+handleChange
+}
+
+
+placeholder="5000+"
+
+
+className="
+h-12
+rounded-xl
+border
+border-slate-200
+px-4
+text-sm
+outline-none
+"
+
+
+/>
+
+
+
+
+<input
+
+
+name="studentCountText"
+
+
+value={
+formData.studentCountText
+}
+
+
+onChange={
+handleChange
+}
+
+
+placeholder="Students"
+
+
+className="
+h-12
+rounded-xl
+border
+border-slate-200
+px-4
+text-sm
+outline-none
+"
+
+
+/>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+{/* =====================================================
+    ACTIVE
+===================================================== */}
+
+
+
+<div
+
+className="
+flex
+items-center
+justify-between
+rounded-xl
+bg-slate-50
+p-4
+"
+
+>
+
+
+<div>
+
+
+<p
+
+className="
+font-semibold
+text-slate-700
+"
+
+>
+
+Publish Section
+
+</p>
+
+
+<p
+
+className="
+text-sm
+text-slate-500
+"
+
+>
+
+Show this section on website
+
+</p>
+
+
+</div>
+
+
+
+
+<button
+
+
+type="button"
+
+
+onClick={
+handleActiveToggle
+}
+
+
+className={`
+
+h-7
+w-12
+rounded-full
+transition
+
+
+${
+formData.isActive
+
+?
+
+"bg-[#008B45]"
+
+:
+
+"bg-slate-300"
+
+}
+
+`}
+
+
+>
+
+
+<span
+
+className={`
+
+block
+h-5
+w-5
+rounded-full
+bg-white
+transition
+
+
+${
+formData.isActive
+
+?
+
+"translate-x-6"
+
+:
+
+"translate-x-1"
+
+}
+
+`}
+
+/>
+
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* =====================================================
+    SUBMIT
+===================================================== */}
+
+
+
+<button
+
+
+disabled={saving}
+
+
+className="
+inline-flex
+min-h-12
+w-full
+items-center
+justify-center
+gap-2
+rounded-xl
+bg-[#008B45]
+px-6
+py-3
+font-semibold
+text-white
+transition
+
+hover:bg-[#00763B]
+
+disabled:opacity-60
+"
+
+
+>
+
+
+{
+saving
+
+?
+
+<Loader2
+size={18}
+className="animate-spin"
+/>
+
+:
+
+<Save size={18}/>
+
+}
+
+
+
+{
+saving
+
+?
+
+"Saving..."
+
+:
+
+sectionId
+
+?
+
+"Update Section"
+
+:
+
+"Create Section"
+
+}
+
+
+
+</button>
+
+
+
+
+
+</form>
+
+
+);
+}
+};

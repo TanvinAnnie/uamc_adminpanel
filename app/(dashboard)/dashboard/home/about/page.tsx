@@ -1,187 +1,193 @@
 "use client";
 
-import { useEffect, useState } from "react";
+
+import {
+  useEffect,
+  useState,
+} from "react";
+
+
 import {
   ArrowLeft,
   Edit3,
   Plus,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+
+
+import {
+  useRouter,
+} from "next/navigation";
+
+
+import {
+  toast,
+} from "sonner";
+
 
 import AboutLoading from "@/components/dashboard/home/about/AboutLoading";
+
 import AboutEmpty from "@/components/dashboard/home/about/AboutEmpty";
+
 import AboutTable from "@/components/dashboard/home/about/AboutTable";
-import type { AboutData } from "@/components/dashboard/home/about/AboutTableRow";
 
-export default function AboutPage() {
-  const router = useRouter();
 
-  const [about, setAbout] =
-    useState<AboutData | null>(null);
+import type {
+  AboutData,
+} from "@/components/dashboard/home/about/AboutTableRow";
 
-  const [loading, setLoading] =
-    useState(true);
 
-  // =========================================
-  // LOAD ABOUT
-  // =========================================
 
-  useEffect(() => {
-    let cancelled = false;
 
-    const loadAbout = async () => {
-      try {
-        const response = await fetch(
-          "/api/about",
-          {
-            cache: "no-store",
-          }
-        );
 
-        const data =
-          await response.json();
+// =====================================
+// HEADER COMPONENT
+// =====================================
 
-        if (cancelled) {
-          return;
-        }
 
-        // =====================================
-        // ABOUT NOT FOUND
-        // =====================================
+function AboutHeader({
+  router,
+  about,
+}: {
+  router: ReturnType<typeof useRouter>;
+  about: AboutData | null;
+}) {
 
-        if (response.status === 404) {
-          setAbout(null);
-          setLoading(false);
-          return;
-        }
 
-        // =====================================
-        // API ERROR
-        // =====================================
+  return (
 
-        if (!response.ok || !data.success) {
-          throw new Error(
-            data.message ||
-              "Failed to fetch About section."
-          );
-        }
+    <div
+      className="
+        flex
+        flex-col
+        gap-5
+        rounded-3xl
+        border
+        border-white/10
+        bg-slate-900/70
+        p-5
+        shadow-xl
+        backdrop-blur-xl
+        sm:flex-row
+        sm:items-center
+        sm:justify-between
+        sm:p-6
+      "
+    >
 
-        // =====================================
-        // SUCCESS
-        // =====================================
 
-        setAbout(data.data);
-        setLoading(false);
-      } catch (error) {
-        if (cancelled) {
-          return;
-        }
+      <div>
 
-        console.error(
-          "FETCH ABOUT ERROR:",
-          error
-        );
 
-        toast.error(
-          error instanceof Error
-            ? error.message
-            : "Failed to fetch About section."
-        );
+        <h1
+          className="
+            text-2xl
+            font-bold
+            text-white
+            sm:text-3xl
+          "
+        >
+          About UAMC
+        </h1>
 
-        setLoading(false);
-      }
-    };
 
-    loadAbout();
 
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+        <p
+          className="
+            mt-2
+            text-sm
+            text-slate-400
+          "
+        >
+          Manage the About section of the website.
+        </p>
 
-  // =========================================
-  // DELETE CALLBACK
-  // =========================================
 
-  const handleDelete = () => {
-    setAbout(null);
-  };
-
-  // =========================================
-  // LOADING
-  // =========================================
-
-  if (loading) {
-    return (
-      <div className="w-full space-y-6 p-4 sm:p-6 lg:p-8">
-        <AboutLoading />
       </div>
-    );
-  }
 
-  // =========================================
-  // EMPTY
-  // =========================================
 
-  if (!about) {
-    return (
-      <div className="w-full space-y-6 p-4 sm:p-6 lg:p-8">
-        {/* =====================================
-            HEADER
-        ===================================== */}
 
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          {/* LEFT SIDE */}
 
-          <div>
-            <h1 className="text-2xl font-bold text-slate-800 sm:text-3xl">
-              About UAMC
-            </h1>
 
-            <p className="mt-1 text-sm text-slate-500 sm:text-base">
-              Manage the About section of the
-              website.
-            </p>
-          </div>
+      <div
+        className="
+          flex
+          flex-wrap
+          gap-3
+        "
+      >
 
-          {/* RIGHT SIDE */}
 
-          <div className="flex flex-wrap items-center gap-3">
-            {/* BACK TO DASHBOARD */}
+
+        <button
+          type="button"
+          onClick={() =>
+            router.push("/dashboard")
+          }
+          className="
+            inline-flex
+            items-center
+            gap-2
+            rounded-xl
+            border
+            border-white/10
+            bg-white/5
+            px-4
+            py-3
+            text-sm
+            font-semibold
+            text-slate-300
+            transition
+            hover:bg-white/10
+            hover:text-white
+          "
+        >
+
+          <ArrowLeft size={17}/>
+
+          Back Dashboard
+
+        </button>
+
+
+
+
+
+
+        {
+          about ? (
 
             <button
               type="button"
               onClick={() =>
-                router.push("/dashboard")
+                router.push(
+                  `/dashboard/home/about/edit/${about._id}`
+                )
               }
               className="
                 inline-flex
-                min-h-11
                 items-center
-                justify-center
                 gap-2
                 rounded-xl
-                border
-                border-slate-200
-                bg-white
-                px-4
+                bg-gradient-to-r
+                from-emerald-500
+                to-cyan-500
+                px-5
                 py-3
                 text-sm
-                font-medium
-                text-slate-600
-                shadow-sm
-                transition
-                hover:border-[#008B45]
-                hover:text-[#008B45]
+                font-bold
+                text-white
               "
             >
-              <ArrowLeft size={17} />
 
-              Back to Dashboard
+              <Edit3 size={17}/>
+
+              Edit About
+
             </button>
 
-            {/* CREATE BUTTON */}
+
+          ) : (
+
 
             <button
               type="button"
@@ -192,150 +198,376 @@ export default function AboutPage() {
               }
               className="
                 inline-flex
-                min-h-11
                 items-center
-                justify-center
                 gap-2
                 rounded-xl
-                bg-[#008B45]
+                bg-gradient-to-r
+                from-emerald-500
+                to-cyan-500
                 px-5
                 py-3
                 text-sm
-                font-semibold
+                font-bold
                 text-white
-                shadow-sm
-                transition
-                hover:bg-[#00763B]
-                hover:shadow-md
               "
             >
-              <Plus size={18} />
+
+              <Plus size={18}/>
 
               Create About
+
             </button>
-          </div>
-        </div>
 
-        {/* =====================================
-            EMPTY STATE
-        ===================================== */}
 
-        <AboutEmpty />
+          )
+        }
+
+
+
       </div>
+
+
+    </div>
+
+  );
+
+}
+
+
+
+
+
+
+
+
+
+// =====================================
+// MAIN PAGE
+// =====================================
+
+
+export default function AboutPage() {
+
+
+  const router = useRouter();
+
+
+
+
+  const [
+    about,
+    setAbout
+  ] = useState<AboutData | null>(null);
+
+
+
+
+  const [
+    loading,
+    setLoading
+  ] = useState(true);
+
+
+
+
+
+
+
+
+  // =====================================
+  // FETCH ABOUT
+  // =====================================
+
+
+  useEffect(() => {
+
+
+    let cancelled = false;
+
+
+
+    const loadAbout = async () => {
+
+
+      try {
+
+
+        const response = await fetch(
+          "/api/about",
+          {
+            cache:"no-store",
+          }
+        );
+
+
+
+        const data =
+          await response.json();
+
+
+
+
+
+        if(cancelled){
+
+          return;
+
+        }
+
+
+
+
+
+        if(response.status === 404){
+
+
+          setAbout(null);
+
+          setLoading(false);
+
+          return;
+
+        }
+
+
+
+
+
+
+
+        if(!response.ok || !data.success){
+
+
+          throw new Error(
+            data.message ||
+            "Failed to fetch About section."
+          );
+
+
+        }
+
+
+
+
+
+        setAbout(data.data);
+
+
+
+
+      }
+
+
+      catch(error){
+
+
+
+        console.error(
+          "FETCH ABOUT ERROR:",
+          error
+        );
+
+
+
+        toast.error(
+
+          error instanceof Error
+
+          ?
+
+          error.message
+
+          :
+
+          "Failed to fetch About section."
+
+        );
+
+
+      }
+
+
+      finally{
+
+
+        if(!cancelled){
+
+          setLoading(false);
+
+        }
+
+
+      }
+
+
+
+    };
+
+
+
+
+
+    loadAbout();
+
+
+
+
+
+    return()=>{
+
+      cancelled=true;
+
+    };
+
+
+
+  }, []);
+
+
+
+
+
+
+
+
+
+  const handleDelete = () => {
+
+    setAbout(null);
+
+  };
+
+
+
+
+
+
+
+
+
+  // =====================================
+  // LOADING
+  // =====================================
+
+
+  if(loading){
+
+
+    return (
+
+      <div
+        className="
+          min-h-screen
+          bg-slate-950
+          p-4
+          sm:p-6
+          lg:p-8
+        "
+      >
+
+        <AboutLoading/>
+
+      </div>
+
     );
+
   }
 
-  // =========================================
-  // DATA AVAILABLE
-  // =========================================
 
-  return (
-    <div className="w-full space-y-6 p-4 sm:p-6 lg:p-8">
-      {/* =====================================
-          HEADER
-      ===================================== */}
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        {/* =====================================
-            LEFT SIDE
-        ===================================== */}
 
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800 sm:text-3xl">
-            About UAMC
-          </h1>
 
-          <p className="mt-1 text-sm text-slate-500 sm:text-base">
-            Manage the About section of the
-            website.
-          </p>
-        </div>
 
-        {/* =====================================
-            RIGHT SIDE BUTTONS
-        ===================================== */}
 
-        <div className="flex flex-wrap items-center gap-3">
-          {/* ===================================
-              BACK TO DASHBOARD
-          =================================== */}
 
-          <button
-            type="button"
-            onClick={() =>
-              router.push("/dashboard")
-            }
-            className="
-              inline-flex
-              min-h-11
-              items-center
-              justify-center
-              gap-2
-              rounded-xl
-              border
-              border-slate-200
-              bg-white
-              px-4
-              py-3
-              text-sm
-              font-medium
-              text-slate-600
-              shadow-sm
-              transition
-              hover:border-[#008B45]
-              hover:text-[#008B45]
-            "
-          >
-            <ArrowLeft size={17} />
 
-            Back to Dashboard
-          </button>
+  // =====================================
+  // EMPTY
+  // =====================================
 
-          {/* ===================================
-              EDIT ABOUT
-          =================================== */}
 
-          <button
-            type="button"
-            onClick={() =>
-              router.push(
-                `/dashboard/home/about/edit/${about._id}`
-              )
-            }
-            className="
-              inline-flex
-              min-h-11
-              items-center
-              justify-center
-              gap-2
-              rounded-xl
-              bg-[#008B45]
-              px-5
-              py-3
-              text-sm
-              font-semibold
-              text-white
-              shadow-sm
-              transition
-              hover:bg-[#00763B]
-              hover:shadow-md
-            "
-          >
-            <Edit3 size={17} />
+  if(!about){
 
-            Edit About
-          </button>
-        </div>
+
+    return (
+
+      <div
+        className="
+          min-h-screen
+          space-y-6
+          bg-slate-950
+          p-4
+          sm:p-6
+          lg:p-8
+        "
+      >
+
+
+        <AboutHeader
+          router={router}
+          about={null}
+        />
+
+
+
+        <AboutEmpty />
+
+
       </div>
 
-      {/* =====================================
-          ABOUT TABLE
-      ===================================== */}
+    );
+
+
+  }
+
+
+
+
+
+
+
+
+
+  // =====================================
+  // DATA AVAILABLE
+  // =====================================
+
+
+  return (
+
+    <div
+      className="
+        min-h-screen
+        space-y-6
+        bg-slate-950
+        p-4
+        sm:p-6
+        lg:p-8
+      "
+    >
+
+
+
+      <AboutHeader
+        router={router}
+        about={about}
+      />
+
+
+
+
 
       <AboutTable
         about={about}
         onDelete={handleDelete}
       />
+
+
+
+
     </div>
+
   );
+
+
 }

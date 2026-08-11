@@ -1,165 +1,687 @@
 "use client";
 
-import { useMemo, useState } from "react";
+
+import {
+  Search,
+} from "lucide-react";
+
+
+import {
+  useMemo,
+  useState,
+} from "react";
+
+
 import AboutTableRow, {
   AboutData,
 } from "./AboutTableRow";
 
+
+
+
+
 interface AboutTableProps {
+
   about: AboutData | null;
-  onDelete: (id: string) => void;
+
+  onDelete:(id:string)=>void;
+
 }
 
+
+
+
+
+
+
+
+
 export default function AboutTable({
+
   about,
+
   onDelete,
-}: AboutTableProps) {
-  const [search, setSearch] = useState("");
 
-  // =========================================
+}:AboutTableProps){
+
+
+
+
+
+  const [
+    search,
+    setSearch
+  ] = useState("");
+
+
+
+
+
+
+
+  // ===============================
   // FILTER ABOUT
-  // =========================================
+  // ===============================
 
-  const filteredAbout = useMemo(() => {
-    if (!about) {
+
+
+  const filteredAbout = useMemo(()=>{
+
+
+    if(!about){
+
       return null;
+
     }
 
-    const searchValue = search
+
+
+
+
+
+
+    const searchValue =
+
+      search
+
       .trim()
+
       .toLowerCase();
 
-    if (!searchValue) {
+
+
+
+
+
+
+    if(!searchValue){
+
       return about;
+
     }
 
-    const matches =
-      about.title
-        ?.toLowerCase()
-        .includes(searchValue) ||
-      about.highlightText
-        ?.toLowerCase()
-        .includes(searchValue) ||
-      about.tagline
-        ?.toLowerCase()
-        .includes(searchValue) ||
-      about.missionTitle
-        ?.toLowerCase()
-        .includes(searchValue) ||
-      about.visionTitle
-        ?.toLowerCase()
-        .includes(searchValue);
 
-    return matches ? about : null;
-  }, [about, search]);
+
+
+
+
+
+    const matches =
+
+      about.title
+
+      ?.toLowerCase()
+
+      .includes(searchValue)
+
+
+
+      ||
+
+
+
+      about.highlightText
+
+      ?.toLowerCase()
+
+      .includes(searchValue)
+
+
+
+      ||
+
+
+
+      about.tagline
+
+      ?.toLowerCase()
+
+      .includes(searchValue)
+
+
+
+      ||
+
+
+
+      about.missionTitle
+
+      ?.toLowerCase()
+
+      .includes(searchValue)
+
+
+
+      ||
+
+
+
+      about.visionTitle
+
+      ?.toLowerCase()
+
+      .includes(searchValue);
+
+
+
+
+
+
+
+    return matches
+
+      ?
+
+      about
+
+      :
+
+      null;
+
+
+
+  },[
+
+    about,
+
+    search
+
+  ]);
+
+
+
+
+
+
+
+
 
   return (
-    <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-      {/* =========================================
-          SEARCH
-      ========================================= */}
 
-      <div className="border-b border-slate-200 p-5">
-        <div className="relative w-full max-w-md">
-          <input
-            type="text"
-            value={search}
-            onChange={(event) =>
-              setSearch(event.target.value)
-            }
-            placeholder="Search About section..."
+    <div
+
+      className="
+        overflow-hidden
+
+
+        rounded-3xl
+
+
+        border
+
+
+        border-white/10
+
+
+        bg-slate-900/70
+
+
+        shadow-[0_25px_80px_rgba(0,0,0,0.35)]
+
+
+        backdrop-blur-xl
+      "
+
+    >
+
+
+
+
+
+
+
+
+      {/* ===============================
+          SEARCH
+      =============================== */}
+
+
+
+      <div
+
+        className="
+          border-b
+
+
+          border-white/10
+
+
+          p-5
+        "
+
+      >
+
+
+
+        <div
+
+          className="
+            relative
+
+
+            max-w-md
+          "
+
+        >
+
+
+
+          <Search
+
+            size={19}
+
+
             className="
-              h-11
-              w-full
-              rounded-xl
-              border
-              border-slate-200
-              bg-white
-              px-4
-              text-sm
-              text-slate-700
-              outline-none
-              transition
-              placeholder:text-slate-400
-              focus:border-[#008B45]
-              focus:ring-2
-              focus:ring-[#008B45]/10
+              absolute
+
+
+              left-4
+
+
+              top-1/2
+
+
+              -translate-y-1/2
+
+
+              text-slate-500
             "
+
           />
+
+
+
+
+
+          <input
+
+
+            type="text"
+
+
+            value={search}
+
+
+            onChange={(event)=>
+
+              setSearch(
+                event.target.value
+              )
+
+            }
+
+
+            placeholder="Search About section..."
+
+
+            className="
+              h-12
+
+
+              w-full
+
+
+              rounded-xl
+
+
+              border
+
+
+              border-white/10
+
+
+              bg-slate-950/70
+
+
+              pl-11
+
+
+              pr-4
+
+
+              text-sm
+
+
+              text-white
+
+
+              outline-none
+
+
+              placeholder:text-slate-500
+
+
+              transition
+
+
+              focus:border-emerald-400
+
+
+              focus:ring-2
+
+
+              focus:ring-emerald-400/20
+            "
+
+
+          />
+
+
+
         </div>
+
+
+
       </div>
 
-      {/* =========================================
-          RESPONSIVE TABLE
-      ========================================= */}
 
-      <div className="w-full overflow-x-auto">
-        <table className="w-full min-w-[1050px] border-collapse">
-          {/* =========================================
-              TABLE HEADER
-          ========================================= */}
+
+
+
+
+
+
+
+      {/* ===============================
+          TABLE
+      =============================== */}
+
+
+
+      <div
+
+        className="
+          w-full
+
+
+          overflow-x-auto
+        "
+
+      >
+
+
+
+        <table
+
+          className="
+            w-full
+
+
+            min-w-[1050px]
+
+
+            border-collapse
+          "
+
+        >
+
+
+
+
+
+
 
           <thead>
-            <tr className="bg-slate-50 text-left">
-              <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-600">
-                Logo
-              </th>
 
-              <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-600">
-                About
-              </th>
 
-              <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-600">
-                Mission
-              </th>
+            <tr
 
-              <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-600">
-                Vision
-              </th>
+              className="
+                border-b
 
-              <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-600">
-                Status
-              </th>
 
-              <th className="px-5 py-4 text-right text-xs font-semibold uppercase tracking-wide text-slate-600">
-                Actions
-              </th>
+                border-white/10
+
+
+                bg-slate-800/50
+
+
+                text-left
+              "
+
+            >
+
+
+
+              {
+                [
+
+                  "Logo",
+
+                  "About",
+
+                  "Mission",
+
+                  "Vision",
+
+                  "Status",
+
+                  "Actions"
+
+                ]
+
+                .map((item)=>(
+
+
+
+                  <th
+
+                    key={item}
+
+
+                    className="
+                      px-5
+
+
+                      py-5
+
+
+                      text-xs
+
+
+                      font-semibold
+
+
+                      uppercase
+
+
+                      tracking-wider
+
+
+                      text-slate-400
+                    "
+
+                  >
+
+                    {item}
+
+
+                  </th>
+
+
+
+                ))
+              }
+
+
+
+
             </tr>
+
+
+
           </thead>
 
-          {/* =========================================
-              TABLE BODY
-          ========================================= */}
+
+
+
+
+
+
+
 
           <tbody>
-            {filteredAbout ? (
-              <AboutTableRow
-                about={filteredAbout}
-                onDelete={onDelete}
-              />
-            ) : (
-              <tr>
-                <td
-                  colSpan={6}
-                  className="px-6 py-12 text-center"
-                >
-                  <p className="text-sm font-medium text-slate-600">
-                    {about
-                      ? "No About section found."
-                      : "No About section available."}
-                  </p>
 
-                  {search && about && (
-                    <p className="mt-1 text-xs text-slate-400">
-                      Try a different search term.
+
+
+            {
+
+              filteredAbout
+
+              ?
+
+              (
+
+                <AboutTableRow
+
+                  about={
+                    filteredAbout
+                  }
+
+
+                  onDelete={
+                    onDelete
+                  }
+
+                />
+
+              )
+
+
+              :
+
+
+              (
+
+                <tr>
+
+
+                  <td
+
+                    colSpan={6}
+
+
+                    className="
+                      px-6
+
+
+                      py-14
+
+
+                      text-center
+                    "
+
+                  >
+
+
+
+
+                    <p
+
+                      className="
+                        text-sm
+
+
+                        font-semibold
+
+
+                        text-white
+                      "
+
+                    >
+
+                      {
+                        about
+
+                        ?
+
+                        "No About section found."
+
+                        :
+
+                        "No About section available."
+                      }
+
+
                     </p>
-                  )}
-                </td>
-              </tr>
-            )}
+
+
+
+
+
+
+
+                    {
+
+                      search && about &&
+
+                      (
+
+                        <p
+
+                          className="
+                            mt-2
+
+
+                            text-xs
+
+
+                            text-slate-500
+                          "
+
+                        >
+
+                          Try a different search term.
+
+                        </p>
+
+
+                      )
+
+                    }
+
+
+
+
+
+
+                  </td>
+
+
+                </tr>
+
+
+              )
+
+            }
+
+
+
+
+
           </tbody>
+
+
+
+
+
+
         </table>
+
+
+
+
+
       </div>
+
+
+
+
+
+
     </div>
+
   );
+
+
 }

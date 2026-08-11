@@ -1,39 +1,371 @@
 export default function AboutLoading() {
+
   return (
-    <div className="w-full rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-      {/* Header Skeleton */}
-      <div className="mb-6">
-        <div className="h-6 w-40 animate-pulse rounded-lg bg-slate-200" />
 
-        <div className="mt-2 h-4 w-64 animate-pulse rounded bg-slate-100" />
+    <div
+      className="
+        w-full
+
+
+        rounded-3xl
+
+
+        border
+
+
+        border-white/10
+
+
+        bg-slate-900/70
+
+
+        p-5
+
+
+        shadow-[0_25px_80px_rgba(0,0,0,0.35)]
+
+
+        backdrop-blur-xl
+
+
+        sm:p-6
+      "
+    >
+
+
+
+
+
+
+      {/* HEADER SKELETON */}
+
+
+
+      <div
+        className="
+          mb-7
+        "
+      >
+
+
+        <div
+          className="
+            h-7
+
+            w-48
+
+            animate-pulse
+
+
+            rounded-xl
+
+
+            bg-slate-700/60
+          "
+        />
+
+
+
+        <div
+          className="
+            mt-3
+
+
+            h-4
+
+
+            w-72
+
+
+            animate-pulse
+
+
+            rounded-lg
+
+
+            bg-slate-800
+          "
+        />
+
+
+
       </div>
 
-      {/* Content Skeleton */}
-      <div className="space-y-5">
-        {/* Image Skeleton */}
-        <div className="h-52 w-full animate-pulse rounded-2xl bg-slate-100" />
 
-        {/* Text Skeleton */}
-        <div className="space-y-3">
-          <div className="h-4 w-32 animate-pulse rounded bg-slate-200" />
 
-          <div className="h-4 w-full animate-pulse rounded bg-slate-100" />
 
-          <div className="h-4 w-5/6 animate-pulse rounded bg-slate-100" />
 
-          <div className="h-4 w-4/6 animate-pulse rounded bg-slate-100" />
+
+
+
+
+      {/* CONTENT */}
+
+
+
+      <div
+        className="
+          space-y-6
+        "
+      >
+
+
+
+
+
+
+
+
+        {/* IMAGE */}
+
+
+
+        <div
+          className="
+            h-56
+
+
+            w-full
+
+
+            animate-pulse
+
+
+            rounded-3xl
+
+
+            bg-slate-800
+          "
+        />
+
+
+
+
+
+
+
+
+
+        {/* TEXT AREA */}
+
+
+
+        <div
+          className="
+            space-y-4
+          "
+        >
+
+
+
+          <div
+            className="
+              h-5
+
+
+              w-36
+
+
+              animate-pulse
+
+
+              rounded-lg
+
+
+              bg-slate-700/60
+            "
+          />
+
+
+
+
+
+          <div
+            className="
+              h-4
+
+
+              w-full
+
+
+              animate-pulse
+
+
+              rounded-lg
+
+
+              bg-slate-800
+            "
+          />
+
+
+
+
+          <div
+            className="
+              h-4
+
+
+              w-5/6
+
+
+              animate-pulse
+
+
+              rounded-lg
+
+
+              bg-slate-800
+            "
+          />
+
+
+
+
+
+          <div
+            className="
+              h-4
+
+
+              w-4/6
+
+
+              animate-pulse
+
+
+              rounded-lg
+
+
+              bg-slate-800
+            "
+          />
+
+
+
+
         </div>
 
-        {/* Cards Skeleton */}
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="h-24 animate-pulse rounded-xl bg-slate-100" />
 
-          <div className="h-24 animate-pulse rounded-xl bg-slate-100" />
+
+
+
+
+
+
+
+        {/* CARD SKELETON */}
+
+
+
+        <div
+          className="
+            grid
+
+
+            gap-5
+
+
+            sm:grid-cols-2
+          "
+        >
+
+
+
+          <div
+            className="
+              h-28
+
+
+              animate-pulse
+
+
+              rounded-2xl
+
+
+              border
+
+
+              border-white/10
+
+
+              bg-slate-800
+            "
+          />
+
+
+
+
+
+          <div
+            className="
+              h-28
+
+
+              animate-pulse
+
+
+              rounded-2xl
+
+
+              border
+
+
+              border-white/10
+
+
+              bg-slate-800
+            "
+          />
+
+
+
         </div>
 
-        {/* Button Skeleton */}
-        <div className="h-12 w-40 animate-pulse rounded-xl bg-slate-200" />
+
+
+
+
+
+
+
+
+        {/* BUTTON */}
+
+
+
+        <div
+          className="
+            h-12
+
+
+            w-48
+
+
+            animate-pulse
+
+
+            rounded-xl
+
+
+            bg-slate-700/60
+          "
+        />
+
+
+
+
+
+
       </div>
+
+
+
+
+
+
     </div>
+
   );
+
 }

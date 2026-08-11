@@ -1,1130 +1,3090 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+
 import {
-  Image as ImageIcon,
-  Link as LinkIcon,
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useState,
+} from "react";
+
+
+import {
   Loader2,
   Save,
   Upload,
   X,
+  Link as LinkIcon,
+  Image as ImageIcon,
 } from "lucide-react";
-import { toast } from "sonner";
 
-import type { AboutData } from "./AboutTableRow";
+
+import {
+  toast,
+} from "sonner";
+
+
+import type {
+  AboutData,
+} from "./AboutTableRow";
+
+
+
+
 
 interface AboutFormProps {
+
   initialData?: AboutData | null;
-  onSuccess?: (data: AboutData) => void;
-  onDataChange?: (data: AboutFormData) => void;
+
+  onSuccess?: (
+    data: AboutData
+  ) => void;
+
+
+  onDataChange?: (
+    data: AboutFormData
+  ) => void;
+
 }
+
+
+
+
+
+
 
 export interface AboutFormData {
-  tagline: string;
-  title: string;
-  highlightText: string;
 
-  descriptionOne: string;
-  descriptionTwo: string;
 
-  imageOne: string;
-  imageTwo: string;
-  logo: string;
+  tagline:string;
 
-  missionTitle: string;
-  missionLink: string;
 
-  visionTitle: string;
-  visionLink: string;
+  title:string;
 
-  buttonText: string;
-  buttonLink: string;
 
-  isActive: boolean;
+  highlightText:string;
+
+
+
+  descriptionOne:string;
+
+
+  descriptionTwo:string;
+
+
+
+  imageOne:string;
+
+
+  imageTwo:string;
+
+
+  logo:string;
+
+
+
+
+  missionTitle:string;
+
+
+  missionLink:string;
+
+
+
+  visionTitle:string;
+
+
+  visionLink:string;
+
+
+
+  buttonText:string;
+
+
+  buttonLink:string;
+
+
+
+  isActive:boolean;
+
 }
 
-const defaultFormData: AboutFormData = {
-  tagline: "",
-  title: "",
-  highlightText: "",
 
-  descriptionOne: "",
-  descriptionTwo: "",
 
-  imageOne: "",
-  imageTwo: "",
-  logo: "",
 
-  missionTitle: "",
-  missionLink: "",
 
-  visionTitle: "",
-  visionLink: "",
 
-  buttonText: "View Our Program",
-  buttonLink: "",
 
-  isActive: true,
+
+const defaultFormData:AboutFormData = {
+
+
+  tagline:"",
+
+
+  title:"",
+
+
+  highlightText:"",
+
+
+
+
+  descriptionOne:"",
+
+
+  descriptionTwo:"",
+
+
+
+
+  imageOne:"",
+
+
+  imageTwo:"",
+
+
+  logo:"",
+
+
+
+
+  missionTitle:"",
+
+
+  missionLink:"",
+
+
+
+  visionTitle:"",
+
+
+  visionLink:"",
+
+
+
+
+  buttonText:
+    "View Our Program",
+
+
+  buttonLink:"",
+
+
+
+
+  isActive:true,
+
+
 };
 
+
+
+
+
+
+
+
+
 export default function AboutForm({
-  initialData = null,
+
+
+  initialData=null,
+
+
   onSuccess,
+
+
   onDataChange,
-}: AboutFormProps) {
-  const [formData, setFormData] =
-    useState<AboutFormData>(
-      initialData
-        ? {
-            tagline: initialData.tagline || "",
-            title: initialData.title || "",
-            highlightText:
-              initialData.highlightText || "",
 
-            descriptionOne:
-              initialData.descriptionOne || "",
-            descriptionTwo:
-              initialData.descriptionTwo || "",
+}:AboutFormProps){
 
-            imageOne: initialData.imageOne || "",
-            imageTwo: initialData.imageTwo || "",
-            logo: initialData.logo || "",
 
-            missionTitle:
-              initialData.missionTitle || "",
-            missionLink:
-              initialData.missionLink || "",
 
-            visionTitle:
-              initialData.visionTitle || "",
-            visionLink:
-              initialData.visionLink || "",
 
-            buttonText:
-              initialData.buttonText ||
-              "View Our Program",
-            buttonLink:
-              initialData.buttonLink || "",
 
-            isActive:
-              initialData.isActive ?? true,
-          }
-        : defaultFormData
+
+
+  const [
+    formData,
+    setFormData
+  ] = useState<AboutFormData>(
+
+
+
+    initialData
+
+    ?
+
+    {
+
+
+      tagline:
+        initialData.tagline || "",
+
+
+
+      title:
+        initialData.title || "",
+
+
+
+      highlightText:
+        initialData.highlightText || "",
+
+
+
+
+
+      descriptionOne:
+        initialData.descriptionOne || "",
+
+
+
+      descriptionTwo:
+        initialData.descriptionTwo || "",
+
+
+
+
+
+      imageOne:
+        initialData.imageOne || "",
+
+
+
+      imageTwo:
+        initialData.imageTwo || "",
+
+
+
+      logo:
+        initialData.logo || "",
+
+
+
+
+
+
+      missionTitle:
+        initialData.missionTitle || "",
+
+
+
+      missionLink:
+        initialData.missionLink || "",
+
+
+
+
+
+
+      visionTitle:
+        initialData.visionTitle || "",
+
+
+
+      visionLink:
+        initialData.visionLink || "",
+
+
+
+
+
+      buttonText:
+        initialData.buttonText ||
+        "View Our Program",
+
+
+
+      buttonLink:
+        initialData.buttonLink || "",
+
+
+
+
+
+      isActive:
+        initialData.isActive ?? true,
+
+
+
+    }
+
+
+    :
+
+    defaultFormData
+
+
+  );
+
+
+
+
+
+
+
+
+
+  const [
+    saving,
+    setSaving
+  ] = useState(false);
+
+
+
+
+
+
+  const [
+    uploading,
+    setUploading
+  ] = useState<
+
+    | "imageOne"
+
+    | "imageTwo"
+
+    | "logo"
+
+    | null
+
+  >(null);
+
+
+
+
+
+
+
+
+
+  // LIVE PREVIEW DATA
+
+
+
+  useEffect(()=>{
+
+
+    onDataChange?.(
+      formData
     );
 
-  const [saving, setSaving] =
-    useState(false);
 
-  const [uploading, setUploading] =
-    useState<
-      "imageOne" |
-      "imageTwo" |
-      "logo" |
-      null
-    >(null);
+  },[
+    formData,
+    onDataChange
+  ]);
+    // ===============================
+  // HANDLE INPUT CHANGE
+  // ===============================
 
-  // =========================================
-  // SEND FORM DATA TO LIVE PREVIEW
-  // =========================================
-
-  useEffect(() => {
-    onDataChange?.(formData);
-  }, [formData, onDataChange]);
-
-  // =========================================
-  // HANDLE INPUT
-  // =========================================
 
   const handleChange = (
-    event: ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement
-    >
+    event:
+      ChangeEvent<
+        HTMLInputElement |
+        HTMLTextAreaElement
+      >
   ) => {
-    const { name, value } =
-      event.target;
 
-    setFormData((previous) => ({
+
+    const {
+      name,
+      value
+    } = event.target;
+
+
+
+    setFormData((previous)=>({
+
       ...previous,
-      [name]: value,
+
+      [name]:value,
+
     }));
+
+
   };
 
-  // =========================================
-  // UPLOAD IMAGE
-  // =========================================
+
+
+
+
+
+
+
+  // ===============================
+  // IMAGE UPLOAD
+  // ===============================
+
 
   const handleImageUpload = async (
-    event: ChangeEvent<HTMLInputElement>,
+
+    event:
+      ChangeEvent<HTMLInputElement>,
+
+
     field:
       | "imageOne"
       | "imageTwo"
       | "logo"
+
   ) => {
+
+
+
     const file =
       event.target.files?.[0];
 
-    if (!file) {
+
+
+    if(!file){
+
       return;
+
     }
 
-    if (!file.type.startsWith("image/")) {
+
+
+
+
+
+
+    if(!file.type.startsWith("image/")){
+
+
       toast.error(
         "Please select a valid image file."
       );
 
-      event.target.value = "";
+
+      event.target.value="";
+
 
       return;
+
     }
 
-    if (file.size > 5 * 1024 * 1024) {
+
+
+
+
+
+
+    if(file.size > 5 * 1024 * 1024){
+
+
       toast.error(
         "Image size must be less than 5MB."
       );
 
-      event.target.value = "";
+
+      event.target.value="";
+
 
       return;
+
     }
 
-    try {
+
+
+
+
+
+
+    try{
+
+
       setUploading(field);
 
-      const uploadData = new FormData();
 
-      uploadData.append("file", file);
-      uploadData.append("type", "image");
 
-      const response = await fetch(
-        "/api/upload",
-        {
-          method: "POST",
-          body: uploadData,
-        }
+
+
+      const uploadData =
+        new FormData();
+
+
+
+
+      uploadData.append(
+        "file",
+        file
       );
+
+
+
+      uploadData.append(
+        "type",
+        "image"
+      );
+
+
+
+
+
+
+
+      const response =
+        await fetch(
+          "/api/upload",
+          {
+            method:"POST",
+            body:uploadData,
+          }
+        );
+
+
+
+
+
+
 
       const data =
         await response.json();
 
-      if (!response.ok || !data.success) {
+
+
+
+
+
+
+      if(
+        !response.ok ||
+        !data.success
+      ){
+
         throw new Error(
           data.message ||
-            "Image upload failed."
+          "Image upload failed."
         );
+
+
       }
 
-      setFormData((previous) => ({
+
+
+
+
+
+
+      setFormData((previous)=>({
+
         ...previous,
-        [field]: data.url,
+
+        [field]:
+          data.url,
+
       }));
+
+
+
+
+
 
       toast.success(
         "Image uploaded successfully."
       );
-    } catch (error) {
+
+
+
+
+
+    }
+
+
+    catch(error){
+
+
       console.error(
         "ABOUT IMAGE UPLOAD ERROR:",
         error
       );
 
+
+
       toast.error(
+
         error instanceof Error
-          ? error.message
-          : "Image upload failed."
+
+        ?
+
+        error.message
+
+        :
+
+        "Image upload failed."
+
       );
-    } finally {
+
+
+
+    }
+
+
+    finally{
+
+
       setUploading(null);
 
-      event.target.value = "";
+
+      event.target.value="";
+
+
     }
+
+
+
   };
 
-  // =========================================
+
+
+
+
+
+
+
+
+  // ===============================
   // REMOVE IMAGE
-  // =========================================
+  // ===============================
+
 
   const removeImage = (
+
     field:
       | "imageOne"
       | "imageTwo"
       | "logo"
-  ) => {
-    setFormData((previous) => ({
+
+  )=>{
+
+
+    setFormData((previous)=>({
+
+
       ...previous,
-      [field]: "",
+
+
+      [field]:"",
+
+
     }));
+
+
   };
 
-  // =========================================
-  // SUBMIT
-  // =========================================
+
+
+
+
+
+
+
+
+  // ===============================
+  // SUBMIT FORM
+  // ===============================
+
 
   const handleSubmit = async (
-    event: FormEvent<HTMLFormElement>
-  ) => {
+
+    event:
+      FormEvent<HTMLFormElement>
+
+  )=>{
+
+
     event.preventDefault();
 
-    if (!formData.title.trim()) {
+
+
+
+
+
+
+    if(!formData.title.trim()){
+
+
       toast.error(
         "Please enter the About title."
       );
 
+
       return;
+
     }
 
-    if (!formData.highlightText.trim()) {
+
+
+
+
+
+
+    if(!formData.highlightText.trim()){
+
+
       toast.error(
         "Please enter the highlight text."
       );
 
+
       return;
+
+
     }
 
-    if (!formData.descriptionOne.trim()) {
+
+
+
+
+
+
+    if(!formData.descriptionOne.trim()){
+
+
       toast.error(
         "Please enter Description 1."
       );
 
+
       return;
+
+
     }
 
-    if (!formData.descriptionTwo.trim()) {
+
+
+
+
+
+
+    if(!formData.descriptionTwo.trim()){
+
+
       toast.error(
         "Please enter Description 2."
       );
 
+
       return;
+
+
     }
 
-    if (!formData.imageOne) {
+
+
+
+
+
+
+    if(!formData.imageOne){
+
+
       toast.error(
         "Please upload Left Image 1."
       );
 
+
       return;
+
+
     }
 
-    if (!formData.imageTwo) {
+
+
+
+
+
+
+    if(!formData.imageTwo){
+
+
       toast.error(
         "Please upload Left Image 2."
       );
 
+
       return;
+
+
     }
 
-    if (!formData.logo) {
+
+
+
+
+
+
+    if(!formData.logo){
+
+
       toast.error(
         "Please upload the UAMC logo."
       );
 
+
       return;
+
+
     }
 
-    try {
+
+
+
+
+
+
+    try{
+
+
       setSaving(true);
 
+
+
+
+
       const isEdit =
-        Boolean(initialData?._id);
+        Boolean(
+          initialData?._id
+        );
 
-      const response = await fetch(
-        "/api/about",
-        {
-          method: isEdit
-            ? "PUT"
-            : "POST",
 
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
 
-          body: JSON.stringify(
-            formData
-          ),
-        }
-      );
+
+
+
+      const response =
+        await fetch(
+          "/api/about",
+          {
+
+            method:
+              isEdit
+              ?
+              "PUT"
+              :
+              "POST",
+
+
+
+            headers:{
+
+              "Content-Type":
+                "application/json",
+
+            },
+
+
+
+            body:
+              JSON.stringify(
+                formData
+              ),
+
+
+          }
+        );
+
+
+
+
+
+
 
       const data =
         await response.json();
 
-      if (!response.ok || !data.success) {
+
+
+
+
+
+
+      if(
+        !response.ok ||
+        !data.success
+      ){
+
+
         throw new Error(
+
           data.message ||
-            "Failed to save About section."
+
+          "Failed to save About section."
+
         );
+
+
       }
+
+
+
+
+
+
 
       toast.success(
+
         isEdit
-          ? "About section updated successfully."
-          : "About section created successfully."
+
+        ?
+
+        "About section updated successfully."
+
+        :
+
+        "About section created successfully."
+
       );
 
-      if (onSuccess) {
-        onSuccess(data.data);
-      }
-    } catch (error) {
+
+
+
+
+
+
+
+      onSuccess?.(
+        data.data
+      );
+
+
+
+
+
+
+    }
+
+
+    catch(error){
+
+
       console.error(
         "SAVE ABOUT ERROR:",
         error
       );
 
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Failed to save About section."
-      );
-    } finally {
-      setSaving(false);
-    }
-  };
 
-  // =========================================
-  // IMAGE UPLOAD FIELD
-  // =========================================
+
+      toast.error(
+
+        error instanceof Error
+
+        ?
+
+        error.message
+
+        :
+
+        "Failed to save About section."
+
+      );
+
+
+
+    }
+
+
+    finally{
+
+
+      setSaving(false);
+
+
+    }
+
+
+
+  };
+    // ===============================
+  // IMAGE UPLOAD COMPONENT
+  // ===============================
+
 
   const renderImageUpload = (
+
     field:
       | "imageOne"
       | "imageTwo"
       | "logo",
-    label: string,
-    description: string
-  ) => {
+
+
+    label:string,
+
+
+    description:string
+
+  )=>{
+
+
     const imageUrl =
       formData[field];
+
+
 
     const isUploading =
       uploading === field;
 
+
+
+
+
     return (
-      <div className="space-y-3">
+
+      <div
+        className="
+          space-y-3
+        "
+      >
+
+
+
         <div>
-          <label className="block text-sm font-semibold text-slate-700">
-            {label}
-          </label>
 
-          <p className="mt-1 text-xs text-slate-500">
-            {description}
-          </p>
-        </div>
 
-        {imageUrl ? (
-          <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
-            <img
-              src={imageUrl}
-              alt={label}
-              className={`w-full object-cover ${
-                field === "logo"
-                  ? "h-40 object-contain p-5"
-                  : "h-52"
-              }`}
-            />
-
-            <button
-              type="button"
-              onClick={() =>
-                removeImage(field)
-              }
-              className="
-                absolute
-                right-3
-                top-3
-                inline-flex
-                h-9
-                w-9
-                items-center
-                justify-center
-                rounded-full
-                bg-white
-                text-red-500
-                shadow-md
-                transition
-                hover:bg-red-50
-              "
-              title="Remove image"
-            >
-              <X size={17} />
-            </button>
-          </div>
-        ) : (
           <label
             className="
-              flex
-              min-h-[180px]
-              cursor-pointer
-              flex-col
-              items-center
-              justify-center
-              rounded-2xl
-              border-2
-              border-dashed
-              border-slate-300
-              bg-slate-50
-              px-5
-              text-center
-              transition
-              hover:border-[#008B45]
-              hover:bg-emerald-50/40
+              block
+
+              text-sm
+
+              font-semibold
+
+              text-slate-200
             "
           >
-            {isUploading ? (
-              <>
-                <Loader2
-                  size={28}
-                  className="animate-spin text-[#008B45]"
-                />
 
-                <p className="mt-3 text-sm font-medium text-slate-600">
-                  Uploading...
-                </p>
-              </>
-            ) : (
-              <>
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50">
-                  <Upload
-                    size={22}
-                    className="text-[#008B45]"
-                  />
-                </div>
+            {label}
 
-                <p className="mt-3 text-sm font-semibold text-slate-700">
-                  Click to upload
-                </p>
-
-                <p className="mt-1 text-xs text-slate-500">
-                  PNG, JPG or WEBP up to 5MB
-                </p>
-              </>
-            )}
-
-            <input
-              type="file"
-              accept="image/png,image/jpeg,image/webp"
-              className="hidden"
-              disabled={isUploading}
-              onChange={(event) =>
-                handleImageUpload(
-                  event,
-                  field
-                )
-              }
-            />
           </label>
-        )}
-      </div>
-    );
-  };
 
-  return (
-    <form
-      onSubmit={handleSubmit}
-      className="w-full space-y-6"
-    >
-      {/* =========================================
-          BASIC INFORMATION
-      ========================================= */}
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold text-slate-800">
-            About Information
-          </h2>
 
-          <p className="mt-1 text-sm text-slate-500">
-            Manage the main About UAMC content.
+          <p
+            className="
+              mt-1
+
+              text-xs
+
+              text-slate-400
+            "
+          >
+
+            {description}
+
           </p>
+
+
         </div>
 
-        <div className="grid gap-5">
-          {/* TAGLINE */}
 
-          <div>
-            <label
-              htmlFor="tagline"
-              className="mb-2 block text-sm font-semibold text-slate-700"
+
+
+
+
+
+
+        {
+          imageUrl
+
+          ?
+
+          (
+
+            <div
+              className="
+                relative
+
+                overflow-hidden
+
+                rounded-2xl
+
+
+                border
+
+                border-white/10
+
+
+                bg-slate-950/60
+              "
             >
-              Small Tagline
+
+
+
+              <img
+
+                src={imageUrl}
+
+                alt={label}
+
+
+                className={`
+                  w-full
+
+                  object-cover
+
+
+                  ${
+                    field==="logo"
+
+                    ?
+
+                    "h-40 object-contain p-5"
+
+                    :
+
+                    "h-52"
+                  }
+
+                `}
+
+              />
+
+
+
+
+
+
+
+              <button
+
+                type="button"
+
+
+                onClick={()=>removeImage(field)}
+
+
+                className="
+                  absolute
+
+                  right-3
+
+                  top-3
+
+
+                  flex
+
+                  h-9
+
+                  w-9
+
+
+                  items-center
+
+                  justify-center
+
+
+                  rounded-full
+
+
+                  bg-red-500/20
+
+
+                  text-red-400
+
+
+                  backdrop-blur-md
+
+
+                  transition
+
+
+                  hover:bg-red-500/30
+                "
+
+              >
+
+                <X size={17}/>
+
+
+              </button>
+
+
+
+            </div>
+
+
+          )
+
+
+
+          :
+
+
+
+          (
+
+            <label
+
+              className="
+                flex
+
+                min-h-[190px]
+
+                cursor-pointer
+
+                flex-col
+
+                items-center
+
+                justify-center
+
+
+                rounded-2xl
+
+
+                border-2
+
+
+                border-dashed
+
+
+                border-white/20
+
+
+                bg-slate-950/60
+
+
+                px-5
+
+
+                text-center
+
+
+                transition
+
+
+                hover:border-emerald-400
+              "
+
+            >
+
+
+
+              {
+                isUploading
+
+                ?
+
+                (
+
+                  <>
+
+
+                    <Loader2
+
+                      size={30}
+
+                      className="
+                        animate-spin
+
+                        text-emerald-400
+                      "
+
+                    />
+
+
+
+                    <p
+                      className="
+                        mt-3
+
+                        text-sm
+
+                        font-semibold
+
+                        text-white
+                      "
+                    >
+
+                      Uploading...
+
+                    </p>
+
+
+
+                  </>
+
+
+                )
+
+
+
+                :
+
+
+                (
+
+                  <>
+
+
+                    <div
+
+                      className="
+                        flex
+
+                        h-14
+
+                        w-14
+
+
+                        items-center
+
+                        justify-center
+
+
+                        rounded-2xl
+
+
+                        bg-emerald-400/10
+
+
+                        text-emerald-400
+                      "
+
+                    >
+
+                      <Upload size={25}/>
+
+
+                    </div>
+
+
+
+
+
+                    <p
+
+                      className="
+                        mt-4
+
+                        text-sm
+
+                        font-semibold
+
+                        text-white
+                      "
+
+                    >
+
+                      Click to upload
+
+                    </p>
+
+
+
+
+                    <p
+
+                      className="
+                        mt-1
+
+                        text-xs
+
+                        text-slate-400
+                      "
+
+                    >
+
+                      PNG, JPG or WEBP up to 5MB
+
+                    </p>
+
+
+
+                  </>
+
+
+                )
+
+              }
+
+
+
+
+
+              <input
+
+                type="file"
+
+                accept="
+                  image/png,
+                  image/jpeg,
+                  image/webp
+                "
+
+                className="hidden"
+
+
+                disabled={isUploading}
+
+
+                onChange={(event)=>
+
+                  handleImageUpload(
+
+                    event,
+
+                    field
+
+                  )
+
+                }
+
+              />
+
+
+
             </label>
 
+
+          )
+
+        }
+
+
+
+
+      </div>
+
+    );
+
+
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+  return (
+
+    <form
+
+      onSubmit={handleSubmit}
+
+
+      className="
+        w-full
+
+        space-y-6
+      "
+
+    >
+
+
+
+
+
+
+
+
+      {/* ===============================
+          BASIC INFORMATION
+      =============================== */}
+
+
+
+
+      <div
+
+        className="
+          rounded-3xl
+
+
+          border
+
+
+          border-white/10
+
+
+          bg-slate-900/70
+
+
+          p-5
+
+
+          shadow-xl
+
+
+          backdrop-blur-xl
+
+
+          sm:p-6
+        "
+
+      >
+
+
+
+        <div
+          className="
+            mb-6
+          "
+        >
+
+
+          <h2
+            className="
+              text-xl
+
+              font-bold
+
+              text-white
+            "
+          >
+
+            About Information
+
+          </h2>
+
+
+
+          <p
+            className="
+              mt-2
+
+              text-sm
+
+              text-slate-400
+            "
+          >
+
+            Manage the main About UAMC content.
+
+          </p>
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <div
+          className="
+            grid
+
+            gap-5
+          "
+        >
+
+
+
+
+
+
+
+          {/* TAGLINE */}
+
+
+
+          <div>
+
+
+            <label
+
+              className="
+                mb-2
+
+                block
+
+                text-sm
+
+                font-semibold
+
+                text-slate-200
+              "
+
+            >
+
+              Small Tagline
+
+            </label>
+
+
+
+
             <input
-              id="tagline"
+
               name="tagline"
-              type="text"
+
+
               value={formData.tagline}
+
+
               onChange={handleChange}
+
+
               placeholder="knowledge meets innovation"
+
+
+
               className="
                 h-12
+
                 w-full
+
+
                 rounded-xl
+
+
                 border
-                border-slate-200
-                bg-white
+
+
+                border-white/10
+
+
+                bg-slate-950/70
+
+
                 px-4
+
+
                 text-sm
-                text-slate-700
+
+
+                text-white
+
+
                 outline-none
-                transition
-                placeholder:text-slate-400
-                focus:border-[#008B45]
+
+
+                placeholder:text-slate-500
+
+
+                focus:border-emerald-400
+
+
                 focus:ring-2
-                focus:ring-[#008B45]/10
+
+
+                focus:ring-emerald-400/20
               "
+
             />
+
+
           </div>
+
+
+
+
+
+
+
 
           {/* TITLE + HIGHLIGHT */}
 
-          <div className="grid gap-5 sm:grid-cols-2">
-            <div>
-              <label
-                htmlFor="title"
-                className="mb-2 block text-sm font-semibold text-slate-700"
-              >
-                Main Title
-              </label>
 
-              <input
-                id="title"
-                name="title"
-                type="text"
-                value={formData.title}
-                onChange={handleChange}
-                placeholder="About"
-                className="
-                  h-12
-                  w-full
-                  rounded-xl
-                  border
-                  border-slate-200
-                  px-4
-                  text-sm
-                  outline-none
-                  transition
-                  placeholder:text-slate-400
-                  focus:border-[#008B45]
-                  focus:ring-2
-                  focus:ring-[#008B45]/10
-                "
-              />
-            </div>
 
-            <div>
-              <label
-                htmlFor="highlightText"
-                className="mb-2 block text-sm font-semibold text-slate-700"
-              >
-                Highlight Text
-              </label>
+          <div
 
-              <input
-                id="highlightText"
-                name="highlightText"
-                type="text"
-                value={
-                  formData.highlightText
-                }
-                onChange={handleChange}
-                placeholder="UAMC"
-                className="
-                  h-12
-                  w-full
-                  rounded-xl
-                  border
-                  border-slate-200
-                  px-4
-                  text-sm
-                  outline-none
-                  transition
-                  placeholder:text-slate-400
-                  focus:border-[#008B45]
-                  focus:ring-2
-                  focus:ring-[#008B45]/10
-                "
-              />
-            </div>
+            className="
+              grid
+
+              gap-5
+
+
+              sm:grid-cols-2
+            "
+
+          >
+
+
+            <input
+
+              name="title"
+
+
+              value={formData.title}
+
+
+              onChange={handleChange}
+
+
+              placeholder="Main Title"
+
+
+              className="
+                h-12
+
+                rounded-xl
+
+
+                border
+
+
+                border-white/10
+
+
+                bg-slate-950/70
+
+
+                px-4
+
+
+                text-sm
+
+
+                text-white
+
+
+                outline-none
+
+
+                focus:border-emerald-400
+              "
+
+            />
+
+
+
+
+
+            <input
+
+              name="highlightText"
+
+
+              value={formData.highlightText}
+
+
+              onChange={handleChange}
+
+
+              placeholder="Highlight Text"
+
+
+              className="
+                h-12
+
+                rounded-xl
+
+
+                border
+
+
+                border-white/10
+
+
+                bg-slate-950/70
+
+
+                px-4
+
+
+                text-sm
+
+
+                text-white
+
+
+                outline-none
+
+
+                focus:border-emerald-400
+              "
+
+            />
+
+
+
           </div>
+
+
+
+
+
+
 
           {/* DESCRIPTION 1 */}
 
-          <div>
-            <label
-              htmlFor="descriptionOne"
-              className="mb-2 block text-sm font-semibold text-slate-700"
-            >
-              Description 1
-            </label>
 
-            <textarea
-              id="descriptionOne"
-              name="descriptionOne"
-              value={
-                formData.descriptionOne
-              }
-              onChange={handleChange}
-              rows={5}
-              placeholder="Enter the first About UAMC description..."
-              className="
-                w-full
-                resize-y
-                rounded-xl
-                border
-                border-slate-200
-                px-4
-                py-3
-                text-sm
-                leading-6
-                outline-none
-                transition
-                placeholder:text-slate-400
-                focus:border-[#008B45]
-                focus:ring-2
-                focus:ring-[#008B45]/10
-              "
-            />
-          </div>
+
+          <textarea
+
+
+            name="descriptionOne"
+
+
+            value={formData.descriptionOne}
+
+
+            onChange={handleChange}
+
+
+            rows={5}
+
+
+            placeholder="Enter Description 1"
+
+
+            className="
+              w-full
+
+              resize-y
+
+
+              rounded-xl
+
+
+              border
+
+
+              border-white/10
+
+
+              bg-slate-950/70
+
+
+              px-4
+
+
+              py-3
+
+
+              text-sm
+
+
+              text-white
+
+
+              outline-none
+
+
+              focus:border-emerald-400
+            "
+
+          />
+
+
+
+
+
+
 
           {/* DESCRIPTION 2 */}
 
-          <div>
-            <label
-              htmlFor="descriptionTwo"
-              className="mb-2 block text-sm font-semibold text-slate-700"
-            >
-              Description 2
-            </label>
 
-            <textarea
-              id="descriptionTwo"
-              name="descriptionTwo"
-              value={
-                formData.descriptionTwo
-              }
-              onChange={handleChange}
-              rows={5}
-              placeholder="Enter the second About UAMC description..."
-              className="
-                w-full
-                resize-y
-                rounded-xl
-                border
-                border-slate-200
-                px-4
-                py-3
-                text-sm
-                leading-6
-                outline-none
-                transition
-                placeholder:text-slate-400
-                focus:border-[#008B45]
-                focus:ring-2
-                focus:ring-[#008B45]/10
-              "
-            />
-          </div>
-        </div>
-      </div>
 
-      {/* =========================================
-          IMAGES
-      ========================================= */}
+          <textarea
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold text-slate-800">
-            Images & Logo
-          </h2>
 
-          <p className="mt-1 text-sm text-slate-500">
-            Upload the two About images and UAMC logo.
-          </p>
-        </div>
+            name="descriptionTwo"
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          {renderImageUpload(
-            "imageOne",
-            "Left Image 1",
-            "Main image displayed on the left side."
-          )}
 
-          {renderImageUpload(
-            "imageTwo",
-            "Left Image 2",
-            "Second image displayed beside the first image."
-          )}
-        </div>
+            value={formData.descriptionTwo}
 
-        <div className="mt-6 max-w-xl">
-          {renderImageUpload(
-            "logo",
-            "UAMC Logo",
-            "Logo displayed over the About images."
-          )}
-        </div>
-      </div>
 
-      {/* =========================================
-          MISSION & VISION
-      ========================================= */}
+            onChange={handleChange}
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold text-slate-800">
-            Mission & Vision
-          </h2>
 
-          <p className="mt-1 text-sm text-slate-500">
-            Configure the Mission and Vision cards.
-          </p>
-        </div>
+            rows={5}
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          {/* MISSION */}
 
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-            <h3 className="mb-4 text-base font-semibold text-slate-800">
-              College Mission Statement
-            </h3>
+            placeholder="Enter Description 2"
 
-            <div className="space-y-4">
-              <div>
-                <label
-                  htmlFor="missionTitle"
-                  className="mb-2 block text-sm font-semibold text-slate-700"
-                >
-                  Mission Title
-                </label>
 
-                <input
-                  id="missionTitle"
-                  name="missionTitle"
-                  type="text"
-                  value={
-                    formData.missionTitle
-                  }
-                  onChange={handleChange}
-                  placeholder="College Mission Statement"
-                  className="
-                    h-12
-                    w-full
-                    rounded-xl
-                    border
-                    border-slate-200
-                    bg-white
-                    px-4
-                    text-sm
-                    outline-none
-                    transition
-                    focus:border-[#008B45]
-                    focus:ring-2
-                    focus:ring-[#008B45]/10
-                  "
-                />
-              </div>
+            className="
+              w-full
 
-              <div>
-                <label
-                  htmlFor="missionLink"
-                  className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-700"
-                >
-                  <LinkIcon size={15} />
-                  Mission Link
-                </label>
+              resize-y
 
-                <input
-                  id="missionLink"
-                  name="missionLink"
-                  type="text"
-                  value={
-                    formData.missionLink
-                  }
-                  onChange={handleChange}
-                  placeholder="/about/mission"
-                  className="
-                    h-12
-                    w-full
-                    rounded-xl
-                    border
-                    border-slate-200
-                    bg-white
-                    px-4
-                    text-sm
-                    outline-none
-                    transition
-                    focus:border-[#008B45]
-                    focus:ring-2
-                    focus:ring-[#008B45]/10
-                  "
-                />
-              </div>
-            </div>
-          </div>
 
-          {/* VISION */}
+              rounded-xl
 
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-            <h3 className="mb-4 text-base font-semibold text-slate-800">
-              College Vision Achievement
-            </h3>
 
-            <div className="space-y-4">
-              <div>
-                <label
-                  htmlFor="visionTitle"
-                  className="mb-2 block text-sm font-semibold text-slate-700"
-                >
-                  Vision Title
-                </label>
+              border
 
-                <input
-                  id="visionTitle"
-                  name="visionTitle"
-                  type="text"
-                  value={
-                    formData.visionTitle
-                  }
-                  onChange={handleChange}
-                  placeholder="College Vision Achievement"
-                  className="
-                    h-12
-                    w-full
-                    rounded-xl
-                    border
-                    border-slate-200
-                    bg-white
-                    px-4
-                    text-sm
-                    outline-none
-                    transition
-                    focus:border-[#008B45]
-                    focus:ring-2
-                    focus:ring-[#008B45]/10
-                  "
-                />
-              </div>
 
-              <div>
-                <label
-                  htmlFor="visionLink"
-                  className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-700"
-                >
-                  <LinkIcon size={15} />
-                  Vision Link
-                </label>
+              border-white/10
 
-                <input
-                  id="visionLink"
-                  name="visionLink"
-                  type="text"
-                  value={
-                    formData.visionLink
-                  }
-                  onChange={handleChange}
-                  placeholder="/about/vision"
-                  className="
-                    h-12
-                    w-full
-                    rounded-xl
-                    border
-                    border-slate-200
-                    bg-white
-                    px-4
-                    text-sm
-                    outline-none
-                    transition
-                    focus:border-[#008B45]
-                    focus:ring-2
-                    focus:ring-[#008B45]/10
-                  "
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* =========================================
-          BUTTON
-      ========================================= */}
+              bg-slate-950/70
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold text-slate-800">
-            Program Button
-          </h2>
 
-          <p className="mt-1 text-sm text-slate-500">
-            Configure the View Our Program button.
-          </p>
-        </div>
+              px-4
 
-        <div className="grid gap-5 sm:grid-cols-2">
-          <div>
-            <label
-              htmlFor="buttonText"
-              className="mb-2 block text-sm font-semibold text-slate-700"
-            >
-              Button Text
-            </label>
 
-            <input
-              id="buttonText"
-              name="buttonText"
-              type="text"
-              value={
-                formData.buttonText
-              }
-              onChange={handleChange}
-              placeholder="View Our Program"
-              className="
-                h-12
-                w-full
-                rounded-xl
-                border
-                border-slate-200
-                px-4
-                text-sm
-                outline-none
-                transition
-                focus:border-[#008B45]
-                focus:ring-2
-                focus:ring-[#008B45]/10
-              "
-            />
-          </div>
+              py-3
 
-          <div>
-            <label
-              htmlFor="buttonLink"
-              className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-700"
-            >
-              <LinkIcon size={15} />
-              Button Link
-            </label>
 
-            <input
-              id="buttonLink"
-              name="buttonLink"
-              type="text"
-              value={
-                formData.buttonLink
-              }
-              onChange={handleChange}
-              placeholder="/admission"
-              className="
-                h-12
-                w-full
-                rounded-xl
-                border
-                border-slate-200
-                px-4
-                text-sm
-                outline-none
-                transition
-                focus:border-[#008B45]
-                focus:ring-2
-                focus:ring-[#008B45]/10
-              "
-            />
-          </div>
-        </div>
-      </div>
+              text-sm
 
-      {/* =========================================
-          PUBLISH STATUS
-      ========================================= */}
 
-      <div className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-6">
-        <div>
-          <h2 className="text-base font-semibold text-slate-800">
-            Publish About Section
-          </h2>
+              text-white
 
-          <p className="mt-1 text-sm text-slate-500">
-            Make this About section visible on
-            the client website.
-          </p>
-        </div>
 
-        <button
-          type="button"
-          onClick={() =>
-            setFormData((previous) => ({
-              ...previous,
-              isActive:
-                !previous.isActive,
-            }))
-          }
-          className={`relative h-7 w-12 shrink-0 rounded-full transition ${
-            formData.isActive
-              ? "bg-[#008B45]"
-              : "bg-slate-300"
-          }`}
-          aria-label="Toggle publish status"
-        >
-          <span
-            className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow-sm transition-all ${
-              formData.isActive
-                ? "left-6"
-                : "left-1"
-            }`}
+              outline-none
+
+
+              focus:border-emerald-400
+            "
+
           />
-        </button>
+
+
+
+
+
+        </div>
+
+
       </div>
+            {/* ===============================
+          IMAGES SECTION
+      =============================== */}
 
-      {/* =========================================
-          SAVE BUTTON
-      ========================================= */}
 
-      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-        <button
-          type="submit"
-          disabled={
-            saving ||
-            uploading !== null
-          }
+
+      <div
+        className="
+          rounded-3xl
+
+          border
+
+          border-white/10
+
+
+          bg-slate-900/70
+
+
+          p-5
+
+
+          shadow-xl
+
+
+          backdrop-blur-xl
+
+
+          sm:p-6
+        "
+      >
+
+
+        <div
           className="
-            inline-flex
-            min-h-12
-            items-center
-            justify-center
-            gap-2
-            rounded-xl
-            bg-[#008B45]
-            px-7
-            text-sm
-            font-semibold
-            text-white
-            shadow-sm
-            transition
-            hover:bg-[#00763B]
-            hover:shadow-md
-            disabled:cursor-not-allowed
-            disabled:opacity-60
-            sm:text-base
+            mb-6
           "
         >
-          {saving ? (
+
+          <h2
+            className="
+              text-xl
+
+              font-bold
+
+              text-white
+            "
+          >
+
+            About Images
+
+          </h2>
+
+
+
+          <p
+            className="
+              mt-2
+
+              text-sm
+
+              text-slate-400
+            "
+          >
+
+            Upload images used in the About section.
+
+          </p>
+
+
+        </div>
+
+
+
+
+
+
+        <div
+          className="
+            grid
+
+            gap-6
+
+
+            lg:grid-cols-3
+          "
+        >
+
+
+
+          {renderImageUpload(
+
+            "imageOne",
+
+            "Image One",
+
+            "Main About image"
+
+          )}
+
+
+
+
+          {renderImageUpload(
+
+            "imageTwo",
+
+            "Image Two",
+
+            "Secondary About image"
+
+          )}
+
+
+
+
+
+          {renderImageUpload(
+
+            "logo",
+
+            "UAMC Logo",
+
+            "Upload organization logo"
+
+          )}
+
+
+
+
+
+        </div>
+
+
+      </div>
+
+
+
+
+
+
+
+
+
+      {/* ===============================
+          MISSION & VISION
+      =============================== */}
+
+
+
+
+      <div
+        className="
+          grid
+
+          gap-6
+
+
+          lg:grid-cols-2
+        "
+      >
+
+
+
+
+
+
+
+
+        {/* MISSION */}
+
+
+
+        <div
+          className="
+            rounded-3xl
+
+
+            border
+
+
+            border-white/10
+
+
+            bg-slate-900/70
+
+
+            p-5
+
+
+            shadow-xl
+
+
+            backdrop-blur-xl
+          "
+        >
+
+
+
+          <h2
+            className="
+              mb-5
+
+              text-xl
+
+              font-bold
+
+              text-white
+            "
+          >
+
+            Mission
+
+          </h2>
+
+
+
+
+
+
+
+          <div
+            className="
+              space-y-4
+            "
+          >
+
+
+
+            <input
+
+              name="missionTitle"
+
+
+              value={
+                formData.missionTitle
+              }
+
+
+              onChange={handleChange}
+
+
+              placeholder="Mission Title"
+
+
+              className="
+                h-12
+
+                w-full
+
+
+                rounded-xl
+
+
+                border
+
+
+                border-white/10
+
+
+                bg-slate-950/70
+
+
+                px-4
+
+
+                text-sm
+
+
+                text-white
+
+
+                outline-none
+
+
+                focus:border-emerald-400
+              "
+
+            />
+
+
+
+
+
+            <div
+              className="
+                relative
+              "
+            >
+
+
+
+              <LinkIcon
+
+                size={17}
+
+                className="
+                  absolute
+
+                  left-4
+
+                  top-1/2
+
+                  -translate-y-1/2
+
+                  text-slate-500
+                "
+
+              />
+
+
+
+              <input
+
+                name="missionLink"
+
+
+                value={
+                  formData.missionLink
+                }
+
+
+                onChange={handleChange}
+
+
+                placeholder="Mission Link"
+
+
+                className="
+                  h-12
+
+                  w-full
+
+
+                  rounded-xl
+
+
+                  border
+
+
+                  border-white/10
+
+
+                  bg-slate-950/70
+
+
+                  pl-11
+
+
+                  pr-4
+
+
+                  text-sm
+
+
+                  text-white
+
+
+                  outline-none
+
+
+                  focus:border-emerald-400
+                "
+
+              />
+
+
+
+            </div>
+
+
+
+          </div>
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+        {/* VISION */}
+
+
+
+        <div
+          className="
+            rounded-3xl
+
+
+            border
+
+
+            border-white/10
+
+
+            bg-slate-900/70
+
+
+            p-5
+
+
+            shadow-xl
+
+
+            backdrop-blur-xl
+          "
+        >
+
+
+
+          <h2
+            className="
+              mb-5
+
+              text-xl
+
+              font-bold
+
+              text-white
+            "
+          >
+
+            Vision
+
+          </h2>
+
+
+
+
+
+
+
+          <div
+            className="
+              space-y-4
+            "
+          >
+
+
+
+            <input
+
+              name="visionTitle"
+
+
+              value={
+                formData.visionTitle
+              }
+
+
+              onChange={handleChange}
+
+
+              placeholder="Vision Title"
+
+
+              className="
+                h-12
+
+                w-full
+
+
+                rounded-xl
+
+
+                border
+
+
+                border-white/10
+
+
+                bg-slate-950/70
+
+
+                px-4
+
+
+                text-sm
+
+
+                text-white
+
+
+                outline-none
+
+
+                focus:border-emerald-400
+              "
+
+            />
+
+
+
+
+
+
+            <div
+              className="
+                relative
+              "
+            >
+
+
+              <LinkIcon
+
+                size={17}
+
+                className="
+                  absolute
+
+                  left-4
+
+                  top-1/2
+
+                  -translate-y-1/2
+
+                  text-slate-500
+                "
+
+              />
+
+
+
+
+              <input
+
+                name="visionLink"
+
+
+                value={
+                  formData.visionLink
+                }
+
+
+                onChange={handleChange}
+
+
+                placeholder="Vision Link"
+
+
+                className="
+                  h-12
+
+                  w-full
+
+
+                  rounded-xl
+
+
+                  border
+
+
+                  border-white/10
+
+
+                  bg-slate-950/70
+
+
+                  pl-11
+
+
+                  pr-4
+
+
+                  text-sm
+
+
+                  text-white
+
+
+                  outline-none
+
+
+                  focus:border-emerald-400
+                "
+
+              />
+
+
+
+            </div>
+
+
+
+
+          </div>
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+      </div>
+            {/* ===============================
+          BUTTON SETTINGS
+      =============================== */}
+
+
+
+      <div
+        className="
+          rounded-3xl
+
+          border
+
+          border-white/10
+
+
+          bg-slate-900/70
+
+
+          p-5
+
+
+          shadow-xl
+
+
+          backdrop-blur-xl
+
+
+          sm:p-6
+        "
+      >
+
+
+
+        <h2
+          className="
+            mb-5
+
+            text-xl
+
+            font-bold
+
+            text-white
+          "
+        >
+
+          Button Settings
+
+        </h2>
+
+
+
+
+
+
+
+        <div
+          className="
+            grid
+
+            gap-5
+
+
+            sm:grid-cols-2
+          "
+        >
+
+
+
+
+          <input
+
+            name="buttonText"
+
+
+            value={
+              formData.buttonText
+            }
+
+
+            onChange={handleChange}
+
+
+            placeholder="Button Text"
+
+
+            className="
+              h-12
+
+
+              rounded-xl
+
+
+              border
+
+
+              border-white/10
+
+
+              bg-slate-950/70
+
+
+              px-4
+
+
+              text-sm
+
+
+              text-white
+
+
+              outline-none
+
+
+              focus:border-emerald-400
+            "
+
+          />
+
+
+
+
+
+
+
+          <input
+
+            name="buttonLink"
+
+
+            value={
+              formData.buttonLink
+            }
+
+
+            onChange={handleChange}
+
+
+            placeholder="Button Link"
+
+
+            className="
+              h-12
+
+
+              rounded-xl
+
+
+              border
+
+
+              border-white/10
+
+
+              bg-slate-950/70
+
+
+              px-4
+
+
+              text-sm
+
+
+              text-white
+
+
+              outline-none
+
+
+              focus:border-emerald-400
+            "
+
+          />
+
+
+
+        </div>
+
+
+
+
+
+      </div>
+
+
+
+
+
+
+
+
+
+      {/* ===============================
+          STATUS
+      =============================== */}
+
+
+
+
+      <div
+        className="
+          flex
+
+          flex-col
+
+          gap-5
+
+
+          rounded-3xl
+
+
+          border
+
+
+          border-white/10
+
+
+          bg-slate-900/70
+
+
+          p-5
+
+
+          shadow-xl
+
+
+          backdrop-blur-xl
+
+
+          sm:flex-row
+
+
+          sm:items-center
+
+
+          sm:justify-between
+
+
+          sm:p-6
+        "
+      >
+
+
+
+
+
+        <div>
+
+
+          <h2
+            className="
+              text-lg
+
+              font-bold
+
+              text-white
+            "
+          >
+
+            Publish Status
+
+          </h2>
+
+
+
+          <p
+            className="
+              mt-1
+
+              text-sm
+
+              text-slate-400
+            "
+          >
+
+            Control whether this About section is visible.
+
+          </p>
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <button
+
+          type="button"
+
+
+          onClick={()=>
+
+
+            setFormData((previous)=>({
+
+
+              ...previous,
+
+
+              isActive:
+                !previous.isActive
+
+
+            }))
+
+
+          }
+
+
+          className={`
+            relative
+
+            h-8
+
+            w-16
+
+            rounded-full
+
+
+            transition
+
+
+            ${
+              formData.isActive
+
+              ?
+
+              "bg-emerald-500"
+
+              :
+
+              "bg-slate-700"
+
+            }
+          `}
+
+        >
+
+
+          <span
+
+            className={`
+              absolute
+
+              top-1
+
+              h-6
+
+              w-6
+
+              rounded-full
+
+              bg-white
+
+
+              transition
+
+
+              ${
+                formData.isActive
+
+                ?
+
+                "left-9"
+
+                :
+
+                "left-1"
+
+              }
+            `}
+
+          />
+
+
+        </button>
+
+
+
+
+
+      </div>
+
+
+
+
+
+
+
+
+
+      {/* ===============================
+          SAVE BUTTON
+      =============================== */}
+
+
+
+
+      <button
+
+        type="submit"
+
+
+        disabled={saving}
+
+
+        className="
+          inline-flex
+
+
+          w-full
+
+
+          items-center
+
+
+          justify-center
+
+
+          gap-3
+
+
+          rounded-2xl
+
+
+          bg-gradient-to-r
+
+
+          from-emerald-500
+
+
+          to-cyan-500
+
+
+          px-6
+
+
+          py-4
+
+
+          text-sm
+
+
+          font-bold
+
+
+          text-white
+
+
+          shadow-lg
+
+
+          shadow-emerald-500/20
+
+
+          transition
+
+
+          hover:scale-[1.01]
+
+
+          disabled:cursor-not-allowed
+
+
+          disabled:opacity-60
+        "
+
+      >
+
+
+
+        {
+          saving
+
+          ?
+
+          (
+
             <>
+
               <Loader2
-                size={18}
+
+                size={20}
+
                 className="animate-spin"
+
               />
 
               Saving...
-            </>
-          ) : (
-            <>
-              <Save size={18} />
 
-              {initialData
-                ? "Update About"
-                : "Create About"}
             </>
-          )}
-        </button>
-      </div>
+
+
+          )
+
+
+          :
+
+
+          (
+
+            <>
+
+              <Save
+
+                size={20}
+
+              />
+
+              Save About Section
+
+            </>
+
+
+          )
+
+        }
+
+
+
+
+      </button>
+
+
+
+
+
     </form>
+
   );
+
+
 }
