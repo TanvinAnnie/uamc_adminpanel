@@ -1,85 +1,381 @@
 import Link from "next/link";
-import { ArrowLeft, Plus } from "lucide-react";
+
+import {
+  ArrowLeft,
+  Plus,
+  Bell,
+} from "lucide-react";
+
 
 import NoticeTable from "@/components/dashboard/home/notices/NoticeTable";
 
+
+
 export default function NoticePage() {
+
   return (
-    <div className="space-y-8">
-      {/* =========================
-          HEADER
-      ========================= */}
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-800">
-            Notice Management
-          </h1>
+    <div
+      className="
+        space-y-8
+      "
+    >
 
-          <p className="mt-2 text-slate-500">
-            Manage homepage notices.
-          </p>
-        </div>
 
-        <div className="flex flex-col gap-3 sm:flex-row">
-          {/* Back */}
 
-          <Link
-            href="/dashboard"
+      {/* ================= HEADER ================= */}
+
+
+      <div
+        className="
+          flex
+
+          flex-col
+
+          gap-6
+
+
+          rounded-3xl
+
+
+          border
+
+          border-white/10
+
+
+          bg-slate-900/70
+
+
+          p-6
+
+
+          shadow-[0_25px_80px_rgba(0,0,0,0.35)]
+
+
+          backdrop-blur-xl
+
+
+
+          lg:flex-row
+
+          lg:items-center
+
+          lg:justify-between
+        "
+      >
+
+
+
+        {/* LEFT */}
+
+
+        <div
+          className="
+            flex
+
+            items-start
+
+            gap-4
+          "
+        >
+
+
+          <div
             className="
               flex
+
+              h-14
+
+              w-14
+
+              shrink-0
+
               items-center
+
               justify-center
-              gap-2
-              rounded-xl
+
+
+              rounded-2xl
+
+
               border
-              border-slate-300
-              px-5
-              py-3
-              font-medium
-              text-slate-700
-              transition
-              hover:bg-slate-100
+
+              border-cyan-400/20
+
+
+              bg-cyan-400/10
+
+
+              text-cyan-400
             "
           >
-            <ArrowLeft size={18} />
+
+            <Bell
+              size={28}
+            />
+
+
+          </div>
+
+
+
+
+
+          <div>
+
+            <h1
+              className="
+                text-2xl
+
+                font-bold
+
+                text-white
+
+
+                sm:text-3xl
+              "
+            >
+
+              Notice Management
+
+            </h1>
+
+
+            <p
+              className="
+                mt-2
+
+                text-sm
+
+                text-slate-400
+
+
+                sm:text-base
+              "
+            >
+
+              Manage homepage notices and announcements.
+
+            </p>
+
+
+          </div>
+
+
+        </div>
+
+
+
+
+
+
+
+        {/* ACTION BUTTONS */}
+
+
+        <div
+          className="
+            flex
+
+            flex-col
+
+            gap-3
+
+
+            sm:flex-row
+          "
+        >
+
+
+
+          {/* BACK */}
+
+
+          <Link
+
+            href="/dashboard"
+
+
+            className="
+              inline-flex
+
+              items-center
+
+              justify-center
+
+              gap-2
+
+
+              rounded-xl
+
+
+              border
+
+              border-white/10
+
+
+              bg-slate-800
+
+
+              px-5
+
+              py-3
+
+
+              text-sm
+
+              font-semibold
+
+
+              text-slate-200
+
+
+              transition
+
+
+              hover:bg-slate-700
+            "
+          >
+
+            <ArrowLeft
+              size={18}
+            />
+
 
             Back
+
+
           </Link>
 
-          {/* Add Notice */}
+
+
+
+
+
+          {/* ADD */}
+
+
 
           <Link
+
             href="/dashboard/home/notices/new"
+
+
             className="
-              flex
+              inline-flex
+
               items-center
+
               justify-center
+
               gap-2
+
+
               rounded-xl
-              bg-teal-600
+
+
+              bg-gradient-to-r
+
+
+              from-cyan-500
+
+
+              to-blue-600
+
+
               px-5
+
+
               py-3
+
+
+              text-sm
+
+
               font-semibold
+
+
               text-white
+
+
+              shadow-lg
+
+
+              shadow-cyan-500/20
+
+
               transition
-              hover:bg-teal-700
+
+
+              hover:scale-[1.03]
             "
           >
-            <Plus size={18} />
+
+            <Plus
+              size={18}
+            />
+
 
             Add Notice
+
+
           </Link>
+
+
+
         </div>
+
+
+
       </div>
 
-      {/* =========================
-          NOTICE TABLE
-      ========================= */}
 
-      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+
+
+
+
+
+
+      {/* ================= NOTICE TABLE ================= */}
+
+
+
+      <div
+
+        className="
+          overflow-hidden
+
+          rounded-3xl
+
+
+          border
+
+          border-white/10
+
+
+          bg-slate-900/70
+
+
+          shadow-[0_25px_80px_rgba(0,0,0,0.35)]
+
+
+          backdrop-blur-xl
+        "
+
+      >
+
+
         <NoticeTable />
+
+
       </div>
+
+
+
+
+
     </div>
+
   );
+
 }

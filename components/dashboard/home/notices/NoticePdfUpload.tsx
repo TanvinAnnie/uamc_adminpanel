@@ -1,322 +1,711 @@
 "use client";
 
-import { ChangeEvent, useRef, useState } from "react";
-import { FileText, Upload, X, ExternalLink } from "lucide-react";
+
+import {
+  ChangeEvent,
+  useRef,
+  useState,
+} from "react";
+
+import {
+  FileText,
+  Upload,
+  X,
+  ExternalLink,
+} from "lucide-react";
+
 import { toast } from "sonner";
+
+
 
 interface NoticePdfUploadProps {
   pdf: string;
   onChange: (url: string) => void;
 }
 
+
+
 export default function NoticePdfUpload({
   pdf,
   onChange,
 }: NoticePdfUploadProps) {
-  const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const [uploading, setUploading] = useState(false);
+
+  const inputRef =
+    useRef<HTMLInputElement | null>(null);
+
+
+
+  const [uploading, setUploading] =
+    useState(false);
+
+
+
 
   const handleFileChange = async (
     e: ChangeEvent<HTMLInputElement>
   ) => {
-    const file = e.target.files?.[0];
 
-    if (!file) {
-      return;
-    }
 
-    /* =========================================
-       PDF VALIDATION
-    ========================================= */
+    const file =
+      e.target.files?.[0];
 
-    if (file.type !== "application/pdf") {
-      toast.error("Please select a PDF file.");
-      e.target.value = "";
-      return;
-    }
 
-    /* =========================================
-       FILE SIZE
-       Maximum: 10MB
-    ========================================= */
 
-    const maxSize = 10 * 1024 * 1024;
+    if (!file) return;
 
-    if (file.size > maxSize) {
-      toast.error("PDF file must be smaller than 10MB.");
-      e.target.value = "";
-      return;
-    }
 
-    try {
-      setUploading(true);
 
-      /* =========================================
-         FORM DATA
-      ========================================= */
 
-      const formData = new FormData();
-
-      formData.append("file", file);
-      formData.append("type", "pdf");
-
-      /* =========================================
-         UPLOAD
-      ========================================= */
-
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(
-          result.message || "PDF upload failed."
-        );
-      }
-
-      /* =========================================
-         SAVE CLOUDINARY URL TO PARENT
-      ========================================= */
-
-      onChange(result.url);
-
-      toast.success("PDF uploaded successfully.");
-    } catch (error) {
-      console.error("PDF UPLOAD ERROR:", error);
+    if (
+      file.type !==
+      "application/pdf"
+    ) {
 
       toast.error(
-        error instanceof Error
-          ? error.message
-          : "PDF upload failed."
+        "Please select a PDF file."
       );
-    } finally {
+
+      e.target.value = "";
+
+      return;
+    }
+
+
+
+
+
+    const maxSize =
+      10 * 1024 * 1024;
+
+
+
+    if(file.size > maxSize){
+
+      toast.error(
+        "PDF file must be smaller than 10MB."
+      );
+
+      e.target.value = "";
+
+      return;
+
+    }
+
+
+
+
+    try {
+
+
+      setUploading(true);
+
+
+
+      const formData =
+        new FormData();
+
+
+      formData.append(
+        "file",
+        file
+      );
+
+
+      formData.append(
+        "type",
+        "pdf"
+      );
+
+
+
+
+      const response =
+        await fetch(
+          "/api/upload",
+          {
+            method:"POST",
+            body:formData,
+          }
+        );
+
+
+
+      const result =
+        await response.json();
+
+
+
+
+      if(
+        !response.ok ||
+        !result.success
+      ){
+
+        throw new Error(
+          result.message ||
+          "PDF upload failed."
+        );
+
+      }
+
+
+
+      onChange(
+        result.url
+      );
+
+
+
+      toast.success(
+        "PDF uploaded successfully."
+      );
+
+
+    }
+
+    catch(error){
+
+
+      console.error(
+        "PDF UPLOAD ERROR:",
+        error
+      );
+
+
+      toast.error(
+
+        error instanceof Error
+
+        ? error.message
+
+        : "PDF upload failed."
+
+      );
+
+
+    }
+
+    finally{
+
+
       setUploading(false);
 
-      if (inputRef.current) {
+
+
+      if(inputRef.current){
+
         inputRef.current.value = "";
+
       }
+
     }
+
   };
 
-  /* =========================================
-     REMOVE PDF
-  ========================================= */
+
+
+
+
 
   const handleRemove = () => {
+
+
     onChange("");
-    toast.success("PDF removed.");
+
+    toast.success(
+      "PDF removed."
+    );
+
+
   };
 
-  return (
-    <div className="space-y-3">
-      {/* =======================================
-          LABEL
-      ======================================= */}
 
-      <label className="block text-sm font-semibold text-slate-700">
+
+
+
+  return (
+
+    <div
+      className="
+        space-y-4
+      "
+    >
+
+
+      {/* Label */}
+
+      <label
+        className="
+          text-sm
+          font-semibold
+          text-slate-300
+        "
+      >
         Notice PDF
       </label>
 
-      {/* =======================================
-          UPLOAD AREA
-      ======================================= */}
+
+
 
       {!pdf ? (
+
         <div
           className="
-            rounded-xl
+            group
+
+            rounded-3xl
+
             border
+
             border-dashed
-            border-slate-300
-            bg-slate-50
-            p-6
+
+            border-white/20
+
+            bg-slate-950/60
+
+            p-8
+
             transition
-            hover:border-teal-500
-            hover:bg-teal-50/30
+
+            hover:border-cyan-400/60
+
+            hover:bg-slate-900/80
           "
         >
-          <div className="flex flex-col items-center justify-center text-center">
-            {/* ICON */}
+
+
+          <div
+            className="
+              flex
+              flex-col
+              items-center
+              text-center
+            "
+          >
+
+
+
+            {/* Icon */}
 
             <div
               className="
-                mb-4
                 flex
-                h-14
-                w-14
+
+                h-20
+
+                w-20
+
                 items-center
+
                 justify-center
-                rounded-full
-                bg-red-50
-                text-red-500
+
+
+                rounded-3xl
+
+
+                border
+
+                border-red-400/20
+
+
+                bg-red-500/10
+
+
+                text-red-400
               "
             >
-              <FileText size={28} />
+
+              <FileText
+                size={38}
+              />
+
             </div>
 
-            {/* TEXT */}
 
-            <h3 className="text-sm font-semibold text-slate-800">
+
+
+            <h3
+              className="
+                mt-6
+
+                text-lg
+
+                font-bold
+
+                text-white
+              "
+            >
               Upload Notice PDF
             </h3>
 
-            <p className="mt-1 text-xs text-slate-500">
-              PDF only • Maximum 10MB
+
+
+
+            <p
+              className="
+                mt-2
+
+                text-sm
+
+                text-slate-400
+              "
+            >
+              PDF only • Maximum size 10MB
             </p>
 
-            {/* BUTTON */}
+
+
+
 
             <button
               type="button"
+
               disabled={uploading}
+
               onClick={() =>
                 inputRef.current?.click()
               }
+
+
               className="
-                mt-4
+                mt-6
+
                 inline-flex
+
                 items-center
+
                 gap-2
-                rounded-lg
-                bg-teal-600
-                px-5
-                py-2.5
+
+
+                rounded-xl
+
+
+                bg-gradient-to-r
+
+                from-cyan-500
+
+                to-blue-600
+
+
+                px-6
+
+                py-3
+
+
                 text-sm
+
                 font-semibold
+
+
                 text-white
+
+
+                shadow-lg
+
+                shadow-cyan-500/20
+
+
                 transition
-                hover:bg-teal-700
-                disabled:cursor-not-allowed
-                disabled:opacity-60
+
+
+                hover:scale-105
+
+
+                disabled:opacity-50
               "
             >
-              <Upload size={17} />
 
-              {uploading
+              <Upload size={18}/>
+
+
+              {
+                uploading
                 ? "Uploading..."
-                : "Choose PDF"}
+                : "Choose PDF"
+              }
+
             </button>
 
-            {/* HIDDEN INPUT */}
+
+
 
             <input
               ref={inputRef}
+
               type="file"
+
               accept="application/pdf,.pdf"
+
               onChange={handleFileChange}
+
               className="hidden"
             />
+
+
+
           </div>
+
+
+
         </div>
+
+
       ) : (
-        /* =======================================
-           PDF PREVIEW
-        ======================================= */
+
 
         <div
           className="
             flex
+
             flex-col
-            gap-4
-            rounded-xl
+
+            gap-5
+
+
+            rounded-3xl
+
+
             border
-            border-slate-200
-            bg-white
-            p-4
+
+            border-white/10
+
+
+            bg-slate-900/70
+
+
+            p-5
+
+
+            shadow-xl
+
+
+            backdrop-blur-xl
+
+
             sm:flex-row
+
             sm:items-center
+
             sm:justify-between
           "
         >
-          {/* LEFT */}
 
-          <div className="flex min-w-0 items-center gap-3">
+
+
+          {/* PDF Info */}
+
+
+          <div
+            className="
+              flex
+
+              items-center
+
+              gap-4
+            "
+          >
+
+
             <div
               className="
                 flex
-                h-12
-                w-12
-                shrink-0
+
+                h-14
+
+                w-14
+
                 items-center
+
                 justify-center
-                rounded-lg
-                bg-red-50
-                text-red-500
+
+
+                rounded-2xl
+
+
+                bg-red-500/10
+
+
+                text-red-400
               "
             >
-              <FileText size={24} />
+
+              <FileText size={28}/>
+
             </div>
 
-            <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-slate-800">
+
+
+            <div>
+
+
+              <p
+                className="
+                  font-semibold
+
+                  text-white
+                "
+              >
                 Notice PDF
               </p>
 
-              <p className="text-xs text-green-600">
+
+
+              <p
+                className="
+                  mt-1
+
+                  text-sm
+
+                  text-emerald-400
+                "
+              >
                 PDF uploaded successfully
               </p>
+
+
             </div>
+
+
           </div>
 
-          {/* ACTIONS */}
 
-          <div className="flex shrink-0 items-center gap-2">
-            {/* VIEW */}
+
+
+
+
+          {/* Actions */}
+
+
+          <div
+            className="
+              flex
+
+              items-center
+
+              gap-3
+            "
+          >
+
 
             <a
               href={pdf}
+
               target="_blank"
+
               rel="noopener noreferrer"
+
+
               className="
                 inline-flex
+
                 items-center
+
                 gap-2
-                rounded-lg
+
+
+                rounded-xl
+
+
                 border
-                border-slate-300
-                px-3
+
+                border-white/10
+
+
+                bg-slate-800
+
+
+                px-4
+
                 py-2
+
+
                 text-sm
+
                 font-medium
-                text-slate-700
+
+
+                text-slate-200
+
+
                 transition
-                hover:bg-slate-100
+
+
+                hover:bg-slate-700
               "
             >
-              <ExternalLink size={16} />
+
+              <ExternalLink size={16}/>
+
               View
+
             </a>
 
-            {/* REMOVE */}
+
+
+
 
             <button
               type="button"
+
               onClick={handleRemove}
+
+
               className="
                 inline-flex
+
                 items-center
+
                 gap-2
-                rounded-lg
-                bg-red-50
-                px-3
+
+
+                rounded-xl
+
+
+                bg-red-500/10
+
+
+                px-4
+
                 py-2
+
+
                 text-sm
+
+
                 font-medium
-                text-red-600
+
+
+                text-red-400
+
+
                 transition
-                hover:bg-red-100
+
+
+                hover:bg-red-500/20
               "
             >
-              <X size={16} />
+
+              <X size={16}/>
+
               Remove
+
             </button>
+
+
+
           </div>
+
+
+
         </div>
+
+
       )}
+
+
     </div>
+
   );
+
 }

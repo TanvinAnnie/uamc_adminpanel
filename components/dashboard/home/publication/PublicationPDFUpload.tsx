@@ -1,297 +1,864 @@
 "use client";
 
+
 import {
   FileText,
   Loader2,
   Upload,
   Trash2,
 } from "lucide-react";
-import { toast } from "sonner";
-import { useRef, useState } from "react";
+
+import {
+  toast,
+} from "sonner";
+
+import {
+  useRef,
+  useState,
+} from "react";
+
+
 
 interface PublicationPDFUploadProps {
-  pdf: string;
-  onChange: (url: string) => void;
+
+  pdf:string;
+
+  onChange:(url:string)=>void;
+
 }
 
+
+
+
+
 export default function PublicationPDFUpload({
+
   pdf,
+
   onChange,
-}: PublicationPDFUploadProps) {
+
+}:PublicationPDFUploadProps){
+
+
+
   const inputRef =
     useRef<HTMLInputElement>(null);
 
-  const [uploading, setUploading] =
+
+
+  const [uploading,setUploading] =
     useState(false);
+
+
+
+
+
 
   // ==========================
   // UPLOAD PDF
   // ==========================
 
-  const handleUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    try {
+
+  const handleUpload = async(
+    e:React.ChangeEvent<HTMLInputElement>
+  )=>{
+
+
+    try{
+
+
       const file =
         e.target.files?.[0];
 
-      if (!file) {
+
+
+      if(!file)
         return;
-      }
 
-      // Check PDF
 
-      if (file.type !== "application/pdf") {
+
+
+
+      if(file.type !== "application/pdf"){
+
+
         toast.error(
           "Only PDF files are allowed."
         );
 
-        e.target.value = "";
+
+        e.target.value="";
+
 
         return;
+
       }
 
-      // Check size
-      // Maximum 10MB
+
+
+
+
+
 
       const maxSize =
         10 * 1024 * 1024;
 
-      if (file.size > maxSize) {
+
+
+
+      if(file.size > maxSize){
+
+
         toast.error(
           "PDF size must be less than 10MB."
         );
 
-        e.target.value = "";
+
+        e.target.value="";
+
 
         return;
+
+
       }
+
+
+
+
+
 
       setUploading(true);
 
+
+
+
+
       const formData =
         new FormData();
+
+
 
       formData.append(
         "file",
         file
       );
 
-      const res = await fetch(
-        "/api/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+
+
+
+
+
+
+      const res =
+        await fetch(
+          "/api/upload",
+          {
+            method:"POST",
+            body:formData,
+          }
+        );
+
+
+
+
 
       const result =
         await res.json();
 
-      if (!res.ok) {
+
+
+
+
+
+
+      if(!res.ok){
+
+
         throw new Error(
           result.message ||
-            "PDF upload failed."
+          "PDF upload failed."
         );
+
+
       }
 
-      if (!result.url) {
+
+
+
+
+
+
+      if(!result.url){
+
+
         throw new Error(
           "Upload URL was not returned."
         );
+
+
       }
 
-      onChange(result.url);
+
+
+
+
+
+
+      onChange(
+        result.url
+      );
+
+
+
 
       toast.success(
         "PDF uploaded successfully."
       );
-    } catch (error) {
+
+
+
+
+
+    }
+
+
+    catch(error){
+
+
       console.error(
         "PDF UPLOAD ERROR:",
         error
       );
 
+
+
       toast.error(
+
         error instanceof Error
-          ? error.message
-          : "PDF upload failed."
+
+        ?
+
+        error.message
+
+        :
+
+        "PDF upload failed."
+
       );
-    } finally {
+
+
+    }
+
+
+    finally{
+
+
       setUploading(false);
 
-      if (inputRef.current) {
-        inputRef.current.value = "";
+
+
+      if(inputRef.current){
+
+        inputRef.current.value="";
+
       }
+
+
     }
+
+
   };
+
+
+
+
+
+
+
 
   // ==========================
   // REMOVE PDF
   // ==========================
 
-  const handleRemove = () => {
+
+  const handleRemove =()=>{
+
+
     onChange("");
+
+
 
     toast.success(
       "PDF removed."
     );
+
+
   };
 
+
+
+
+
+
+
+
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6">
-      {/* ==========================
-          HEADER
-      ========================== */}
+
+    <div
+      className="
+        rounded-3xl
+
+        border
+
+        border-white/10
+
+        bg-slate-900/70
+
+        p-6
+
+        shadow-[0_25px_80px_rgba(0,0,0,0.35)]
+
+        backdrop-blur-xl
+      "
+    >
+
+
+
+      {/* HEADER */}
+
+
 
       <div>
-        <h2 className="text-xl font-bold text-slate-800">
-          Publication PDF
-        </h2>
 
-        <p className="mt-1 text-sm text-slate-500">
-          Upload the PDF document for
-          this publication.
-        </p>
-      </div>
 
-      {/* ==========================
-          HIDDEN INPUT
-      ========================== */}
-
-      <input
-        ref={inputRef}
-        type="file"
-        accept="application/pdf,.pdf"
-        hidden
-        onChange={handleUpload}
-      />
-
-      {/* ==========================
-          EMPTY STATE
-      ========================== */}
-
-      {!pdf ? (
-        <button
-          type="button"
-          onClick={() =>
-            inputRef.current?.click()
-          }
-          disabled={uploading}
+        <h2
           className="
-            mt-6
-            flex
-            min-h-48
-            w-full
-            flex-col
-            items-center
-            justify-center
-            rounded-2xl
-            border-2
-            border-dashed
-            border-slate-300
-            bg-slate-50
-            px-6
-            transition
-            hover:border-teal-500
-            hover:bg-slate-100
-            disabled:cursor-not-allowed
-            disabled:opacity-60
+            text-xl
+
+            font-bold
+
+            text-white
           "
         >
-          {uploading ? (
+
+          Publication PDF
+
+        </h2>
+
+
+
+
+        <p
+          className="
+            mt-2
+
+            text-sm
+
+            text-slate-400
+          "
+        >
+
+          Upload the PDF document for this publication.
+
+        </p>
+
+
+      </div>
+
+
+
+
+
+
+
+      {/* INPUT */}
+
+
+      <input
+
+        ref={inputRef}
+
+        type="file"
+
+        accept="application/pdf,.pdf"
+
+        hidden
+
+        onChange={handleUpload}
+
+      />
+
+
+
+
+
+
+
+
+      {!pdf ? (
+
+
+
+        <button
+
+          type="button"
+
+          disabled={uploading}
+
+
+          onClick={()=>
+            inputRef.current?.click()
+          }
+
+
+          className="
+            group
+
+            mt-6
+
+            flex
+
+            min-h-52
+
+            w-full
+
+            flex-col
+
+            items-center
+
+            justify-center
+
+
+            rounded-3xl
+
+
+            border-2
+
+
+            border-dashed
+
+
+            border-white/20
+
+
+            bg-slate-950/60
+
+
+            px-6
+
+
+            transition
+
+
+            hover:border-cyan-400/60
+
+
+            hover:bg-slate-900
+
+
+            disabled:cursor-not-allowed
+
+
+            disabled:opacity-60
+          "
+
+        >
+
+
+
+          {
+            uploading
+
+            ?
+
             <>
+
+
               <Loader2
+
                 size={42}
-                className="animate-spin text-teal-600"
+
+                className="
+                  animate-spin
+
+                  text-cyan-400
+                "
+
               />
 
-              <span className="mt-4 text-sm font-semibold text-slate-700">
+
+
+              <span
+                className="
+                  mt-5
+
+                  font-semibold
+
+                  text-white
+                "
+              >
+
                 Uploading PDF...
+
               </span>
 
-              <span className="mt-1 text-xs text-slate-500">
+
+
+              <span
+                className="
+                  mt-1
+
+                  text-sm
+
+                  text-slate-400
+                "
+              >
+
                 Please wait
+
               </span>
+
+
+
             </>
-          ) : (
+
+
+
+            :
+
+
             <>
-              <Upload
-                size={42}
-                className="text-slate-400"
-              />
 
-              <span className="mt-4 text-base font-semibold text-slate-700">
+
+
+              <div
+                className="
+                  flex
+
+                  h-20
+
+                  w-20
+
+                  items-center
+
+                  justify-center
+
+
+                  rounded-3xl
+
+
+                  bg-cyan-400/10
+
+
+                  text-cyan-400
+                "
+              >
+
+                <Upload size={38}/>
+
+
+              </div>
+
+
+
+
+
+              <span
+                className="
+                  mt-5
+
+                  text-lg
+
+                  font-bold
+
+                  text-white
+                "
+              >
+
                 Click to Upload PDF
+
               </span>
 
-              <span className="mt-1 text-sm text-slate-500">
+
+
+
+              <span
+                className="
+                  mt-2
+
+                  text-sm
+
+                  text-slate-400
+                "
+              >
+
                 PDF only • Maximum 10MB
+
               </span>
+
+
+
             </>
-          )}
+
+
+          }
+
+
+
+
         </button>
-      ) : (
-        /* ==========================
-           PDF EXISTS
-        ========================== */
 
-        <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
-          <div className="flex items-center gap-4 p-5">
-            {/* PDF Icon */}
 
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-red-50">
-              <FileText
-                size={28}
-                className="text-red-600"
-              />
-            </div>
 
-            {/* File Information */}
+      )
 
-            <div className="min-w-0 flex-1">
-              <p className="font-semibold text-slate-800">
-                Publication PDF
-              </p>
 
-              <p className="mt-1 truncate text-xs text-slate-500">
-                PDF uploaded successfully
-              </p>
-            </div>
 
-            {/* Remove */}
 
-            <button
-              type="button"
-              onClick={handleRemove}
+
+      :
+
+
+
+      (
+
+
+
+        <div
+          className="
+            mt-6
+
+            overflow-hidden
+
+            rounded-3xl
+
+            border
+
+            border-white/10
+
+            bg-slate-950/60
+          "
+        >
+
+
+
+
+          <div
+            className="
+              flex
+
+              items-center
+
+              gap-4
+
+              p-5
+            "
+          >
+
+
+
+
+            {/* ICON */}
+
+
+            <div
               className="
                 flex
-                h-10
-                w-10
+
+                h-14
+
+                w-14
+
                 shrink-0
+
                 items-center
+
                 justify-center
-                rounded-xl
-                bg-red-50
-                text-red-600
-                transition
-                hover:bg-red-100
+
+
+                rounded-2xl
+
+
+                bg-red-500/10
+
+
+                text-red-400
               "
-              title="Remove PDF"
             >
-              <Trash2 size={18} />
+
+              <FileText size={28}/>
+
+
+            </div>
+
+
+
+
+
+
+
+            {/* INFO */}
+
+
+
+            <div
+              className="
+                min-w-0
+
+                flex-1
+              "
+            >
+
+              <p
+                className="
+                  font-semibold
+
+                  text-white
+                "
+              >
+
+                Publication PDF
+
+              </p>
+
+
+
+              <p
+                className="
+                  mt-1
+
+                  text-sm
+
+                  text-emerald-400
+                "
+              >
+
+                PDF uploaded successfully
+
+              </p>
+
+
+            </div>
+
+
+
+
+
+
+
+            {/* REMOVE */}
+
+
+
+            <button
+
+              type="button"
+
+              onClick={handleRemove}
+
+
+              className="
+                flex
+
+                h-10
+
+                w-10
+
+                shrink-0
+
+                items-center
+
+                justify-center
+
+
+                rounded-xl
+
+
+                bg-red-500/10
+
+
+                text-red-400
+
+
+                transition
+
+
+                hover:bg-red-500/20
+              "
+
+              title="Remove PDF"
+
+            >
+
+              <Trash2 size={18}/>
+
+
             </button>
+
+
+
           </div>
+
+
+
+
+
+
+
 
           {/* URL */}
 
-          <div className="border-t border-slate-200 bg-white px-5 py-3">
-            <p className="truncate text-xs text-slate-500">
+
+
+          <div
+            className="
+              border-t
+
+              border-white/10
+
+              bg-slate-900/70
+
+              px-5
+
+              py-3
+            "
+          >
+
+            <p
+              className="
+                truncate
+
+                text-xs
+
+                text-slate-400
+              "
+            >
+
               {pdf}
+
             </p>
+
+
           </div>
+
+
+
+
         </div>
-      )}
+
+
+
+      )
+
+
+
+      }
+
+
+
     </div>
+
   );
+
+
 }
