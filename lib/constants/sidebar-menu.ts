@@ -53,13 +53,24 @@ export const sidebarMenu: SidebarMenuItem[] = [
         href: "/dashboard/home/statistics",
       },
       {
-        title: "Gallery",
-        href: "/dashboard/home/gallery",
+        title: "Departments",
+        href: "/dashboard/home/departments",
       },
-      
+       {
+        title: "Departments Section",
+        href: "/dashboard/home/departments/section",
+      },
       {
-        title: "Contact",
-        href: "/dashboard/home/contact",
+        title: "Admission",
+        href: "/dashboard/home/admission",
+      },
+      {
+        title: "Facilities",
+        href: "/dashboard/home/facilities",
+      },
+       {
+        title: "Principal Message",
+        href: "/dashboard/home/principal-message",
       },
     ],
   },
