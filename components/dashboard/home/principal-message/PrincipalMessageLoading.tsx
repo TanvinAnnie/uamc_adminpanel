@@ -1,129 +1,200 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import {
+  Loader2,
+} from "lucide-react";
+
+
+// =========================================================
+// COMPONENT
+// =========================================================
+
 
 export default function PrincipalMessageLoading() {
+
   return (
+
     <div
       className="
         flex
         min-h-[420px]
         w-full
-        flex-col
         items-center
         justify-center
-        rounded-2xl
-        border
-        border-slate-200
-        bg-white
-        px-6
-        py-12
-        text-center
+        bg-[#F8FAF9]
+        px-4
+        py-10
+        sm:px-6
       "
     >
-      {/* =================================================
-          ICON
-      ================================================= */}
+
 
       <div
         className="
           flex
-          h-16
-          w-16
+          w-full
+          max-w-[650px]
+          flex-col
           items-center
           justify-center
-          rounded-2xl
-          bg-emerald-50
+          rounded-3xl
+          border
+          border-slate-200
+          bg-white
+          px-6
+          py-12
+          text-center
+          shadow-sm
+          sm:px-10
+          sm:py-14
         "
       >
-        <Loader2
-          size={30}
-          strokeWidth={2}
+
+
+
+        {/* =================================================
+            ICON
+        ================================================= */}
+
+
+        <div
           className="
-            animate-spin
-            text-[#008B45]
+            flex
+            h-16
+            w-16
+            items-center
+            justify-center
+            rounded-2xl
+            bg-emerald-50
           "
-        />
+        >
+
+          <Loader2
+            size={32}
+            strokeWidth={2}
+            className="
+              animate-spin
+              text-[#008B45]
+            "
+          />
+
+        </div>
+
+
+
+
+
+        {/* =================================================
+            TITLE
+        ================================================= */}
+
+
+        <h2
+          className="
+            mt-6
+            text-xl
+            font-bold
+            text-slate-800
+            sm:text-2xl
+          "
+        >
+          Loading Principal Message
+        </h2>
+
+
+
+
+
+
+        {/* =================================================
+            DESCRIPTION
+        ================================================= */}
+
+
+        <p
+          className="
+            mt-3
+            max-w-[500px]
+            text-sm
+            leading-6
+            text-slate-500
+            sm:text-base
+          "
+        >
+          Please wait while we load
+          the Principal Message section
+          data.
+        </p>
+
+
+
+
+
+
+
+        {/* =================================================
+            LOADING DOTS
+        ================================================= */}
+
+
+        <div
+          className="
+            mt-6
+            flex
+            items-center
+            gap-2
+          "
+        >
+
+
+          <span
+            className="
+              h-2
+              w-2
+              animate-pulse
+              rounded-full
+              bg-[#008B45]
+            "
+          />
+
+
+
+          <span
+            className="
+              h-2
+              w-2
+              animate-pulse
+              rounded-full
+              bg-[#008B45]
+              [animation-delay:150ms]
+            "
+          />
+
+
+
+          <span
+            className="
+              h-2
+              w-2
+              animate-pulse
+              rounded-full
+              bg-[#008B45]
+              [animation-delay:300ms]
+            "
+          />
+
+
+
+        </div>
+
+
+
+
       </div>
 
-      {/* =================================================
-          TITLE
-      ================================================= */}
 
-      <h2
-        className="
-          mt-5
-          text-xl
-          font-semibold
-          text-slate-800
-          sm:text-2xl
-        "
-      >
-        Loading Principal Message
-      </h2>
-
-      {/* =================================================
-          DESCRIPTION
-      ================================================= */}
-
-      <p
-        className="
-          mt-3
-          max-w-[480px]
-          text-sm
-          leading-6
-          text-slate-500
-        "
-      >
-        Please wait while we load
-        the Principal Message section
-        data.
-      </p>
-
-      {/* =================================================
-          LOADING DOTS
-      ================================================= */}
-
-      <div
-        className="
-          mt-6
-          flex
-          items-center
-          gap-1.5
-        "
-      >
-        <span
-          className="
-            h-2
-            w-2
-            animate-pulse
-            rounded-full
-            bg-[#008B45]
-          "
-        />
-
-        <span
-          className="
-            h-2
-            w-2
-            animate-pulse
-            rounded-full
-            bg-[#008B45]
-            [animation-delay:150ms]
-          "
-        />
-
-        <span
-          className="
-            h-2
-            w-2
-            animate-pulse
-            rounded-full
-            bg-[#008B45]
-            [animation-delay:300ms]
-          "
-        />
-      </div>
     </div>
+
   );
+
 }
