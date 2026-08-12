@@ -1,234 +1,192 @@
 export default function DepartmentSectionLoading() {
-  return (
-    <div className="w-full space-y-6">
 
-      {/* =====================================================
-          HEADER SKELETON
-      ===================================================== */}
 
-      <div
-        className="
-          flex
-          flex-col
-          gap-4
+return(
 
-          sm:flex-row
-          sm:items-center
-          sm:justify-between
-        "
-      >
 
-        <div className="space-y-3">
 
-          <div
-            className="
-              h-8
-              w-56
-              animate-pulse
-              rounded-lg
-              bg-slate-200
+<div
 
-              sm:w-64
-            "
-          />
+className="
+w-full
+space-y-6
+"
 
+>
 
-          <div
-            className="
-              h-4
-              w-72
-              animate-pulse
-              rounded-lg
-              bg-slate-100
 
-              sm:w-80
-            "
-          />
 
-        </div>
+{/* =====================================
+    HEADER SKELETON
+===================================== */}
 
 
 
+<div
 
-        <div
-          className="
-            h-11
-            w-36
-            animate-pulse
-            rounded-xl
-            bg-slate-200
-          "
-        />
+className="
+flex
+flex-col
+gap-4
 
-      </div>
+sm:flex-row
+sm:items-center
+sm:justify-between
+"
 
+>
 
 
 
+<div
 
+className="
+space-y-3
+"
 
+>
 
-      {/* =====================================================
-          MAIN CONTENT SKELETON
-      ===================================================== */}
 
+<div
 
-      <div
-        className="
-          overflow-hidden
-          rounded-2xl
+className="
+h-8
+w-64
+animate-pulse
+rounded-lg
+bg-slate-800
+"
 
-          border
-          border-slate-200
+/>
 
-          bg-white
 
-          shadow-sm
-        "
-      >
 
+<div
 
-        <div
-          className="
-            space-y-7
+className="
+h-4
+w-80
+animate-pulse
+rounded-lg
+bg-slate-800
+"
 
-            p-5
+/>
 
-            sm:p-6
-          "
-        >
 
 
+</div>
 
 
 
 
-          {/* =====================================================
-              IMAGE SECTION
-          ===================================================== */}
 
 
+<div
 
-          <div
-            className="
-              grid
-              gap-5
+className="
+h-11
+w-36
+animate-pulse
+rounded-xl
+bg-slate-800
+"
 
-              md:grid-cols-2
-            "
-          >
+/>
 
 
-            <div
-              className="
-                h-52
-                animate-pulse
-                rounded-2xl
-                bg-slate-200
 
-                sm:h-60
-              "
-            />
+</div>
 
 
 
-            <div
-              className="
-                h-52
-                animate-pulse
-                rounded-2xl
-                bg-slate-200
 
-                sm:h-60
-              "
-            />
 
 
-          </div>
 
 
 
+{/* =====================================
+    MAIN CARD
+===================================== */}
 
 
 
+<div
 
 
+className="
+overflow-hidden
+rounded-2xl
+border
+border-slate-800
+bg-[#080f24]
+shadow-xl
+"
 
-          {/* =====================================================
-              TITLE
-          ===================================================== */}
 
+>
 
 
-          <div className="space-y-3">
 
+<div
 
-            <div
-              className="
-                h-5
-                w-32
-                animate-pulse
-                rounded
-                bg-slate-200
-              "
-            />
+className="
+space-y-6
+p-6
+"
 
+>
 
-            <div
-              className="
-                h-12
-                w-full
-                animate-pulse
-                rounded-xl
-                bg-slate-100
-              "
-            />
 
 
-          </div>
+{/* =====================================
+    IMAGE SKELETON
+===================================== */}
 
 
 
+<div
 
+className="
+grid
+gap-5
 
+md:grid-cols-2
+"
 
+>
 
 
 
-          {/* =====================================================
-              DESCRIPTION
-          ===================================================== */}
+<div
 
+className="
+h-56
+animate-pulse
+rounded-2xl
+bg-slate-800
+"
 
+/>
 
-          <div className="space-y-3">
 
 
-            <div
-              className="
-                h-5
-                w-28
-                animate-pulse
-                rounded
-                bg-slate-200
-              "
-            />
 
+<div
 
-            <div
-              className="
-                h-28
-                w-full
-                animate-pulse
-                rounded-xl
-                bg-slate-100
-              "
-            />
+className="
+h-56
+animate-pulse
+rounded-2xl
+bg-slate-800
+"
 
+/>
 
-          </div>
 
 
+</div>
 
 
 
@@ -236,122 +194,254 @@ export default function DepartmentSectionLoading() {
 
 
 
-          {/* =====================================================
-              SEARCH PLACEHOLDER
-          ===================================================== */}
 
 
 
-          <div className="space-y-3">
+{/* =====================================
+    TITLE
+===================================== */}
 
 
-            <div
-              className="
-                h-5
-                w-44
-                animate-pulse
-                rounded
-                bg-slate-200
-              "
-            />
 
+<div
 
+className="
+space-y-3
+"
 
-            <div
-              className="
-                h-12
-                w-full
-                animate-pulse
-                rounded-xl
-                bg-slate-100
-              "
-            />
+>
 
 
 
-          </div>
+<div
 
+className="
+h-5
+w-36
+animate-pulse
+rounded
+bg-slate-800
+"
 
+/>
 
 
 
+<div
 
+className="
+h-12
+w-full
+animate-pulse
+rounded-xl
+bg-slate-800
+"
 
+/>
 
 
-          {/* =====================================================
-              POPULAR SEARCH + COUNT
-          ===================================================== */}
 
+</div>
 
 
-          <div
-            className="
-              grid
-              gap-5
 
-              md:grid-cols-2
-            "
-          >
 
 
-            <div
-              className="
-                h-12
-                animate-pulse
-                rounded-xl
-                bg-slate-100
-              "
-            />
 
 
-            <div
-              className="
-                h-12
-                animate-pulse
-                rounded-xl
-                bg-slate-100
-              "
-            />
 
 
-          </div>
+{/* =====================================
+    DESCRIPTION
+===================================== */}
 
 
 
+<div
 
+className="
+space-y-3
+"
 
+>
 
 
 
-          {/* =====================================================
-              BUTTON SKELETON
-          ===================================================== */}
+<div
 
+className="
+h-5
+w-32
+animate-pulse
+rounded
+bg-slate-800
+"
 
+/>
 
-          <div
-            className="
-              h-12
-              w-full
-              animate-pulse
-              rounded-xl
-              bg-slate-200
 
-              sm:w-44
-            "
-          />
 
+<div
 
+className="
+h-28
+w-full
+animate-pulse
+rounded-xl
+bg-slate-800
+"
 
+/>
 
 
-        </div>
 
+</div>
 
-      </div>
 
 
-    </div>
-  );
+
+
+
+
+
+
+{/* =====================================
+    SEARCH + COUNT
+===================================== */}
+
+
+
+<div
+
+className="
+grid
+gap-5
+
+md:grid-cols-2
+"
+
+>
+
+
+
+<div
+
+className="
+h-12
+animate-pulse
+rounded-xl
+bg-slate-800
+"
+
+/>
+
+
+
+<div
+
+className="
+h-12
+animate-pulse
+rounded-xl
+bg-slate-800
+"
+
+/>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* =====================================
+    FOOTER BUTTONS
+===================================== */}
+
+
+
+<div
+
+className="
+flex
+justify-end
+gap-3
+border-t
+border-slate-800
+pt-5
+"
+
+>
+
+
+
+<div
+
+className="
+h-10
+w-24
+animate-pulse
+rounded-xl
+bg-slate-800
+"
+
+/>
+
+
+
+<div
+
+className="
+h-10
+w-24
+animate-pulse
+rounded-xl
+bg-slate-800
+"
+
+/>
+
+
+
+<div
+
+className="
+h-10
+w-24
+animate-pulse
+rounded-xl
+bg-slate-800
+"
+
+/>
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+);
+
+
+
 }

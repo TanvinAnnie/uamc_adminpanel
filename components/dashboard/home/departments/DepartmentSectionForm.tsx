@@ -1,10 +1,12 @@
 "use client";
 
+
 import {
   ChangeEvent,
   FormEvent,
   useState,
 } from "react";
+
 
 import {
   Image as ImageIcon,
@@ -15,64 +17,105 @@ import {
   X,
 } from "lucide-react";
 
+
 import { toast } from "sonner";
+
+
 
 
 // =========================================================
 // FORM DATA
 // =========================================================
 
+
 export interface DepartmentSectionFormData {
+
+
   title: string;
+
 
   description: string;
 
+
   searchPlaceholder: string;
+
 
   popularSearches: string[];
 
+
   imageOne: string;
+
 
   imageTwo: string;
 
+
   studentCount: string;
+
 
   studentCountText: string;
 
+
   isActive: boolean;
+
+
 }
+
+
+
+
 
 
 // =========================================================
 // DEFAULT DATA
 // =========================================================
 
+
 const defaultFormData: DepartmentSectionFormData = {
+
+
   title: "",
+
 
   description: "",
 
+
   searchPlaceholder: "",
+
 
   popularSearches: [],
 
+
   imageOne: "",
+
 
   imageTwo: "",
 
+
   studentCount: "",
+
 
   studentCountText: "",
 
+
   isActive: true,
+
+
 };
+
+
+
+
+
+
 
 
 // =========================================================
 // PROPS
 // =========================================================
 
+
 interface DepartmentSectionFormProps {
+
 
   initialData?: DepartmentSectionFormData;
 
@@ -83,71 +126,116 @@ interface DepartmentSectionFormProps {
   onDataChange:
   (
     data: DepartmentSectionFormData
-  )=>void;
+  ) => void;
+
 
 
   onSuccess:
   (
     data:any
-  )=>void;
+  ) => void;
+
 
 }
+
+
+
+
+
+
+
 
 
 // =========================================================
 // COMPONENT
 // =========================================================
 
+
 export default function DepartmentSectionForm({
+
 
   initialData,
 
+
   sectionId,
+
 
   onDataChange,
 
+
   onSuccess,
+
 
 }: DepartmentSectionFormProps) {
 
 
-  const [formData, setFormData] =
-    useState<DepartmentSectionFormData>(
-      initialData
-        ? {
-            title:
-              initialData.title || "",
 
-            description:
-              initialData.description || "",
-
-            searchPlaceholder:
-              initialData.searchPlaceholder || "",
-
-            popularSearches:
-              initialData.popularSearches || [],
-
-            imageOne:
-              initialData.imageOne || "",
-
-            imageTwo:
-              initialData.imageTwo || "",
-
-            studentCount:
-              initialData.studentCount || "",
-
-            studentCountText:
-              initialData.studentCountText || "",
-
-            isActive:
-              initialData.isActive ?? true,
-          }
-        : defaultFormData
-    );
+  const [
+    formData,
+    setFormData,
+  ] = useState<DepartmentSectionFormData>(
 
 
-  const [saving, setSaving] =
-    useState(false);
+    initialData
+    ?
+
+    {
+      title:
+        initialData.title || "",
+
+
+      description:
+        initialData.description || "",
+
+
+      searchPlaceholder:
+        initialData.searchPlaceholder || "",
+
+
+      popularSearches:
+        initialData.popularSearches || [],
+
+
+      imageOne:
+        initialData.imageOne || "",
+
+
+      imageTwo:
+        initialData.imageTwo || "",
+
+
+      studentCount:
+        initialData.studentCount || "",
+
+
+      studentCountText:
+        initialData.studentCountText || "",
+
+
+      isActive:
+        initialData.isActive ?? true,
+
+    }
+
+
+    :
+
+    defaultFormData
+
+  );
+
+
+
+
+
+
+  const [
+    saving,
+    setSaving,
+  ] = useState(false);
+
+
+
 
 
   const [
@@ -156,10 +244,17 @@ export default function DepartmentSectionForm({
   ] = useState(false);
 
 
+
+
+
   const [
     uploadingImageTwo,
     setUploadingImageTwo,
   ] = useState(false);
+
+
+
+
 
 
   const [
@@ -169,33 +264,50 @@ export default function DepartmentSectionForm({
 
 
 
+
+
+
+
+
   // =======================================================
   // UPDATE FORM DATA
   // =======================================================
+
 
   const updateFormData = (
     updatedData: DepartmentSectionFormData
   ) => {
 
+
     setFormData(updatedData);
+
 
     onDataChange?.(
       updatedData
     );
+
+
   };
 
 
 
+
+
+
+
   // =======================================================
-  // HANDLE TEXT CHANGE
+  // TEXT CHANGE
   // =======================================================
 
+
   const handleChange = (
-    event: ChangeEvent<
+    event:
+    ChangeEvent<
       HTMLInputElement |
       HTMLTextAreaElement
     >
   ) => {
+
 
     const {
       name,
@@ -203,14 +315,23 @@ export default function DepartmentSectionForm({
     } = event.target;
 
 
+
     updateFormData({
+
       ...formData,
+
 
       [name]: value,
 
+
     } as DepartmentSectionFormData);
 
+
   };
+
+
+
+
 
 
 
@@ -218,45 +339,59 @@ export default function DepartmentSectionForm({
   // ACTIVE TOGGLE
   // =======================================================
 
+
   const handleActiveToggle = () => {
+
 
     updateFormData({
 
       ...formData,
 
+
       isActive:
         !formData.isActive,
 
+
     });
 
+
   };
-
-
-// =======================================================
+  // =======================================================
 // POPULAR SEARCH ADD
 // =======================================================
 
+
 const addPopularSearch = () => {
+
 
   const value =
     popularSearchInput.trim();
 
 
-  if (!value) {
+
+  if(!value){
+
     return;
+
   }
 
 
-  if (
+
+
+  if(
     formData.popularSearches.includes(value)
-  ) {
+  ){
+
 
     toast.error(
       "This search already exists."
     );
 
+
     return;
+
   }
+
 
 
 
@@ -264,7 +399,8 @@ const addPopularSearch = () => {
 
     ...formData,
 
-    popularSearches: [
+
+    popularSearches:[
 
       ...formData.popularSearches,
 
@@ -283,13 +419,17 @@ const addPopularSearch = () => {
 
 
 
+
+
+
 // =======================================================
 // REMOVE POPULAR SEARCH
 // =======================================================
 
+
 const removePopularSearch = (
-  index: number
-) => {
+  index:number
+)=>{
 
 
   updateFormData({
@@ -300,9 +440,13 @@ const removePopularSearch = (
     popularSearches:
 
       formData.popularSearches.filter(
-        (_, itemIndex) =>
+
+        (_,itemIndex)=>
+
           itemIndex !== index
+
       ),
+
 
   });
 
@@ -312,29 +456,40 @@ const removePopularSearch = (
 
 
 
+
+
+
 // =======================================================
 // IMAGE UPLOAD
 // =======================================================
 
 
-const uploadImage = async (
-
-  file: File,
-
-  type: "imageOne" | "imageTwo"
-
-) => {
+const uploadImage = async(
 
 
+  file:File,
 
-  if (
+
+  type:
+  "imageOne"
+  |
+  "imageTwo"
+
+
+)=>{
+
+
+
+  if(
     !file.type.startsWith("image/")
-  ) {
+  ){
+
 
     toast.error(
       "Please select an image file."
     );
 
+
     return;
 
   }
@@ -342,15 +497,18 @@ const uploadImage = async (
 
 
 
-  if (
+
+  if(
     file.size >
     5 * 1024 * 1024
-  ) {
+  ){
+
 
     toast.error(
       "Image size must be less than 5MB."
     );
 
+
     return;
 
   }
@@ -359,21 +517,25 @@ const uploadImage = async (
 
 
 
-  try {
+
+  try{
 
 
-    if (
-      type === "imageOne"
-    ) {
+    if(type==="imageOne"){
+
 
       setUploadingImageOne(true);
 
-    } else {
-
-      setUploadingImageTwo(true);
 
     }
 
+    else{
+
+
+      setUploadingImageTwo(true);
+
+
+    }
 
 
 
@@ -384,10 +546,13 @@ const uploadImage = async (
 
 
 
+
     uploadData.append(
       "file",
       file
     );
+
+
 
 
 
@@ -396,13 +561,15 @@ const uploadImage = async (
         "/api/upload",
         {
 
-          method: "POST",
+          method:"POST",
 
-          body: uploadData,
+
+          body:uploadData,
+
 
         }
-      );
 
+      );
 
 
 
@@ -416,10 +583,11 @@ const uploadImage = async (
 
 
 
-    if (
+    if(
       !response.ok ||
       !result.success
-    ) {
+    ){
+
 
       throw new Error(
 
@@ -429,7 +597,9 @@ const uploadImage = async (
 
       );
 
+
     }
+
 
 
 
@@ -443,6 +613,7 @@ const uploadImage = async (
 
       [type]:
         result.url,
+
 
     } as DepartmentSectionFormData);
 
@@ -460,6 +631,7 @@ const uploadImage = async (
   }
 
   catch(error){
+
 
 
     console.error(
@@ -484,23 +656,26 @@ const uploadImage = async (
     );
 
 
-  }
 
+  }
 
   finally{
 
 
-    if (
-      type === "imageOne"
-    ){
+
+    if(type==="imageOne"){
+
 
       setUploadingImageOne(false);
+
 
     }
 
     else{
 
+
       setUploadingImageTwo(false);
+
 
     }
 
@@ -508,8 +683,9 @@ const uploadImage = async (
   }
 
 
-
 };
+
+
 
 
 
@@ -522,11 +698,17 @@ const uploadImage = async (
 
 const handleImageChange = (
 
-  event: ChangeEvent<HTMLInputElement>,
+  event:
+  ChangeEvent<HTMLInputElement>,
 
-  type: "imageOne" | "imageTwo"
 
-) => {
+  type:
+  "imageOne"
+  |
+  "imageTwo"
+
+
+)=>{
 
 
   const file =
@@ -539,6 +721,7 @@ const handleImageChange = (
     return;
 
   }
+
 
 
 
@@ -555,120 +738,79 @@ const handleImageChange = (
 
 
 
+
 // =======================================================
 // FORM SUBMIT
 // =======================================================
 
 
-const handleSubmit = async (
+const handleSubmit = async(
 
-  event: FormEvent<HTMLFormElement>
+ event:FormEvent<HTMLFormElement>
 
-) => {
+)=>{
 
 
-  event.preventDefault();
+ event.preventDefault();
 
 
 
-  try {
+ try{
 
 
-    setSaving(true);
+  setSaving(true);
 
 
 
 
+  const response =
+    await fetch(
+      "/api/department-section",
+      {
 
-    const response =
-      await fetch(
-        "/api/department-section",
-        {
 
-          method:
+        method:
 
-            sectionId
+        sectionId
 
-            ?
+        ?
 
-            "PUT"
+        "PUT"
 
-            :
+        :
 
-            "POST",
+        "POST",
 
 
 
-          headers:{
 
-            "Content-Type":
-              "application/json",
 
-          },
+        headers:{
 
+          "Content-Type":
+          "application/json",
 
+        },
 
-          body:
-            JSON.stringify({
 
-              ...formData,
 
-              id:
-                sectionId,
 
-            }),
 
-        }
-      );
+        body:
 
+        JSON.stringify({
 
+          ...formData,
 
 
+          id:
+          sectionId,
 
 
+        }),
 
-    const result =
-      await response.json();
 
-
-
-
-
-
-    if(
-
-      !response.ok ||
-
-      !result.success
-
-    ){
-
-      throw new Error(
-
-        result.message ||
-
-        "Failed to save department section."
-
-      );
-
-    }
-
-
-
-
-
-
-    toast.success(
-
-      sectionId
-
-      ?
-
-      "Department section updated successfully."
-
-      :
-
-      "Department section created successfully."
+      }
 
     );
 
@@ -677,37 +819,24 @@ const handleSubmit = async (
 
 
 
-    onSuccess?.(
-      result.data
-    );
+  const result =
+    await response.json();
 
 
 
-  }
 
 
-  catch(error){
+  if(
+    !response.ok ||
+    !result.success
+  ){
 
 
+    throw new Error(
 
-    console.error(
-      "SAVE DEPARTMENT SECTION ERROR:",
-      error
-    );
+      result.message ||
 
-
-
-    toast.error(
-
-      error instanceof Error
-
-      ?
-
-      error.message
-
-      :
-
-      "Something went wrong."
+      "Failed to save department section."
 
     );
 
@@ -716,36 +845,96 @@ const handleSubmit = async (
 
 
 
-  finally{
 
 
-    setSaving(false);
+
+  toast.success(
+
+    sectionId
+
+    ?
+
+    "Department section updated successfully."
+
+    :
+
+    "Department section created successfully."
+
+  );
 
 
-  }
-
-// =======================================================
-// RENDER
-// =======================================================
 
 
+
+
+  onSuccess?.(
+    result.data
+  );
+
+
+
+
+ }
+
+ catch(error){
+
+
+  console.error(
+    "SAVE DEPARTMENT SECTION ERROR:",
+    error
+  );
+
+
+
+  toast.error(
+
+    error instanceof Error
+
+    ?
+
+    error.message
+
+    :
+
+    "Something went wrong."
+
+  );
+
+
+ }
+
+ finally{
+
+
+  setSaving(false);
+
+
+ }
+
+
+};
 return (
 
 <form
 
-  onSubmit={handleSubmit}
 
-  className="
-    space-y-6
-    rounded-2xl
-    border
-    border-slate-200
-    bg-white
-    p-5
-    shadow-sm
+onSubmit={handleSubmit}
 
-    sm:p-6
-  "
+
+
+className="
+space-y-6
+rounded-3xl
+border
+border-slate-800
+bg-[#080f24]
+p-5
+shadow-xl
+
+sm:p-6
+"
+
+
 
 >
 
@@ -754,11 +943,23 @@ return (
 
 
 {/* =====================================================
-    BASIC INFORMATION
+    SECTION INFORMATION
 ===================================================== */}
 
 
-<div>
+
+<div
+
+className="
+rounded-2xl
+border
+border-slate-800
+bg-[#0d162f]
+p-5
+"
+
+>
+
 
 
 <h3
@@ -766,14 +967,20 @@ return (
 className="
 text-lg
 font-bold
-text-slate-800
+text-white
 "
 
 >
 
+
 Section Information
 
+
 </h3>
+
+
+
+
 
 
 
@@ -789,59 +996,98 @@ gap-5
 
 
 
+
 {/* TITLE */}
+
 
 <div>
 
 
 <label
 
+
 className="
 mb-2
 block
 text-sm
 font-semibold
-text-slate-700
+text-slate-300
 "
+
 
 >
 
+
 Title
+
 
 </label>
 
 
+
+
+
 <input
 
+
 name="title"
+
+
 
 value={
 formData.title
 }
 
+
+
+
 onChange={
 handleChange
 }
 
+
+
+
+
 placeholder="Find Your Department"
 
+
+
+
+
 className="
+
 h-12
 w-full
 rounded-xl
 border
-border-slate-200
+border-slate-700
+bg-[#080f24]
 px-4
 text-sm
+text-white
+
+placeholder:text-slate-500
+
 outline-none
 
-focus:border-[#008B45]
+focus:border-emerald-400
+
 "
+
+
+
+
 
 />
 
 
+
 </div>
+
+
+
+
 
 
 
@@ -849,31 +1095,42 @@ focus:border-[#008B45]
 
 {/* DESCRIPTION */}
 
+
 <div>
 
 
 <label
+
 
 className="
 mb-2
 block
 text-sm
 font-semibold
-text-slate-700
+text-slate-300
 "
+
 
 >
 
+
 Description
 
+
 </label>
+
+
+
+
 
 
 
 <textarea
 
 
+
 name="description"
+
 
 
 value={
@@ -881,39 +1138,67 @@ formData.description
 }
 
 
+
+
+
 onChange={
 handleChange
 }
 
 
+
+
+
 rows={5}
+
+
+
 
 
 placeholder="Write department description..."
 
 
+
+
+
 className="
+
 w-full
 resize-none
 rounded-xl
 border
-border-slate-200
+border-slate-700
+bg-[#080f24]
 p-4
 text-sm
+text-white
+
+placeholder:text-slate-500
+
 outline-none
 
-focus:border-[#008B45]
+focus:border-emerald-400
+
 "
+
+
+
+
 
 />
 
 
-</div>
-
-
 
 
 </div>
+
+
+
+
+
+
+</div>
+
 
 
 </div>
@@ -927,60 +1212,96 @@ focus:border-[#008B45]
 
 
 {/* =====================================================
-    SEARCH
+    SEARCH SETTINGS
 ===================================================== */}
 
 
 
-<div>
-
-
-<h3
+<div
 
 className="
-text-lg
-font-bold
-text-slate-800
+rounded-2xl
+border
+border-slate-800
+bg-[#0d162f]
+p-5
 "
 
 >
 
+
+
+<h3
+
+
+className="
+text-lg
+font-bold
+text-white
+"
+
+
+>
+
+
 Search Settings
+
 
 </h3>
 
 
 
-<div className="mt-5">
+
+
+
+
+<div
+
+className="
+mt-5
+"
+
+>
 
 
 <label
+
 
 className="
 mb-2
 block
 text-sm
 font-semibold
-text-slate-700
+text-slate-300
 "
+
 
 >
 
+
 Search Placeholder
 
+
 </label>
+
+
+
 
 
 
 <input
 
 
+
 name="searchPlaceholder"
+
 
 
 value={
 formData.searchPlaceholder
 }
+
+
 
 
 onChange={
@@ -989,24 +1310,41 @@ handleChange
 
 
 
+
+
 placeholder="Search department..."
 
 
+
+
+
 className="
+
 h-12
 w-full
 rounded-xl
 border
-border-slate-200
+border-slate-700
+bg-[#080f24]
 px-4
 text-sm
+text-white
+
+placeholder:text-slate-500
+
 outline-none
 
-focus:border-[#008B45]
+focus:border-emerald-400
+
 "
 
 
+
+
+
 />
+
+
 
 
 </div>
@@ -1015,28 +1353,43 @@ focus:border-[#008B45]
 
 
 
-{/* POPULAR SEARCH */}
+
+</div>
+{/* =====================================================
+    STATISTICS
+===================================================== */}
 
 
-
-<div className="mt-5">
-
-
-<label
+<div
 
 className="
-mb-2
-block
-text-sm
-font-semibold
-text-slate-700
+rounded-2xl
+border
+border-slate-800
+bg-[#0d162f]
+p-5
 "
 
 >
 
+
+<h3
+
+className="
+text-lg
+font-bold
+text-white
+"
+
+>
+
+
 Popular Searches
 
-</label>
+
+</h3>
+
+
 
 
 
@@ -1044,6 +1397,7 @@ Popular Searches
 <div
 
 className="
+mt-5
 flex
 gap-2
 "
@@ -1059,9 +1413,8 @@ popularSearchInput
 }
 
 
-onChange={
 
-(e)=>
+onChange={(e)=>
 
 setPopularSearchInput(
 e.target.value
@@ -1070,24 +1423,42 @@ e.target.value
 }
 
 
+
+
 placeholder="Add search keyword"
 
 
+
+
+
 className="
+
 h-11
 flex-1
 rounded-xl
 border
-border-slate-200
+border-slate-700
+bg-[#080f24]
 px-4
 text-sm
+text-white
+
+placeholder:text-slate-500
+
 outline-none
 
-focus:border-[#008B45]
+focus:border-emerald-400
+
 "
 
 
+
+
+
 />
+
+
+
 
 
 
@@ -1098,9 +1469,12 @@ focus:border-[#008B45]
 type="button"
 
 
+
 onClick={
 addPopularSearch
 }
+
+
 
 
 className="
@@ -1112,10 +1486,13 @@ justify-center
 rounded-xl
 bg-[#008B45]
 text-white
+transition
+hover:bg-[#00763B]
 "
 
 
 >
+
 
 <Plus size={18}/>
 
@@ -1124,7 +1501,10 @@ text-white
 
 
 
+
+
 </div>
+
 
 
 
@@ -1135,7 +1515,7 @@ text-white
 <div
 
 className="
-mt-3
+mt-4
 flex
 flex-wrap
 gap-2
@@ -1145,7 +1525,9 @@ gap-2
 
 
 {
+
 formData.popularSearches.map(
+
 (item,index)=>(
 
 
@@ -1155,19 +1537,21 @@ formData.popularSearches.map(
 key={index}
 
 
+
 className="
 inline-flex
 items-center
 gap-2
 rounded-full
-bg-emerald-50
+border
+border-emerald-400/20
+bg-emerald-400/10
 px-3
 py-1.5
 text-xs
 font-semibold
-text-[#008B45]
+text-emerald-400
 "
-
 
 >
 
@@ -1176,16 +1560,32 @@ text-[#008B45]
 
 
 
+
+
 <button
+
 
 type="button"
 
+
+
 onClick={()=>
+
+
 removePopularSearch(index)
+
 }
 
 
+
+
+className="
+text-emerald-300
+hover:text-white
+"
+
 >
+
 
 <X size={14}/>
 
@@ -1194,12 +1594,16 @@ removePopularSearch(index)
 
 
 
+
+
 </span>
 
 
 )
 
+
 )
+
 
 }
 
@@ -1209,12 +1613,8 @@ removePopularSearch(index)
 
 
 
-</div>
-
-
 
 </div>
-
 
 
 
@@ -1230,7 +1630,18 @@ removePopularSearch(index)
 
 
 
-<div>
+<div
+
+className="
+rounded-2xl
+border
+border-slate-800
+bg-[#0d162f]
+p-5
+"
+
+>
+
 
 
 <h3
@@ -1238,14 +1649,19 @@ removePopularSearch(index)
 className="
 text-lg
 font-bold
-text-slate-800
+text-white
 "
 
 >
 
+
 Images
 
+
 </h3>
+
+
+
 
 
 
@@ -1269,19 +1685,34 @@ md:grid-cols-2
 {
 
 [
-{
-key:"imageOne",
-label:"Main Image",
-value:formData.imageOne,
-loading:uploadingImageOne
-},
 
 {
+
+key:"imageOne",
+
+label:"Main Image",
+
+value:formData.imageOne,
+
+loading:uploadingImageOne
+
+},
+
+
+
+{
+
 key:"imageTwo",
+
 label:"Secondary Image",
+
 value:formData.imageTwo,
+
 loading:uploadingImageTwo
+
 }
+
+
 
 ].map((image)=>(
 
@@ -1295,85 +1726,109 @@ key={image.key}
 
 <label
 
+
 className="
 mb-2
 block
 text-sm
 font-semibold
-text-slate-700
+text-slate-300
 "
+
 
 >
 
+
 {image.label}
+
 
 </label>
 
 
 
 
+
+
 <div
+
 
 className="
 relative
 overflow-hidden
-rounded-xl
+rounded-2xl
 border
-border-slate-200
-bg-slate-50
+border-slate-700
+bg-[#080f24]
 "
 
 >
 
 
 
+
+
+
 {
-image.value &&
+
+image.value
+
+?
+
 
 <img
 
+
 src={image.value}
+
+
 
 alt={image.label}
 
+
+
 className="
-h-44
+h-48
 w-full
 object-cover
 "
 
+
 />
 
-}
 
+:
 
-
-{
-!image.value &&
 
 <div
 
+
 className="
 flex
-h-44
+h-48
 items-center
 justify-center
-text-slate-400
+text-slate-500
 "
+
 
 >
 
-<ImageIcon size={32}/>
+
+<ImageIcon size={35}/>
 
 
 </div>
 
+
 }
+
+
 
 
 
 
 <label
+
 
 className="
 absolute
@@ -1383,48 +1838,69 @@ flex
 cursor-pointer
 items-center
 gap-2
-rounded-lg
+rounded-xl
 bg-[#008B45]
-px-3
+px-4
 py-2
 text-xs
 font-semibold
 text-white
+transition
+hover:bg-[#00763B]
 "
+
 
 >
 
 
+
+
+
 {
+
 image.loading
 
 ?
 
 <Loader2
+
 size={15}
+
 className="animate-spin"
+
 />
+
 
 :
 
 <Upload
+
 size={15}
+
 />
 
+
 }
+
 
 
 Upload
 
 
 
+
+
 <input
+
 
 type="file"
 
+
 hidden
 
+
 accept="image/*"
+
 
 
 onChange={(e)=>
@@ -1434,7 +1910,11 @@ handleImageChange(
 e,
 
 image.key as
-"imageOne" |
+
+"imageOne"
+
+|
+
 "imageTwo"
 
 )
@@ -1446,28 +1926,31 @@ image.key as
 
 
 
+
+
 </label>
 
 
 
 
-</div>
-
-
 
 </div>
 
+
+
+
+
+
+</div>
 
 
 ))
+
 
 }
 
 
 
-</div>
-
-
 
 </div>
 
@@ -1476,36 +1959,51 @@ image.key as
 
 
 
-
-
-
+</div>
 {/* =====================================================
-    STUDENT COUNT
+    STATISTICS
 ===================================================== */}
 
 
-
-<div>
-
-
-<h3
+<div
 
 className="
-text-lg
-font-bold
-text-slate-800
+rounded-2xl
+border
+border-slate-800
+bg-[#0d162f]
+p-5
 "
 
 >
 
+
+<h3
+
+
+className="
+text-lg
+font-bold
+text-white
+"
+
+
+>
+
+
 Statistics
+
 
 </h3>
 
 
 
 
+
+
+
 <div
+
 
 className="
 mt-5
@@ -1515,7 +2013,11 @@ gap-5
 md:grid-cols-2
 "
 
+
 >
+
+
+
 
 
 <input
@@ -1524,9 +2026,11 @@ md:grid-cols-2
 name="studentCount"
 
 
+
 value={
 formData.studentCount
 }
+
 
 
 onChange={
@@ -1534,21 +2038,41 @@ handleChange
 }
 
 
+
+
+
 placeholder="5000+"
 
 
+
+
+
 className="
+
 h-12
 rounded-xl
 border
-border-slate-200
+border-slate-700
+bg-[#080f24]
 px-4
 text-sm
+text-white
+
+placeholder:text-slate-500
+
 outline-none
+
+focus:border-emerald-400
+
 "
 
 
+
 />
+
+
+
+
 
 
 
@@ -1559,9 +2083,11 @@ outline-none
 name="studentCountText"
 
 
+
 value={
 formData.studentCountText
 }
+
 
 
 onChange={
@@ -1569,28 +2095,53 @@ handleChange
 }
 
 
+
+
+
 placeholder="Students"
 
 
+
+
+
 className="
+
 h-12
 rounded-xl
 border
-border-slate-200
+border-slate-700
+bg-[#080f24]
 px-4
 text-sm
+text-white
+
+placeholder:text-slate-500
+
 outline-none
+
+focus:border-emerald-400
+
 "
+
 
 
 />
 
 
 
+
+
+
 </div>
 
 
+
+
+
+
+
 </div>
+
 
 
 
@@ -1600,23 +2151,28 @@ outline-none
 
 
 {/* =====================================================
-    ACTIVE
+    ACTIVE STATUS
 ===================================================== */}
 
 
 
 <div
 
+
 className="
 flex
 items-center
 justify-between
-rounded-xl
-bg-slate-50
-p-4
+rounded-2xl
+border
+border-slate-800
+bg-[#0d162f]
+p-5
 "
 
+
 >
+
 
 
 <div>
@@ -1624,33 +2180,50 @@ p-4
 
 <p
 
+
 className="
 font-semibold
-text-slate-700
+text-white
 "
+
 
 >
 
+
 Publish Section
 
+
 </p>
+
+
+
 
 
 <p
 
+
 className="
+mt-1
 text-sm
-text-slate-500
+text-slate-400
 "
+
 
 >
 
+
 Show this section on website
+
 
 </p>
 
 
+
 </div>
+
+
+
+
 
 
 
@@ -1661,9 +2234,13 @@ Show this section on website
 type="button"
 
 
+
 onClick={
 handleActiveToggle
 }
+
+
+
 
 
 className={`
@@ -1683,7 +2260,7 @@ formData.isActive
 
 :
 
-"bg-slate-300"
+"bg-slate-700"
 
 }
 
@@ -1693,7 +2270,9 @@ formData.isActive
 >
 
 
+
 <span
+
 
 className={`
 
@@ -1720,11 +2299,16 @@ formData.isActive
 
 `}
 
+
 />
 
 
 
 </button>
+
+
+
+
 
 
 
@@ -1739,7 +2323,7 @@ formData.isActive
 
 
 {/* =====================================================
-    SUBMIT
+    SUBMIT BUTTON
 ===================================================== */}
 
 
@@ -1750,49 +2334,69 @@ formData.isActive
 disabled={saving}
 
 
+
 className="
+
 inline-flex
 min-h-12
 w-full
 items-center
 justify-center
 gap-2
+
 rounded-xl
+
 bg-[#008B45]
+
 px-6
 py-3
+
 font-semibold
 text-white
+
 transition
 
 hover:bg-[#00763B]
 
+disabled:cursor-not-allowed
+
 disabled:opacity-60
+
 "
+
 
 
 >
 
 
 {
+
 saving
 
 ?
 
 <Loader2
+
 size={18}
+
 className="animate-spin"
+
 />
+
 
 :
 
 <Save size={18}/>
 
+
 }
 
 
 
+
+
 {
+
 saving
 
 ?
@@ -1811,7 +2415,9 @@ sectionId
 
 "Create Section"
 
+
 }
+
 
 
 
@@ -1821,9 +2427,7 @@ sectionId
 
 
 
+
 </form>
-
-
 );
 }
-};

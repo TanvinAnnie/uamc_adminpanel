@@ -63,7 +63,7 @@ function AboutHeader({
         rounded-3xl
         border
         border-white/10
-        bg-slate-900/70
+       bg-[#080d20]
         p-5
         shadow-xl
         backdrop-blur-xl
@@ -452,26 +452,20 @@ export default function AboutPage() {
 
   if(loading){
 
+return (
+  <div
+    className="
+      w-full
+      space-y-6
+    "
+  >
 
-    return (
+    <AboutLoading/>
 
-      <div
-        className="
-          min-h-screen
-          bg-slate-950
-          p-4
-          sm:p-6
-          lg:p-8
-        "
-      >
+  </div>
+);
 
-        <AboutLoading/>
-
-      </div>
-
-    );
-
-  }
+}
 
 
 
@@ -486,21 +480,16 @@ export default function AboutPage() {
   // =====================================
 
 
-  if(!about){
+ if(!about){
 
+return (
 
-    return (
-
-      <div
-        className="
-          min-h-screen
-          space-y-6
-          bg-slate-950
-          p-4
-          sm:p-6
-          lg:p-8
-        "
-      >
+<div
+className="
+  w-full
+  space-y-6
+"
+>
 
 
         <AboutHeader
@@ -532,19 +521,14 @@ export default function AboutPage() {
   // DATA AVAILABLE
   // =====================================
 
+return (
 
-  return (
-
-    <div
-      className="
-        min-h-screen
-        space-y-6
-        bg-slate-950
-        p-4
-        sm:p-6
-        lg:p-8
-      "
-    >
+<div
+  className="
+    w-full
+    space-y-6
+"
+>
 
 
 

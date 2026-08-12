@@ -6,14 +6,27 @@ import {
   Edit3,
 } from "lucide-react";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+
+import {
+  useEffect,
+  useState,
+} from "react";
+
+
+import {
+  useRouter,
+} from "next/navigation";
+
+
+import {
+  toast,
+} from "sonner";
 
 
 import StatisticsLoading from "@/components/dashboard/home/statistics/StatisticsLoading";
 import StatisticsEmpty from "@/components/dashboard/home/statistics/StatisticsEmpty";
 import StatisticsTable from "@/components/dashboard/home/statistics/StatisticsTable";
+
 
 import type {
   StatisticsData,
@@ -23,10 +36,14 @@ import type {
 
 
 
+
+
 export default function StatisticsPage(){
 
 
+
 const router = useRouter();
+
 
 
 
@@ -42,10 +59,16 @@ useState(true);
 
 
 
+
+
+
+
 useEffect(()=>{
 
 
+
 let cancelled=false;
+
 
 
 
@@ -59,7 +82,7 @@ const response =
 await fetch(
 "/api/statistics",
 {
-cache:"no-store"
+cache:"no-store",
 }
 );
 
@@ -70,9 +93,13 @@ await response.json();
 
 
 
+
 if(cancelled){
+
 return;
+
 }
+
 
 
 
@@ -80,7 +107,6 @@ return;
 if(response.status===404){
 
 setStatistics(null);
-setLoading(false);
 
 return;
 
@@ -89,8 +115,10 @@ return;
 
 
 
-
-if(!response.ok || !data.success){
+if(
+!response.ok ||
+!data.success
+){
 
 throw new Error(
 data.message ||
@@ -102,32 +130,38 @@ data.message ||
 
 
 
-
 setStatistics(data.data);
 
 
 
-
 }
+
+
 
 catch(error){
 
 
-console.error(
-error
-);
+console.error(error);
+
 
 
 toast.error(
+
 error instanceof Error
+
 ?
+
 error.message
+
 :
+
 "Something went wrong"
+
 );
 
 
 }
+
 
 
 finally{
@@ -140,7 +174,9 @@ setLoading(false);
 }
 
 
+
 }
+
 
 
 
@@ -152,11 +188,13 @@ loadStatistics();
 
 
 
+
 return()=>{
 
 cancelled=true;
 
 };
+
 
 
 },[]);
@@ -165,9 +203,14 @@ cancelled=true;
 
 
 
+
+
+
 const handleDelete=()=>{
 
+
 setStatistics(null);
+
 
 };
 
@@ -177,21 +220,31 @@ setStatistics(null);
 
 
 
+
+
+// ================================
+// LOADING
+// ================================
+
+
 if(loading){
+
 
 return(
 
-<div className="
-min-h-screen
-bg-[#030817]
-p-6
-">
 
+<div
+className="
+w-full
+space-y-6
+"
+>
 
 <StatisticsLoading/>
 
 
 </div>
+
 
 );
 
@@ -208,39 +261,38 @@ p-6
 
 return(
 
+
+
 <div
 
 className="
-min-h-screen
-bg-[#030817]
-p-4
-sm:p-6
-lg:p-8
+w-full
+space-y-6
 "
-
 
 >
 
 
 
-{/* HEADER CARD */}
+{/* =====================================
+    HEADER CARD
+===================================== */}
 
 
 
 <div
 
 className="
-mb-6
 rounded-3xl
 border
-border-white/10
+border-slate-800
 bg-[#080d20]
 p-6
 shadow-xl
 "
 
-
 >
+
 
 
 <div
@@ -249,11 +301,11 @@ className="
 flex
 flex-col
 gap-5
+
 sm:flex-row
 sm:items-center
 sm:justify-between
 "
-
 
 >
 
@@ -270,12 +322,13 @@ font-bold
 text-white
 "
 
-
 >
 
 Statistics
 
 </h1>
+
+
 
 
 
@@ -287,12 +340,13 @@ text-sm
 text-slate-400
 "
 
-
 >
 
 Manage the Statistics section of the website.
 
 </p>
+
+
 
 
 </div>
@@ -307,16 +361,22 @@ Manage the Statistics section of the website.
 
 className="
 flex
+flex-wrap
 gap-3
 "
-
 
 >
 
 
+
 <button
 
+
+type="button"
+
+
 onClick={()=>router.push("/dashboard")}
+
 
 className="
 inline-flex
@@ -324,22 +384,25 @@ items-center
 gap-2
 rounded-xl
 border
-border-white/10
-bg-white/5
+border-slate-700
+bg-slate-800
 px-5
 py-3
 text-sm
 font-medium
 text-slate-300
-hover:bg-white/10
+transition
+hover:bg-slate-700
 "
-
 
 >
 
+
 <ArrowLeft size={16}/>
 
+
 Back Dashboard
+
 
 </button>
 
@@ -348,15 +411,25 @@ Back Dashboard
 
 
 
+
+
 {
 
-statistics &&
+statistics && (
+
 
 <button
 
+
+type="button"
+
+
 onClick={()=>router.push(
+
 `/dashboard/home/statistics/edit/${statistics._id}`
+
 )}
+
 
 className="
 inline-flex
@@ -369,14 +442,15 @@ py-3
 text-sm
 font-semibold
 text-white
+transition
 hover:bg-cyan-600
 "
-
 
 >
 
 
 <Edit3 size={16}/>
+
 
 Edit Statistics
 
@@ -384,31 +458,47 @@ Edit Statistics
 </button>
 
 
+)
+
 }
 
 
 
-</div>
 
 
 </div>
 
 
+
+</div>
+
+
+
 </div>
 
 
 
 
 
+
+
+
+
+{/* =====================================
+    CONTENT
+===================================== */}
 
 
 
 {
 
+
 !statistics ?
 
 
+
 <StatisticsEmpty/>
+
 
 
 :
@@ -427,10 +517,14 @@ onDelete={handleDelete}
 
 
 
+
+
 </div>
 
 
+
 );
+
 
 
 }

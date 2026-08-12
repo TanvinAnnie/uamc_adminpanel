@@ -1,69 +1,80 @@
 "use client";
 
+
 import {
   Edit3,
   Eye,
   Trash2,
 } from "lucide-react";
 
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+
+import Image from "next/image";
 
 
-// =========================================================
+import {
+  useRouter,
+} from "next/navigation";
+
+
+import {
+  toast,
+} from "sonner";
+
+
+
+
+// =====================================================
 // TYPE
-// =========================================================
+// =====================================================
+
 
 export interface DepartmentSectionData {
 
-  _id: string;
+  _id:string;
 
-  title: string;
+  title:string;
 
-  description: string;
+  description:string;
 
-  searchPlaceholder: string;
+  searchPlaceholder:string;
 
-  popularSearches: string[];
+  popularSearches:string[];
 
-  imageOne: string;
+  imageOne:string;
 
-  imageTwo: string;
+  imageTwo:string;
 
-  studentCount: string;
+  studentCount:string;
 
-  studentCountText: string;
+  studentCountText:string;
 
-  isActive: boolean;
-
-  createdAt: string;
-
-  updatedAt: string;
+  isActive:boolean;
 
 }
 
 
 
-// =========================================================
-// PROPS
-// =========================================================
 
 
-interface DepartmentSectionRowProps {
+interface DepartmentSectionRowProps{
 
-  section: DepartmentSectionData;
+  section:DepartmentSectionData;
 
-  onDelete: (
-    id:string
-  )=>void;
+  onDelete:(id:string)=>void;
 
 }
 
 
 
-// =========================================================
+
+
+
+
+
+
+// =====================================================
 // COMPONENT
-// =========================================================
+// =====================================================
 
 
 export default function DepartmentSectionRow({
@@ -75,555 +86,80 @@ export default function DepartmentSectionRow({
 }:DepartmentSectionRowProps){
 
 
-  const router = useRouter();
 
+const router = useRouter();
 
 
 
-  // =====================================================
-  // DELETE
-  // =====================================================
 
 
-  const handleDelete = async()=>{
 
 
-    const confirmed =
-      window.confirm(
-        "Are you sure you want to delete Department section?"
-      );
+// =====================================================
+// DELETE
+// =====================================================
 
 
-    if(!confirmed){
-      return;
-    }
+const handleDelete = async()=>{
 
 
+const confirmed =
+window.confirm(
+"Are you sure you want to delete this section?"
+);
 
-    try{
 
 
-      const response =
-        await fetch(
-          "/api/department-section",
-          {
-            method:"DELETE",
-          }
-        );
+if(!confirmed){
 
+return;
 
+}
 
-      const data =
-        await response.json();
 
 
 
-      if(
-        !response.ok ||
-        !data.success
-      ){
+try{
 
-        throw new Error(
-          data.message ||
-          "Failed to delete Department section."
-        );
 
-      }
+const response =
+await fetch(
 
+`/api/department-section/${section._id}`,
 
+{
 
-      toast.success(
-        "Department section deleted successfully."
-      );
+method:"DELETE"
 
+}
 
-      onDelete(
-        section._id
-      );
+);
 
 
 
-    }
-    catch(error){
 
 
-      console.error(
-        "DELETE DEPARTMENT SECTION ERROR:",
-        error
-      );
+const data =
+await response.json();
 
 
-      toast.error(
 
-        error instanceof Error
-        ?
-        error.message
-        :
-        "Failed to delete section."
 
-      );
 
 
-    }
+if(
+!response.ok ||
+!data.success
+){
 
 
-  };
+throw new Error(
 
+data.message ||
 
+"Delete failed."
 
-
-
-
-  return (
-
-    <div
-      className="
-        overflow-hidden
-        rounded-2xl
-        border
-        border-slate-200
-        bg-white
-        shadow-sm
-
-        transition
-
-        hover:shadow-md
-      "
-    >
-
-
-
-
-
-      {/* =========================================
-          IMAGES
-      ========================================= */}
-
-
-
-      <div
-        className="
-          grid
-          gap-4
-          p-5
-
-          sm:p-6
-
-          md:grid-cols-2
-        "
-      >
-
-
-        {/* IMAGE ONE */}
-
-
-        <div
-          className="
-            h-48
-            overflow-hidden
-            rounded-xl
-            bg-slate-100
-
-            sm:h-56
-          "
-        >
-
-          {
-            section.imageOne
-            ?
-
-            <img
-              src={section.imageOne}
-              alt="Department image one"
-              className="
-                h-full
-                w-full
-                object-cover
-              "
-            />
-
-            :
-
-            <div
-              className="
-                flex
-                h-full
-                items-center
-                justify-center
-                text-sm
-                text-slate-400
-              "
-            >
-              No Image
-            </div>
-
-          }
-
-
-        </div>
-
-
-
-
-
-        {/* IMAGE TWO */}
-
-
-        <div
-          className="
-            h-48
-            overflow-hidden
-            rounded-xl
-            bg-slate-100
-
-            sm:h-56
-          "
-        >
-
-          {
-            section.imageTwo
-            ?
-
-            <img
-              src={section.imageTwo}
-              alt="Department image two"
-              className="
-                h-full
-                w-full
-                object-cover
-              "
-            />
-
-            :
-
-            <div
-              className="
-                flex
-                h-full
-                items-center
-                justify-center
-                text-sm
-                text-slate-400
-              "
-            >
-              No Image
-            </div>
-
-          }
-
-
-        </div>
-
-
-
-      </div>
-
-
-
-
-
-
-
-      {/* =========================================
-          INFORMATION
-      ========================================= */}
-
-
-
-      <div
-        className="
-          space-y-6
-          px-5
-          pb-6
-
-          sm:px-6
-        "
-      >
-
-
-
-        <div
-          className="
-            flex
-            flex-col
-            gap-4
-
-            sm:flex-row
-            sm:items-start
-            sm:justify-between
-          "
-        >
-
-
-
-          <div className="min-w-0">
-
-
-            <h2
-              className="
-                text-xl
-                font-bold
-                text-slate-800
-
-                sm:text-2xl
-              "
-            >
-              {section.title}
-            </h2>
-
-
-
-            <p
-              className="
-                mt-2
-                max-w-3xl
-                text-sm
-                leading-6
-                text-slate-500
-
-                line-clamp-3
-              "
-            >
-              {section.description}
-            </p>
-
-
-          </div>
-
-
-
-
-
-
-          {/* STATUS */}
-
-
-          <span
-            className={`
-              w-fit
-              rounded-full
-              px-3
-              py-1.5
-              text-xs
-              font-semibold
-
-              ${
-                section.isActive
-                ?
-                "bg-emerald-50 text-emerald-600"
-                :
-                "bg-red-50 text-red-500"
-              }
-            `}
-          >
-
-            {
-              section.isActive
-              ?
-              "Active"
-              :
-              "Inactive"
-            }
-
-          </span>
-
-
-
-        </div>
-
-
-
-
-
-
-
-
-        {/* DETAILS */}
-
-
-        <div
-          className="
-            grid
-            gap-4
-
-            sm:grid-cols-2
-
-            lg:grid-cols-4
-          "
-        >
-
-
-          <InfoBox
-            title="Search Placeholder"
-            value={section.searchPlaceholder}
-          />
-
-
-
-          <InfoBox
-            title="Popular Searches"
-            value={`${section.popularSearches?.length || 0} searches`}
-          />
-
-
-
-          <InfoBox
-            title="Student Count"
-            value={section.studentCount}
-            highlight
-          />
-
-
-
-          <InfoBox
-            title="Count Text"
-            value={section.studentCountText}
-          />
-
-
-        </div>
-
-
-
-
-
-
-
-        {/* TAGS */}
-
-
-        {
-          section.popularSearches?.length > 0 &&
-
-          <div>
-
-            <p
-              className="
-                mb-2
-                text-xs
-                font-semibold
-                uppercase
-                tracking-wide
-                text-slate-400
-              "
-            >
-              Popular Search Terms
-            </p>
-
-
-
-            <div
-              className="
-                flex
-                flex-wrap
-                gap-2
-              "
-            >
-
-              {
-                section.popularSearches.map(
-                  (item,index)=>(
-
-                    <span
-                      key={`${item}-${index}`}
-                      className="
-                        rounded-full
-                        bg-[#E8F7F0]
-                        px-3
-                        py-1.5
-                        text-xs
-                        font-medium
-                        text-[#008B45]
-                      "
-                    >
-                      {item}
-                    </span>
-
-                  )
-                )
-              }
-
-
-            </div>
-
-
-          </div>
-
-        }
-
-
-
-
-      </div>
-
-
-
-
-
-
-
-
-
-      {/* =========================================
-          ACTION BAR
-      ========================================= */}
-
-
-
-      <div
-        className="
-          flex
-          flex-wrap
-          gap-2
-          border-t
-          border-slate-100
-          bg-slate-50/70
-
-          px-5
-          py-4
-
-          sm:justify-end
-          sm:px-6
-        "
-      >
-
-
-
-        <ActionButton
-          label="Preview"
-          icon={<Eye size={16}/>}
-          onClick={()=>router.push(
-            `/dashboard/home/departments/section/preview/${section._id}`
-          )}
-        />
-
-
-
-        <ActionButton
-          label="Edit"
-          icon={<Edit3 size={16}/>}
-          onClick={()=>router.push(
-            `/dashboard/home/departments/section/edit/${section._id}`
-          )}
-        />
-
-
-
-        <ActionButton
-          danger
-          label="Delete"
-          icon={<Trash2 size={16}/>}
-          onClick={handleDelete}
-        />
-
-
-      </div>
-
-
-
-    </div>
-
-  );
+);
 
 
 }
@@ -632,164 +168,693 @@ export default function DepartmentSectionRow({
 
 
 
+toast.success(
+"Department section deleted successfully."
+);
 
 
-// =========================================================
-// SMALL COMPONENTS
-// =========================================================
+
+onDelete(section._id);
 
 
-function InfoBox({
 
-  title,
+}
 
-  value,
+catch(error){
 
-  highlight=false,
 
-}:{
+console.error(
+"DELETE SECTION ERROR:",
+error
+);
 
-  title:string;
 
-  value:string;
 
-  highlight?:boolean;
+toast.error(
 
-}){
+error instanceof Error
+
+?
+
+error.message
+
+:
+
+"Delete failed."
+
+);
+
+
+}
+
+
+
+};
+
+
+
+
+
+
+
 
 
 return(
 
+
+
 <div
+
+
 className="
-rounded-xl
-bg-slate-50
-p-4
+border-b
+border-slate-800
+p-5
+
+transition
+
+hover:bg-[#0d162f]
+
+sm:p-6
+
 "
+
+
 >
 
+
+
+<div
+
+
+className="
+grid
+gap-6
+
+xl:grid-cols-[260px_minmax(250px,1fr)_180px_140px_170px]
+
+xl:items-center
+
+"
+
+
+>
+
+
+
+
+
+
+{/* =====================================
+    IMAGES
+===================================== */}
+
+
+
+<div
+
+
+className="
+flex
+gap-3
+
+"
+
+>
+
+
+
+<div
+
+
+className="
+relative
+h-24
+w-32
+overflow-hidden
+rounded-2xl
+border
+border-slate-700
+bg-slate-800
+"
+
+
+>
+
+
+{
+
+section.imageOne
+
+?
+
+<Image
+
+src={section.imageOne}
+
+alt="Department"
+
+fill
+
+sizes="128px"
+
+className="
+object-cover
+"
+
+/>
+
+:
+
+<div
+
+className="
+flex
+h-full
+items-center
+justify-center
+text-xs
+text-slate-500
+"
+
+>
+
+No Image
+
+</div>
+
+
+}
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div
+
+
+className="
+relative
+h-24
+w-32
+overflow-hidden
+rounded-2xl
+border
+border-slate-700
+bg-slate-800
+"
+
+
+>
+
+
+{
+
+section.imageTwo
+
+?
+
+<Image
+
+src={section.imageTwo}
+
+alt="Department"
+
+fill
+
+sizes="128px"
+
+className="
+object-cover
+"
+
+/>
+
+:
+
+<div
+
+className="
+flex
+h-full
+items-center
+justify-center
+text-xs
+text-slate-500
+"
+
+>
+
+No Image
+
+</div>
+
+
+}
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* =====================================
+    INFORMATION
+===================================== */}
+
+
+
+<div>
+
+
+
+<h2
+
+
+className="
+text-lg
+font-bold
+text-white
+"
+
+
+>
+
+
+{
+section.title ||
+
+"Department Section"
+
+}
+
+
+</h2>
+
+
+
+
+
 <p
+
+
+className="
+mt-2
+line-clamp-3
+text-sm
+leading-6
+text-slate-400
+"
+
+
+>
+
+
+{
+section.description ||
+
+"No description available."
+
+}
+
+
+</p>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* =====================================
+    SEARCH
+===================================== */}
+
+
+
+<div>
+
+
+<p
+
+
 className="
 text-xs
 font-semibold
 uppercase
 tracking-wide
-text-slate-400
+text-slate-500
 "
+
+
 >
-{title}
+
+
+Search Placeholder
+
+
 </p>
+
+
 
 
 <p
-className={`
-mt-2
-truncate
-text-sm
-font-medium
 
-${
-highlight
-?
-"text-[#008B45] text-lg font-bold"
-:
-"text-slate-700"
+
+className="
+mt-2
+text-sm
+font-semibold
+text-emerald-400
+"
+
+
+>
+
+
+{
+section.searchPlaceholder ||
+
+"--"
+
 }
 
-`}
->
-{value}
+
 </p>
+
 
 
 </div>
 
-);
-
-}
 
 
 
 
 
-function ActionButton({
-
-label,
-
-icon,
-
-onClick,
-
-danger=false,
-
-}:{
-
-label:string;
-
-icon:React.ReactNode;
-
-onClick:()=>void;
-
-danger?:boolean;
-
-}){
 
 
-return(
 
-<button
+{/* =====================================
+    STATUS
+===================================== */}
 
-type="button"
 
-onClick={onClick}
+
+<div>
+
+
+
+<span
+
 
 className={`
 
 inline-flex
 
-h-10
+rounded-full
 
-items-center
-
-justify-center
-
-gap-2
-
-rounded-xl
+border
 
 px-4
 
-text-sm
+py-1.5
+
+text-xs
 
 font-semibold
 
-transition
-
 
 ${
-danger
+
+section.isActive
 
 ?
 
-"bg-red-50 text-red-500 hover:bg-red-100"
+"border-emerald-400/30 bg-emerald-400/10 text-emerald-400"
 
 :
 
-"border border-slate-200 bg-white text-slate-600 hover:border-[#008B45] hover:text-[#008B45]"
+"border-slate-700 bg-slate-800 text-slate-400"
 
 }
 
 `}
 
+
 >
 
-{icon}
 
-{label}
+{
+
+section.isActive
+
+?
+
+"Published"
+
+:
+
+"Draft"
+
+}
+
+
+
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* =====================================
+    ACTIONS
+===================================== */}
+
+
+
+<div
+
+
+className="
+flex
+gap-2
+
+xl:justify-end
+
+"
+
+
+>
+
+
+<button
+
+
+type="button"
+
+
+onClick={()=>
+
+
+router.push(
+
+`/dashboard/home/departments/section/edit/${section._id}`
+
+)
+
+
+}
+
+
+className="
+flex
+h-10
+items-center
+justify-center
+gap-2
+rounded-xl
+border
+border-cyan-400/20
+bg-cyan-400/10
+px-3
+text-cyan-400
+transition
+hover:bg-cyan-400/20
+"
+
+
+>
+
+
+<Edit3 size={16}/>
+
+<span className="hidden sm:inline">
+
+Edit
+
+</span>
+
 
 </button>
 
+
+
+
+
+
+
+<button
+
+
+type="button"
+
+
+onClick={()=>
+
+
+router.push(
+
+`/dashboard/home/departments/section/${section._id}`
+
+)
+
+
+}
+
+
+className="
+flex
+h-10
+items-center
+justify-center
+gap-2
+rounded-xl
+border
+border-slate-700
+bg-slate-800
+px-3
+text-slate-300
+transition
+hover:text-white
+"
+
+
+>
+
+
+<Eye size={16}/>
+
+<span className="hidden sm:inline">
+
+View
+
+</span>
+
+
+</button>
+
+
+
+
+
+
+
+<button
+
+
+type="button"
+
+
+onClick={handleDelete}
+
+
+className="
+flex
+h-10
+items-center
+justify-center
+gap-2
+rounded-xl
+border
+border-red-400/20
+bg-red-400/10
+px-3
+text-red-400
+transition
+hover:bg-red-400/20
+"
+
+
+>
+
+
+<Trash2 size={16}/>
+
+<span className="hidden sm:inline">
+
+Delete
+
+</span>
+
+
+</button>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
 );
+
 
 
 }

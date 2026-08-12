@@ -1,210 +1,880 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+
+import {
+  useEffect,
+  useState,
+} from "react";
+
+
+import {
+  ArrowLeft,
+  GraduationCap,
+} from "lucide-react";
+
+
+import {
+  useParams,
+  useRouter,
+} from "next/navigation";
+
+
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+
+
+import {
+  toast,
+} from "sonner";
+
+
 
 import AdmissionForm, {
+
   AdmissionFormData,
+
 } from "@/components/dashboard/home/admission/AdmissionForm";
+
+
 
 import AdmissionPreview from "@/components/dashboard/home/admission/AdmissionPreview";
 
+
+
+
+
+
+
+
+
 // =========================================================
-// DEFAULT FORM DATA
+// DEFAULT DATA
 // =========================================================
 
-const defaultFormData: AdmissionFormData = {
-  backgroundImage: "",
 
-  titlePrefix: "UAMC",
+const defaultFormData:AdmissionFormData={
 
-  title: "Admission",
 
-  description:
-    "Uttara Adhunik Medical College (UAMC) was established in 2003 with a vision to provide quality medical education and healthcare services. Founded through the dedicated efforts of medical professionals and social leaders, UAMC is committed to training future doctors while ensuring affordable healthcare for the community.",
+backgroundImage:"",
 
-  buttonText: "Learn More",
 
-  buttonLink: "/admission",
+titlePrefix:"UAMC",
 
-  isActive: true,
+
+title:"Admission",
+
+
+description:"",
+
+
+buttonText:"Learn More",
+
+
+buttonLink:"/admission",
+
+
+isActive:true,
+
+
 };
+
+
+
+
+
+
+
+
 
 // =========================================================
 // PAGE
 // =========================================================
 
-export default function NewAdmissionPage() {
-  // =======================================================
-  // ROUTER
-  // =======================================================
 
-  const router =
-    useRouter();
+export default function EditAdmissionPage(){
 
-  // =======================================================
-  // PREVIEW STATE
-  // =======================================================
 
-  const [
-    previewData,
-    setPreviewData,
-  ] = useState<AdmissionFormData>(
-    defaultFormData
-  );
 
-  // =======================================================
-  // SUCCESS
-  // =======================================================
+const router = useRouter();
 
-  const handleSuccess = () => {
-    router.push(
-      "/dashboard/home/admission"
-    );
 
-    router.refresh();
-  };
 
-  // =======================================================
-  // RENDER
-  // =======================================================
+const params = useParams();
 
-  return (
-    <div
-      className="
-        min-h-screen
-        bg-[#F8FAF9]
-        px-4
-        py-6
-        sm:px-6
-        lg:px-8
-      "
-    >
-      <div
-        className="
-          mx-auto
-          w-full
-          max-w-[1600px]
-        "
-      >
-        {/* =================================================
-            PAGE HEADER
-        ================================================= */}
 
-        <div
-          className="
-            mb-8
-            flex
-            flex-col
-            gap-4
-            sm:flex-row
-            sm:items-center
-            sm:justify-between
-          "
-        >
-          <div>
-            {/* BACK */}
 
-            <Link
-              href="/dashboard/home/admission"
-              className="
-                mb-3
-                inline-flex
-                items-center
-                gap-2
-                text-sm
-                font-medium
-                text-gray-500
-                transition
-                hover:text-[#008B45]
-              "
-            >
-              <ArrowLeft
-                size={17}
-              />
 
-              Back to Admission
-            </Link>
+const id = params.id as string;
 
-            {/* TITLE */}
 
-            <h1
-              className="
-                text-2xl
-                font-bold
-                text-gray-900
-                sm:text-3xl
-              "
-            >
-              Create Admission
-            </h1>
 
-            {/* DESCRIPTION */}
 
-            <p
-              className="
-                mt-2
-                max-w-2xl
-                text-sm
-                leading-6
-                text-gray-500
-              "
-            >
-              Create and configure
-              the Admission section
-              for the website.
-            </p>
-          </div>
-        </div>
 
-        {/* =================================================
-            MAIN CONTENT
-        ================================================= */}
 
-        <div
-          className="
-            grid
-            grid-cols-1
-            items-start
-            gap-6
-            xl:grid-cols-[minmax(0,1fr)_minmax(500px,0.9fr)]
-          "
-        >
-          {/* =================================================
-              FORM
-          ================================================= */}
 
-          <div>
-            <AdmissionForm
-              onDataChange={
-                setPreviewData
-              }
-              onSuccess={
-                handleSuccess
-              }
-            />
-          </div>
 
-          {/* =================================================
-              PREVIEW
-          ================================================= */}
+const [
 
-          <div
-            className="
-              xl:sticky
-              xl:top-6
-            "
-          >
-            <AdmissionPreview
-              data={
-                previewData
-              }
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+previewData,
+
+setPreviewData
+
+]=useState<AdmissionFormData>(
+
+defaultFormData
+
+);
+
+
+
+
+
+const [
+
+loading,
+
+setLoading
+
+]=useState(true);
+
+
+
+
+
+
+
+
+
+// =========================================================
+// FETCH DATA
+// =========================================================
+
+
+useEffect(()=>{
+
+
+const loadAdmission=async()=>{
+
+
+try{
+
+
+
+const response = await fetch(
+
+`/api/admission/${id}`,
+
+{
+
+cache:"no-store",
+
+}
+
+);
+
+
+
+
+
+
+const data = await response.json();
+
+
+
+
+
+
+
+if(
+
+!response.ok ||
+
+!data.success
+
+){
+
+
+throw new Error(
+
+data.message ||
+
+"Failed to load admission."
+
+);
+
+
+}
+
+
+
+
+
+
+
+setPreviewData(
+
+data.data
+
+);
+
+
+
+}
+
+
+
+catch(error){
+
+
+
+toast.error(
+
+error instanceof Error
+
+?
+
+error.message
+
+:
+
+"Failed to load admission."
+
+);
+
+
+
+}
+
+
+
+finally{
+
+
+setLoading(false);
+
+
+}
+
+
+
+};
+
+
+
+
+
+
+if(id){
+
+loadAdmission();
+
+}
+
+
+
+},[id]);
+
+
+
+
+
+
+
+
+
+const handleSuccess=()=>{
+
+
+router.push(
+
+"/dashboard/home/admission"
+
+);
+
+
+router.refresh();
+
+
+};
+// =========================================================
+// LOADING
+// =========================================================
+
+
+if(loading){
+
+
+return(
+
+
+<div
+
+className="
+
+flex
+
+min-h-screen
+
+items-center
+
+justify-center
+
+bg-[#F8FAF9]
+
+"
+
+
+>
+
+
+<div
+
+className="
+
+rounded-2xl
+
+border
+
+border-slate-200
+
+bg-white
+
+px-8
+
+py-6
+
+text-center
+
+shadow-sm
+
+"
+
+
+>
+
+
+<p
+
+className="
+
+text-sm
+
+font-medium
+
+text-slate-500
+
+"
+
+>
+
+Loading Admission data...
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+);
+
+
+}
+
+
+
+
+
+
+
+
+
+// =========================================================
+// RENDER
+// =========================================================
+
+
+
+return(
+
+
+
+<div
+
+
+className="
+
+w-full
+
+space-y-6
+
+"
+
+
+>
+
+
+
+<div
+
+
+className="
+
+mx-auto
+
+w-full
+
+max-w-[1600px]
+
+"
+
+
+>
+
+
+
+
+
+
+
+
+
+
+{/* =====================================================
+    HEADER
+===================================================== */}
+
+
+
+<div
+
+
+className="
+
+rounded-3xl
+
+border
+
+border-slate-800
+
+bg-[#080d20]
+
+p-5
+
+shadow-xl
+
+
+sm:p-6
+
+"
+
+
+>
+
+
+
+<div
+
+
+className="
+
+flex
+
+flex-col
+
+gap-5
+
+
+sm:flex-row
+
+sm:items-center
+
+sm:justify-between
+
+"
+
+
+>
+
+
+
+
+
+
+
+
+<div>
+
+
+
+<Link
+
+
+href="/dashboard/home/admission"
+
+
+className="
+
+inline-flex
+
+items-center
+
+gap-2
+
+text-sm
+
+font-medium
+
+text-slate-400
+
+transition
+
+hover:text-emerald-400
+
+"
+
+>
+
+
+<ArrowLeft size={17}/>
+
+
+Back to Admission
+
+
+</Link>
+
+
+
+
+
+
+
+
+
+<div
+
+
+className="
+
+mt-5
+
+flex
+
+items-center
+
+gap-3
+
+"
+
+>
+
+
+
+
+
+<div
+
+
+className="
+
+flex
+
+h-12
+
+w-12
+
+items-center
+
+justify-center
+
+rounded-2xl
+
+border
+
+border-emerald-400/20
+
+bg-emerald-400/10
+
+text-emerald-400
+
+"
+
+>
+
+
+<GraduationCap size={24}/>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div>
+
+
+<h1
+
+
+className="
+
+text-2xl
+
+font-bold
+
+text-white
+
+
+sm:text-3xl
+
+"
+
+>
+
+
+Edit Admission
+
+
+</h1>
+
+
+
+
+
+
+
+<p
+
+
+className="
+
+mt-1
+
+text-sm
+
+text-slate-400
+
+sm:text-base
+
+"
+
+>
+
+
+Update Admission section content for the website.
+
+
+</p>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+{/* =====================================================
+    MAIN CONTENT
+===================================================== */}
+
+
+
+<div
+
+className="
+
+grid
+
+grid-cols-1
+
+items-start
+
+gap-6
+
+
+
+xl:grid-cols-[minmax(0,1fr)_minmax(420px,0.9fr)]
+
+"
+
+>
+
+
+
+
+
+
+
+{/* =====================================================
+    FORM
+===================================================== */}
+
+
+
+<div
+
+className="
+
+min-w-0
+
+"
+
+>
+
+
+
+<AdmissionForm
+
+
+initialData={previewData}
+
+
+
+onDataChange={
+
+setPreviewData
+
+}
+
+
+
+onSuccess={
+
+handleSuccess
+
+}
+
+
+
+/>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+{/* =====================================================
+    PREVIEW
+===================================================== */}
+
+
+
+<div
+
+
+className="
+
+min-w-0
+
+
+xl:sticky
+
+xl:top-6
+
+"
+
+>
+
+
+
+<AdmissionPreview
+
+
+data={previewData}
+
+
+/>
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+);
+
+
+
 }

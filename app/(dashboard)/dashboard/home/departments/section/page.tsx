@@ -2,9 +2,8 @@
 
 
 import {
-  ArrowLeft,
   Building2,
-  Plus,
+  Edit3,
 } from "lucide-react";
 
 
@@ -22,7 +21,6 @@ import {
 import {
   toast,
 } from "sonner";
-
 
 
 import DepartmentSectionLoading
@@ -46,33 +44,35 @@ import type {
 
 
 
-
+// =====================================================
+// PAGE
+// =====================================================
 
 
 export default function DepartmentSectionPage(){
 
 
-  const router = useRouter();
 
+const router = useRouter();
 
 
 
+const [
+  section,
+  setSection,
+] =
+useState<DepartmentSectionData | null>(null);
 
-  const [
-    section,
-    setSection,
-  ] =
-  useState<DepartmentSectionData | null>(null);
 
 
 
+const [
+  loading,
+  setLoading,
+] =
+useState(true);
 
 
-  const [
-    loading,
-    setLoading,
-  ] =
-  useState(true);
 
 
 
@@ -80,319 +80,346 @@ export default function DepartmentSectionPage(){
 
 
 
+// =====================================================
+// FETCH SECTION
+// =====================================================
 
 
-  // =====================================================
-  // FETCH SECTION
-  // =====================================================
+useEffect(()=>{
 
 
-  useEffect(()=>{
+let mounted = true;
 
 
-    let mounted=true;
 
+const loadSection = async()=>{
 
 
-    const loadSection=async()=>{
+try{
 
 
-      try{
+const response =
+await fetch(
 
+"/api/department-section",
 
-        const response =
-          await fetch(
+{
+cache:"no-store",
+}
 
-            "/api/department-section",
+);
 
-            {
-              cache:"no-store",
-            }
 
-          );
 
 
 
-        const data =
-          await response.json();
+const data =
+await response.json();
 
 
 
 
 
-        if(!mounted){
 
-          return;
+if(!mounted){
 
-        }
+return;
 
+}
 
 
 
 
-        if(response.status===404){
 
 
-          setSection(null);
+if(response.status===404){
 
-          return;
 
+setSection(null);
 
-        }
 
+return;
 
 
+}
 
 
 
 
-        if(
-          !response.ok ||
-          !data.success
-        ){
 
 
-          throw new Error(
+if(
+!response.ok ||
+!data.success
+){
 
-            data.message ||
 
-            "Failed to load department section."
+throw new Error(
 
-          );
+data.message ||
 
+"Failed to load department section."
 
-        }
+);
 
 
+}
 
 
 
 
-        setSection(
-          data.data
-        );
 
 
+setSection(
 
+data.data
 
-      }
+);
 
-      catch(error){
 
 
 
-        console.error(
-          "FETCH DEPARTMENT SECTION ERROR:",
-          error
-        );
+}
 
+catch(error){
 
 
-        toast.error(
 
-          error instanceof Error
+console.error(
+"FETCH DEPARTMENT SECTION ERROR:",
+error
+);
 
-          ?
 
-          error.message
 
-          :
 
-          "Failed to load section."
+toast.error(
 
-        );
+error instanceof Error
 
+?
 
+error.message
 
-      }
+:
 
+"Failed to load department section."
 
-      finally{
+);
 
 
-        if(mounted){
+}
 
-          setLoading(false);
 
-        }
+finally{
 
 
-      }
+if(mounted){
 
+setLoading(false);
 
-    };
+}
 
 
+}
 
 
-    loadSection();
+};
 
 
 
+loadSection();
 
-    return()=>{
 
-      mounted=false;
 
-    };
 
+return()=>{
 
-  },[]);
+mounted=false;
 
+};
 
 
+},[]);
 
 
 
 
 
 
-  // =====================================================
-  // DELETE
-  // =====================================================
 
 
-  const handleDelete=(id:string)=>{
 
+// =====================================================
+// DELETE
+// =====================================================
 
-    if(section?._id===id){
 
-      setSection(null);
+const handleDelete=(id:string)=>{
 
-    }
 
+if(
+section?._id === id
+){
 
-  };
+setSection(null);
 
+}
 
 
+};
 
 
 
 
 
 
-  if(loading){
 
 
-    return(
 
-      <div
-        className="
-          w-full
-          space-y-6
-          p-4
-          sm:p-6
-          lg:p-8
-        "
-      >
+// =====================================================
+// LOADING
+// =====================================================
 
 
-        <DepartmentSectionLoading/>
+if(loading){
 
 
-      </div>
+return(
 
-    );
+<div
+className="
+w-full
+space-y-6
+p-4
+sm:p-6
+lg:p-8
+"
+>
 
 
-  }
+<DepartmentSectionLoading/>
 
 
+</div>
 
+);
 
 
+}
 
 
 
 
-  if(!section){
 
 
-    return(
 
-      <div
-        className="
-          w-full
-          space-y-6
-          p-4
-          sm:p-6
-          lg:p-8
-        "
-      >
 
 
+// =====================================================
+// EMPTY
+// =====================================================
 
-        <SectionHeader
 
-          router={router}
+if(!section){
 
-          empty
 
-        />
+return(
 
+<div
+className="
+w-full
+space-y-6
+p-4
+sm:p-6
+lg:p-8
+"
+>
 
 
-        <DepartmentSectionEmpty/>
+<Header
 
+router={router}
 
+/>
 
-      </div>
 
 
-    );
+<DepartmentSectionEmpty/>
 
 
-  }
 
+</div>
 
+);
 
 
+}
 
 
 
 
 
-  return(
 
-    <div
-      className="
-        w-full
-        space-y-6
-        p-4
-        sm:p-6
-        lg:p-8
-      "
-    >
 
 
 
+// =====================================================
+// MAIN
+// =====================================================
 
-      <SectionHeader
 
-        router={router}
+return(
 
-      />
 
 
+<div
 
+className="
+w-full
+space-y-6
+p-4
+sm:p-6
+lg:p-8
+"
 
+>
 
-      <DepartmentSectionTable
 
-        section={section}
+<Header
 
-        onDelete={handleDelete}
+router={router}
 
-      />
+section={section}
 
+/>
 
 
 
-    </div>
 
 
-  );
+
+<DepartmentSectionTable
+
+
+section={section}
+
+
+onDelete={handleDelete}
+
+
+/>
+
+
+
+
+
+
+</div>
+
+
+
+);
 
 
 }
@@ -410,17 +437,17 @@ export default function DepartmentSectionPage(){
 // =====================================================
 
 
-function SectionHeader({
+function Header({
 
-  router,
+router,
 
-  empty=false,
+section,
 
 }:{
 
-  router:any;
+router:any;
 
-  empty?:boolean;
+section?:DepartmentSectionData | null;
 
 }){
 
@@ -429,16 +456,39 @@ return(
 
 
 <div
+
+
+className="
+rounded-2xl
+border
+border-slate-800
+bg-[#080f24]
+px-5
+py-5
+shadow-xl
+
+sm:px-6
+"
+
+>
+
+
+
+<div
+
+
 className="
 flex
 flex-col
-gap-4
+gap-5
 
 sm:flex-row
 sm:items-center
 sm:justify-between
 "
+
 >
+
 
 
 
@@ -447,16 +497,19 @@ sm:justify-between
 
 
 <div
+
 className="
 flex
 items-center
 gap-3
 "
+
 >
 
 
-
 <div
+
+
 className="
 flex
 h-11
@@ -464,14 +517,23 @@ w-11
 items-center
 justify-center
 rounded-xl
-bg-[#E8F7F0]
-text-[#008B45]
+
+border
+border-emerald-400/20
+
+bg-emerald-400/10
+
+text-emerald-400
 "
+
 >
+
 
 <Building2 size={22}/>
 
+
 </div>
+
 
 
 
@@ -481,34 +543,51 @@ text-[#008B45]
 
 
 <h1
+
 className="
 text-2xl
 font-bold
-text-slate-800
+text-white
+
 sm:text-3xl
 "
+
 >
 
+
 Department Section
+
 
 </h1>
 
 
 
+
 <p
+
 className="
 mt-1
 text-sm
-text-slate-500
+text-slate-400
+
 sm:text-base
 "
+
 >
 
+
 Manage the Find Your Department section.
+
 
 </p>
 
 
+
+</div>
+
+
+
+
 </div>
 
 
@@ -516,7 +595,6 @@ Manage the Find Your Department section.
 </div>
 
 
-</div>
 
 
 
@@ -526,24 +604,23 @@ Manage the Find Your Department section.
 
 <button
 
+
 type="button"
+
+
+disabled={!section}
+
 
 onClick={()=>{
 
 
-if(empty){
+if(section?._id){
+
 
 router.push(
-"/dashboard/home/departments/section/new"
-);
 
+`/dashboard/home/departments/section/edit/${section._id}`
 
-}
-
-else{
-
-router.push(
-`/dashboard/home/departments/section/edit`
 );
 
 
@@ -552,53 +629,43 @@ router.push(
 
 }}
 
+
+
 className="
 inline-flex
 min-h-11
+w-full
 items-center
 justify-center
 gap-2
 rounded-xl
+
 bg-[#008B45]
+
 px-5
 py-3
+
 text-sm
 font-semibold
 text-white
-shadow-sm
+
 transition
+
 hover:bg-[#00763B]
+
+disabled:cursor-not-allowed
+disabled:opacity-50
+
+sm:w-auto
 "
 
 >
 
 
-{
+<Edit3 size={18}/>
 
-empty
-
-?
-
-<>
-
-<Plus size={18}/>
-
-Create Section
-
-</>
-
-
-:
-
-<>
 
 Edit Section
-
-</>
-
-
-}
-
 
 
 </button>
@@ -607,7 +674,13 @@ Edit Section
 
 
 
+
 </div>
+
+
+
+</div>
+
 
 
 );
