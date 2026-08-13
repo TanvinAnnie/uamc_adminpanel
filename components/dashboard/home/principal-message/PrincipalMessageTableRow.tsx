@@ -2,662 +2,184 @@
 
 
 import {
-  Edit3,
-  Eye,
-  EyeOff,
-  Image as ImageIcon,
-  Trash2,
+Edit3,
+Eye,
+EyeOff,
+Trash2
 } from "lucide-react";
 
 
 import type {
-  PrincipalMessageTableData,
+PrincipalMessageTableData
 } from "./PrincipalMessageTable";
 
 
 
-// =========================================================
-// PROPS
-// =========================================================
+interface Props {
 
+data:PrincipalMessageTableData;
 
-interface PrincipalMessageTableRowProps {
+onEdit:(id:string)=>void;
 
-  data: PrincipalMessageTableData;
+onDelete:(id:string)=>void;
 
+onToggleStatus:(
+id:string,
+currentStatus:boolean
+)=>void;
 
-  onEdit: (
-    id:string
-  )=>void;
+deleting?:boolean;
 
-
-  onDelete:(
-    id:string
-  )=>void;
-
-
-  onToggleStatus:(
-    id:string,
-    currentStatus:boolean
-  )=>void;
-
-
-  deleting?:boolean;
-
-
-  updatingStatus?:boolean;
+updatingStatus?:boolean;
 
 }
 
-
-
-
-
-
-
-
-
-// =========================================================
-// COMPONENT
-// =========================================================
 
 
 export default function PrincipalMessageTableRow({
 
-  data,
+data,
 
-  onEdit,
+onEdit,
 
-  onDelete,
+onDelete,
 
-  onToggleStatus,
+onToggleStatus,
 
-  deleting=false,
+deleting=false,
 
-  updatingStatus=false,
+updatingStatus=false,
 
+}:Props){
 
-}:PrincipalMessageTableRowProps){
-
-
-
-
-
-
-// =======================================================
-// DATE
-// =======================================================
-
-
-const formattedDate =
-
-data.createdAt
-
-?
-
-new Date(
-data.createdAt
-).toLocaleDateString(
-
-"en-GB",
-
-{
-
-day:"2-digit",
-
-month:"short",
-
-year:"numeric",
-
-}
-
-)
-
-:
-
-"—";
-
-
-
-
-
-
-
-
-
-// =======================================================
-// DESCRIPTION
-// =======================================================
-
-
-const shortDescription =
-
-data.description?.length > 90
-
-?
-
-`${data.description.slice(0,90)}...`
-
-:
-
-data.description || "—";
-
-
-
-
-
-
-
-
-
-// =======================================================
-// RENDER
-// =======================================================
 
 
 return (
 
 <tr
-
 className="
-border-b
-border-slate-100
 transition
-hover:bg-slate-50
+hover:bg-[#111936]
 "
-
 >
 
-
-
-
-
-
-{/* =====================================================
-    SECTION
-===================================================== */}
 
 
 <td
-
 className="
-px-5
+px-6
 py-5
 "
-
 >
 
 
 <div
-
 className="
 flex
 items-center
-gap-3
+gap-4
 "
-
 >
 
 
-<div
+<img
 
-className="
-flex
-h-12
-w-12
-shrink-0
-items-center
-justify-center
-overflow-hidden
-rounded-xl
-bg-emerald-50
-"
-
->
-
-
-{
-
+src={
 data.principalImage
+}
 
-?
-
-
-{data.principalImage ? (
-  <img
-    src={data.principalImage}
-    alt={data.principalName}
-    className="
-      h-full
-      w-full
-      object-cover
-    "
-  />
-) : (
-  <div
-    className="
-      flex
-      h-full
-      w-full
-      items-center
-      justify-center
-      bg-emerald-50
-      text-xs
-      text-[#008B45]
-    "
-  >
-    No Image
-  </div>
-)}
-:
-
-
-<ImageIcon
-
-size={20}
+alt={
+data.principalName
+}
 
 className="
-text-[#008B45]
+h-14
+w-14
+rounded-xl
+object-cover
+border
+border-slate-700
 "
 
 />
 
 
-}
+
+<div>
 
 
-
-</div>
-
-
-
-
-
-
-
-<div
-
+<h3
 className="
-min-w-0
+font-bold
+text-white
 "
-
 >
+
+{data.principalName}
+
+</h3>
 
 
 <p
-
 className="
-font-semibold
-text-slate-800
-"
-
->
-
-Principal Message
-
-</p>
-
-
-
-<p
-
-className="
-mt-1
-max-w-[180px]
-truncate
-text-xs
-text-slate-500
-"
-
->
-
-{
-
-data.tagline ||
-
-"No tagline"
-
-}
-
-
-</p>
-
-
-
-</div>
-
-
-
-
-</div>
-
-
-</td>
-
-
-
-
-
-
-
-
-
-
-{/* =====================================================
-    PRINCIPAL
-===================================================== */}
-
-
-<td
-
-className="
-px-5
-py-5
-"
-
->
-
-
-<p
-
-className="
-font-semibold
-text-slate-800
-"
-
->
-
-{
-
-data.principalName ||
-
-"—"
-
-}
-
-
-</p>
-
-
-
-<p
-
-className="
-mt-1
-text-xs
-text-slate-500
-"
-
->
-
-{
-
-data.designation ||
-
-"—"
-
-}
-
-
-</p>
-
-
-</td>
-
-
-
-
-
-
-
-
-
-{/* =====================================================
-    CONTENT
-===================================================== */}
-
-
-<td
-
-className="
-max-w-[320px]
-px-5
-py-5
-"
-
->
-
-
-<p
-
-className="
-font-medium
-text-slate-700
-"
-
->
-
-{
-
-data.heading ||
-
-"—"
-
-}
-
-
-</p>
-
-
-
-<p
-
-className="
-mt-1
-line-clamp-2
-text-xs
-leading-5
-text-slate-500
-"
-
->
-
-{
-
-shortDescription
-
-}
-
-
-</p>
-
-
-
-</td>
-
-
-
-
-
-
-
-
-
-{/* =====================================================
-    STATUS
-===================================================== */}
-
-
-<td
-
-className="
-px-5
-py-5
-"
-
->
-
-
-<button
-
-type="button"
-
-
-disabled={
-updatingStatus
-}
-
-
-onClick={()=>
-
-
-onToggleStatus(
-
-data._id,
-
-data.isActive
-
-)
-
-
-}
-
-
-className="
-inline-flex
-items-center
-gap-2
-disabled:cursor-not-allowed
-disabled:opacity-50
-"
-
->
-
-
-<span
-
-className={`
-
-h-2
-
-w-2
-
-rounded-full
-
-
-${
-data.isActive
-
-?
-
-"bg-emerald-500"
-
-:
-
-"bg-slate-400"
-
-}
-
-`}
-
-/>
-
-
-
-<span
-
-className={`
-
-text-xs
-
-font-semibold
-
-
-${
-data.isActive
-
-?
-
-"text-emerald-600"
-
-:
-
-"text-slate-500"
-
-}
-
-`}
-
->
-
-
-{
-
-data.isActive
-
-?
-
-"Published"
-
-:
-
-"Hidden"
-
-}
-
-
-
-</span>
-
-
-
-</button>
-
-
-
-</td>
-
-
-
-
-
-
-
-
-
-{/* =====================================================
-    DATE
-===================================================== */}
-
-
-<td
-
-className="
-px-5
-py-5
-"
-
->
-
-
-<span
-
-className="
-whitespace-nowrap
 text-sm
-text-slate-500
+text-slate-400
 "
-
 >
 
-{
+{data.designation}
 
-formattedDate
-
-}
+</p>
 
 
-</span>
+
+</div>
+
+
+</div>
+
+
+</td>
+
+
+
+
+
+
+
+<td
+className="
+px-6
+py-5
+"
+>
+
+
+<p
+className="
+font-semibold
+text-cyan-400
+"
+>
+
+{data.heading}
+
+</p>
+
+
+
+<p
+className="
+mt-1
+text-xs
+text-slate-400
+"
+>
+
+{data.description}
+
+</p>
+
 
 
 </td>
@@ -669,46 +191,109 @@ formattedDate
 
 
 
+<td
+className="
+px-6
+py-5
+"
+>
 
-{/* =====================================================
-    ACTIONS
-===================================================== */}
+
+{
+data.isActive ?
+
+<span
+className="
+rounded-full
+border
+border-emerald-500/30
+bg-emerald-500/10
+px-4
+py-2
+text-xs
+font-semibold
+text-emerald-400
+"
+>
+Published
+</span>
+
+:
+
+<span
+className="
+rounded-full
+bg-slate-700
+px-4
+py-2
+text-xs
+text-slate-300
+"
+>
+Hidden
+</span>
+
+}
+
+
+
+</td>
+
+
+
+
 
 
 <td
-
 className="
-px-5
+px-6
+py-5
+text-sm
+text-slate-400
+"
+>
+
+{
+data.createdAt
+?
+new Date(
+data.createdAt
+).toLocaleDateString()
+:
+"—"
+}
+
+
+</td>
+
+
+
+
+
+
+
+<td
+className="
+px-6
 py-5
 "
-
 >
 
 
 <div
-
 className="
 flex
 justify-end
 gap-2
 "
-
 >
-
-
-
-
-
-
-
-{/* EDIT */}
 
 
 <button
 
-type="button"
-
-onClick={()=>onEdit(data._id)}
+onClick={()=>
+onEdit(data._id)
+}
 
 className="
 flex
@@ -718,54 +303,30 @@ items-center
 justify-center
 rounded-lg
 border
-border-slate-200
-bg-white
-text-slate-600
-transition
-hover:border-[#008B45]
-hover:bg-emerald-50
-hover:text-[#008B45]
+border-cyan-400/30
+text-cyan-400
+hover:bg-cyan-400/10
 "
 
 >
 
-
 <Edit3 size={16}/>
-
 
 </button>
 
 
 
 
-
-
-
-
-
-{/* STATUS */}
-
-
 <button
 
-type="button"
-
-disabled={updatingStatus}
-
 onClick={()=>
-
-
 onToggleStatus(
-
 data._id,
-
 data.isActive
-
 )
-
-
 }
 
+disabled={updatingStatus}
 
 className="
 flex
@@ -775,30 +336,20 @@ items-center
 justify-center
 rounded-lg
 border
-border-blue-100
-bg-white
-text-blue-600
-transition
-hover:bg-blue-50
-disabled:opacity-50
+border-slate-700
+text-slate-300
+hover:bg-slate-800
 "
 
 >
 
 
 {
-
 data.isActive
-
 ?
-
 <EyeOff size={16}/>
-
 :
-
 <Eye size={16}/>
-
-
 }
 
 
@@ -808,20 +359,13 @@ data.isActive
 
 
 
-
-
-
-
-{/* DELETE */}
-
-
 <button
-
-type="button"
 
 disabled={deleting}
 
-onClick={()=>onDelete(data._id)}
+onClick={()=>
+onDelete(data._id)
+}
 
 className="
 flex
@@ -831,17 +375,12 @@ items-center
 justify-center
 rounded-lg
 border
-border-red-100
-bg-white
-text-red-500
-transition
-hover:bg-red-50
-disabled:cursor-not-allowed
-disabled:opacity-50
+border-red-500/30
+text-red-400
+hover:bg-red-500/10
 "
 
 >
-
 
 <Trash2 size={16}/>
 
@@ -850,12 +389,7 @@ disabled:opacity-50
 
 
 
-
-
-
-
 </div>
-
 
 
 </td>
@@ -863,11 +397,7 @@ disabled:opacity-50
 
 
 
-
-
-
 </tr>
-
 
 );
 

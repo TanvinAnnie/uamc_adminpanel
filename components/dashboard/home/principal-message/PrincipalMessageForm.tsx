@@ -910,7 +910,7 @@ justify-center
 rounded-xl
 border
 border-slate-200
-bg-white
+bg-[#111936]
 text-slate-600
 transition
 hover:border-[#008B45]
@@ -937,10 +937,9 @@ hover:text-[#008B45]
 className="
 text-2xl
 font-bold
-text-slate-900
+text-white
 sm:text-3xl
 "
-
 >
 
 {title}
@@ -957,7 +956,7 @@ mt-2
 max-w-2xl
 text-sm
 leading-6
-text-slate-500
+text-slate-400
 "
 
 >
@@ -992,17 +991,15 @@ text-slate-500
 <section
 
 className="
-rounded-2xl
+rounded-3xl
 border
-border-slate-200
-bg-white
-p-5
-shadow-sm
-sm:p-6
+border-slate-800
+bg-[#080D24]
+p-6
+shadow-xl
+sm:p-7
 "
-
 >
-
 
 
 <div
@@ -1118,7 +1115,7 @@ h-12
 w-full
 rounded-xl
 border
-border-slate-200
+border-slate-700
 px-4
 text-sm
 outline-none
@@ -1186,7 +1183,7 @@ h-12
 w-full
 rounded-xl
 border
-border-slate-200
+border-slate-700
 px-4
 text-sm
 outline-none
@@ -1254,7 +1251,7 @@ h-12
 w-full
 rounded-xl
 border
-border-slate-200
+border-slate-700
 px-4
 text-sm
 outline-none
@@ -1289,7 +1286,7 @@ focus:ring-[#008B45]/10
 className="
 mb-2
 block
-text-sm
+text-white
 font-semibold
 text-slate-700
 "
@@ -1323,9 +1320,9 @@ h-12
 w-full
 rounded-xl
 border
-border-slate-200
+border-slate-700
 px-4
-text-sm
+text-white
 outline-none
 transition
 focus:border-[#008B45]
@@ -1358,7 +1355,7 @@ focus:ring-[#008B45]/10
 className="
 mb-2
 block
-text-sm
+text-white
 font-semibold
 text-slate-700
 "
@@ -1392,9 +1389,9 @@ h-12
 w-full
 rounded-xl
 border
-border-slate-200
+border-slate-700
 px-4
-text-sm
+text-white
 outline-none
 transition
 focus:border-[#008B45]
@@ -1426,7 +1423,7 @@ focus:ring-[#008B45]/10
 className="
 mb-2
 block
-text-sm
+text-white
 font-semibold
 text-slate-700
 "
@@ -1460,9 +1457,9 @@ h-12
 w-full
 rounded-xl
 border
-border-slate-200
+border-slate-700
 px-4
-text-sm
+text-white
 outline-none
 transition
 focus:border-[#008B45]
@@ -1541,10 +1538,10 @@ w-full
 resize-none
 rounded-xl
 border
-border-slate-200
+border-slate-700
 px-4
 py-3
-text-sm
+text-write
 leading-6
 outline-none
 transition
@@ -1574,8 +1571,8 @@ focus:ring-[#008B45]/10
 className="
 rounded-2xl
 border
-border-slate-200
-bg-white
+border-slate-700
+bg-[#080D24]
 p-5
 shadow-sm
 sm:p-6
@@ -1795,8 +1792,8 @@ required
 className="
 rounded-2xl
 border
-border-slate-200
-bg-white
+border-slate-800
+bg-[#080D24]
 p-5
 shadow-sm
 sm:p-6
@@ -2048,8 +2045,8 @@ justify-between
 gap-5
 rounded-2xl
 border
-border-slate-200
-bg-white
+border-slate-700
+bg-[#0111936]
 p-5
 shadow-sm
 sm:p-6
@@ -2172,7 +2169,7 @@ w-5
 
 rounded-full
 
-bg-white
+bg-[#111936]
 
 shadow
 
@@ -2254,7 +2251,7 @@ justify-center
 rounded-xl
 border
 border-slate-200
-bg-white
+bg-[#111936]
 px-6
 py-3
 text-sm

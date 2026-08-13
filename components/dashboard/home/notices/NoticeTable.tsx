@@ -892,12 +892,10 @@ export default function NoticeTable(){
                 >
 
                   <NoticeTableRow
-
-                    notice={notice}
-
-                    onDelete={handleDelete}
-
-                  />
+  notice={notice}
+  onDelete={handleDelete}
+  mobile
+/>
 
                 </div>
 

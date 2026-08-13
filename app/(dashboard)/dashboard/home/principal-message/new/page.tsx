@@ -1,15 +1,12 @@
 "use client";
 
-
 import {
   useState,
 } from "react";
 
-
 import {
   useRouter,
 } from "next/navigation";
-
 
 import {
   toast,
@@ -27,58 +24,34 @@ import PrincipalMessagePreview from "@/components/dashboard/home/principal-messa
 
 
 // =========================================================
-// DEFAULT FORM DATA
+// DEFAULT DATA
 // =========================================================
-
 
 const defaultFormData: PrincipalMessageFormData = {
 
-  tagline:
-    "knowledge meets innovation",
+  tagline:"knowledge meets innovation",
 
+  titlePrefix:"Message from the",
 
-  titlePrefix:
-    "Message from the",
+  titleHighlight:"Principal",
 
+  signatureImage:"",
 
-  titleHighlight:
-    "Principal",
+  principalName:"",
 
+  designation:"Principal (In Charge)",
 
-  signatureImage:
-    "",
+  heading:"",
 
+  description:"",
 
-  principalName:
-    "",
+  principalImage:"",
 
+  buttonText:"Read More",
 
-  designation:
-    "Principal (In Charge)",
+  buttonLink:"#",
 
-
-  heading:
-    "",
-
-
-  description:
-    "",
-
-
-  principalImage:
-    "",
-
-
-  buttonText:
-    "Read More",
-
-
-  buttonLink:
-    "#",
-
-
-  isActive:
-    true,
+  isActive:true,
 
 };
 
@@ -86,56 +59,29 @@ const defaultFormData: PrincipalMessageFormData = {
 
 
 
-
-
-
-// =========================================================
-// PAGE
-// =========================================================
-
-
 export default function PrincipalMessageNewPage(){
 
 
-const router =
-useRouter();
+const router = useRouter();
 
-
-
-
-
-// =======================================================
-// PREVIEW STATE
-// =======================================================
 
 
 const [
- previewData,
- setPreviewData,
+previewData,
+setPreviewData
 ]=useState<PrincipalMessageFormData>(
- defaultFormData
+defaultFormData
 );
 
 
 
 
 
-
-
-// =======================================================
-// FORM CHANGE
-// =======================================================
-
-
 const handleFormChange = (
-
 data:PrincipalMessageFormData
-
 )=>{
 
-
 setPreviewData(data);
-
 
 };
 
@@ -145,46 +91,28 @@ setPreviewData(data);
 
 
 
-
-
-// =======================================================
-// CREATE PRINCIPAL MESSAGE
-// =======================================================
-
-
 const handleSubmit = async(
-
 data:PrincipalMessageFormData
-
 )=>{
 
 
 try{
 
 
-const response =
-await fetch(
+const response = await fetch(
 "/api/principal-message",
 {
 
 method:"POST",
 
 headers:{
-
-"Content-Type":
-"application/json",
-
+"Content-Type":"application/json",
 },
 
-body:
-JSON.stringify(data),
+body:JSON.stringify(data),
 
 }
-
 );
-
-
-
 
 
 
@@ -194,59 +122,33 @@ await response.json();
 
 
 
-
-
-
 if(
-
 !response.ok ||
-
 !result.success
-
 ){
 
-
 throw new Error(
-
 result.message ||
-
 "Failed to create Principal Message."
-
 );
-
 
 }
 
 
 
 
-
-
-
-
 toast.success(
-
 "Principal Message created successfully."
-
 );
-
-
-
 
 
 
 router.push(
-
 "/dashboard/home/principal-message"
-
 );
 
 
-
 router.refresh();
-
-
-
 
 
 
@@ -255,38 +157,24 @@ router.refresh();
 catch(error){
 
 
-
 console.error(
-
 "CREATE PRINCIPAL MESSAGE ERROR:",
-
 error
-
 );
-
-
 
 
 
 toast.error(
-
 error instanceof Error
-
 ?
-
 error.message
-
 :
-
 "Failed to create Principal Message."
-
 );
 
 
 
-
 throw error;
-
 
 
 }
@@ -303,74 +191,58 @@ throw error;
 
 
 
-// =======================================================
-// RENDER
-// =======================================================
-
-
 return (
 
 <main
 
 className="
 min-h-screen
-bg-[#F8FAF9]
-px-4
-py-6
-sm:px-6
-lg:px-8
+bg-[#050B20]
+px-5
+py-8
+lg:px-10
 "
 
 >
 
 
 <div
-
 className="
 mx-auto
-w-full
 max-w-[1600px]
 "
-
 >
 
 
 
 
-
-
-
-{/* =====================================================
-    HEADER
-===================================================== */}
-
+{/* HEADER */}
 
 
 <div
 
 className="
 mb-8
-flex
-flex-col
-gap-4
+rounded-3xl
+border
+border-slate-800
+bg-[#080D24]
+px-8
+py-7
+shadow-xl
 "
 
 >
 
 
-<div>
-
-
 <p
-
 className="
 text-xs
 font-semibold
 uppercase
 tracking-[0.18em]
-text-[#008B45]
+text-cyan-400
 "
-
 >
 
 Homepage
@@ -379,18 +251,13 @@ Homepage
 
 
 
-
-
 <h1
-
 className="
 mt-2
-text-2xl
+text-3xl
 font-bold
-text-slate-900
-sm:text-3xl
+text-white
 "
-
 >
 
 Create Principal Message
@@ -399,32 +266,20 @@ Create Principal Message
 
 
 
-
-
 <p
-
 className="
 mt-2
-max-w-2xl
 text-sm
-leading-6
-text-slate-500
+text-slate-400
 "
-
 >
 
-Create and configure the Principal Message
-section for the website.
+Create and configure the Principal Message section.
 
 </p>
 
 
 
-
-</div>
-
-
-
 </div>
 
 
@@ -435,10 +290,7 @@ section for the website.
 
 
 
-{/* =====================================================
-    FORM + PREVIEW
-===================================================== */}
-
+{/* FORM + PREVIEW */}
 
 
 <div
@@ -446,8 +298,7 @@ section for the website.
 className="
 grid
 grid-cols-1
-items-start
-gap-6
+gap-8
 xl:grid-cols-2
 "
 
@@ -459,17 +310,18 @@ xl:grid-cols-2
 
 
 
-{/* =====================================================
-    LEFT FORM
-===================================================== */}
-
+{/* FORM */}
 
 
 <div
 
 className="
-min-w-0
-w-full
+rounded-3xl
+border
+border-slate-800
+bg-[#080D24]
+p-6
+shadow-xl
 "
 
 >
@@ -477,9 +329,11 @@ w-full
 
 <PrincipalMessageForm
 
+
 initialData={
 defaultFormData
 }
+
 
 
 onChange={
@@ -487,9 +341,11 @@ handleFormChange
 }
 
 
+
 onSubmit={
 handleSubmit
 }
+
 
 
 submitLabel="
@@ -497,15 +353,17 @@ Create Principal Message
 "
 
 
+
 title="
 Principal Message
 "
 
 
+
 description="
-Manage the content, images and button settings
-for this homepage section.
+Manage the content, images and button settings.
 "
+
 
 
 />
@@ -522,17 +380,19 @@ for this homepage section.
 
 
 
-{/* =====================================================
-    RIGHT PREVIEW
-===================================================== */}
+{/* PREVIEW */}
 
 
 
-<aside
+<div
 
 className="
-min-w-0
-w-full
+rounded-3xl
+border
+border-slate-800
+bg-[#080D24]
+p-5
+shadow-xl
 xl:sticky
 xl:top-6
 xl:self-start
@@ -542,62 +402,37 @@ xl:self-start
 
 
 <div
-
-className="
-overflow-hidden
-rounded-2xl
-border
-border-slate-200
-bg-white
-p-4
-shadow-sm
-sm:p-5
-"
-
->
-
-
-<div
-
 className="
 mb-5
 "
-
 >
 
 
 <div
-
 className="
 flex
 items-center
 gap-2
 "
-
 >
 
 
 <span
-
 className="
 h-2
 w-2
 rounded-full
-bg-[#008B45]
+bg-emerald-400
 "
-
 />
 
 
-
 <h2
-
 className="
 text-lg
 font-semibold
-text-slate-800
+text-white
 "
-
 >
 
 Live Preview
@@ -605,20 +440,16 @@ Live Preview
 </h2>
 
 
-
 </div>
 
 
 
-
 <p
-
 className="
-mt-1
+mt-2
 text-sm
-text-slate-500
+text-slate-400
 "
-
 >
 
 Changes appear instantly while editing.
@@ -628,8 +459,6 @@ Changes appear instantly while editing.
 
 
 </div>
-
-
 
 
 
@@ -649,17 +478,11 @@ previewData
 
 
 
-</aside>
-
-
-
-
 
 
 
 
 </div>
-
 
 
 

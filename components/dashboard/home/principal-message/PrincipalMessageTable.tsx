@@ -1,36 +1,70 @@
 "use client";
 
-import type { PrincipalMessageTableData } from "./PrincipalMessageTable";
-
 import PrincipalMessageTableRow from "./PrincipalMessageTableRow";
 
 
-interface PrincipalMessageTableProps {
-  data: PrincipalMessageTableData;
+export interface PrincipalMessageTableData {
 
-  onEdit: (id:string)=>void;
+  _id:string;
 
-  onDelete:(id:string)=>void;
+  tagline:string;
 
-  onToggleStatus:(
-    id:string,
-    currentStatus:boolean
-  )=>void;
+  principalName:string;
 
-  deleting?:boolean;
+  designation:string;
 
-  updatingStatus?:boolean;
+  heading:string;
+
+  description:string;
+
+  principalImage:string;
+
+  isActive:boolean;
+
+  createdAt?:string;
+
 }
 
 
+
+interface PrincipalMessageTableProps {
+
+data:PrincipalMessageTableData;
+
+onEdit:(id:string)=>void;
+
+onDelete:(id:string)=>void;
+
+onToggleStatus:(
+id:string,
+currentStatus:boolean
+)=>void;
+
+deleting?:boolean;
+
+updatingStatus?:boolean;
+
+}
+
+
+
 export default function PrincipalMessageTable({
-  data,
-  onEdit,
-  onDelete,
-  onToggleStatus,
-  deleting=false,
-  updatingStatus=false,
+
+data,
+
+onEdit,
+
+onDelete,
+
+onToggleStatus,
+
+deleting=false,
+
+updatingStatus=false,
+
+
 }:PrincipalMessageTableProps){
+
 
 
 return (
@@ -38,107 +72,183 @@ return (
 <div
 className="
 overflow-hidden
-rounded-2xl
+rounded-3xl
 border
-border-slate-200
-bg-white
+border-slate-800
+bg-[#080D24]
+shadow-xl
 "
 >
 
 
-{/* DESKTOP */}
 
-<div className="hidden lg:block overflow-x-auto">
+{/* HEADER */}
 
-<table className="w-full">
+<div
+className="
+flex
+items-center
+justify-between
+border-b
+border-slate-800
+px-6
+py-5
+"
+>
+
+
+<div>
+
+<h2
+className="
+text-lg
+font-bold
+text-white
+"
+>
+Principal Message List
+</h2>
+
+
+<p
+className="
+mt-1
+text-sm
+text-slate-400
+"
+>
+Manage principal information, visibility and updates.
+</p>
+
+
+</div>
+
+
+
+<div
+className="
+rounded-full
+bg-emerald-500/10
+px-4
+py-2
+text-xs
+font-semibold
+text-emerald-400
+"
+>
+
+1 Message Added
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+{/* SEARCH */}
+
+<div
+className="
+px-5
+py-4
+"
+>
+
+
+<input
+
+placeholder="Search Principal Message..."
+
+className="
+w-full
+max-w-md
+rounded-xl
+border
+border-slate-700
+bg-[#111936]
+px-4
+py-3
+text-sm
+text-white
+outline-none
+placeholder:text-slate-500
+focus:border-cyan-400
+"
+
+/>
+
+
+</div>
+
+
+
+
+
+
+<div
+className="
+overflow-x-auto
+"
+>
+
+
+<table
+className="
+w-full
+"
+>
 
 
 <thead
 className="
-bg-slate-50
-border-b
-border-slate-200
+bg-[#111936]
 "
 >
 
+
 <tr>
 
-<th className="
+
+{
+[
+"Preview",
+"Information",
+"Content",
+"Status",
+"Created",
+"Actions"
+].map((item)=>(
+
+
+<th
+
+key={item}
+
+className="
 px-6
 py-4
 text-left
 text-xs
 font-semibold
 uppercase
-text-slate-500
-">
-Preview
+tracking-wide
+text-slate-400
+"
+
+>
+
+{item}
+
 </th>
 
 
-<th className="
-px-6
-py-4
-text-left
-text-xs
-font-semibold
-uppercase
-text-slate-500
-">
-Information
-</th>
+))
+}
 
-
-<th className="
-px-6
-py-4
-text-left
-text-xs
-font-semibold
-uppercase
-text-slate-500
-">
-Description
-</th>
-
-
-<th className="
-px-6
-py-4
-text-left
-text-xs
-font-semibold
-uppercase
-text-slate-500
-">
-Status
-</th>
-
-
-<th className="
-px-6
-py-4
-text-left
-text-xs
-font-semibold
-uppercase
-text-slate-500
-">
-Created
-</th>
-
-
-<th className="
-px-6
-py-4
-text-right
-text-xs
-font-semibold
-uppercase
-text-slate-500
-">
-Actions
-</th>
 
 
 </tr>
@@ -147,7 +257,15 @@ Actions
 </thead>
 
 
-<tbody>
+
+
+
+<tbody
+className="
+divide-y
+divide-slate-800
+"
+>
 
 
 <PrincipalMessageTableRow
@@ -167,7 +285,9 @@ updatingStatus={updatingStatus}
 />
 
 
+
 </tbody>
+
 
 
 </table>
@@ -178,137 +298,10 @@ updatingStatus={updatingStatus}
 
 
 
-
-{/* MOBILE */}
-
-<div
-className="
-grid
-gap-4
-p-4
-lg:hidden
-"
->
-
-
-<div
-className="
-rounded-xl
-border
-border-slate-200
-bg-slate-50
-p-4
-"
->
-
-
-<div className="
-flex
-items-center
-gap-4
-">
-
-
-<img
-
-src={data.principalImage}
-
-alt={data.principalName}
-
-className="
-h-16
-w-16
-rounded-xl
-object-cover
-"
-
-/>
-
-
-<div>
-
-<h3 className="
-font-semibold
-text-slate-800
-">
-{data.principalName}
-</h3>
-
-
-<p className="
-text-sm
-text-slate-500
-">
-{data.designation}
-</p>
-
-
 </div>
 
-
-</div>
-
-
-
-<p className="
-mt-4
-text-sm
-text-slate-600
-">
-{data.description}
-</p>
-
-
-
-<div className="
-mt-4
-flex
-gap-2
-">
-
-<button
-onClick={()=>onEdit(data._id)}
-className="
-rounded-lg
-bg-blue-50
-px-4
-py-2
-text-sm
-font-semibold
-text-blue-600
-"
->
-Edit
-</button>
-
-
-<button
-onClick={()=>onDelete(data._id)}
-className="
-rounded-lg
-bg-red-50
-px-4
-py-2
-text-sm
-font-semibold
-text-red-600
-"
->
-Delete
-</button>
-
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-</div>
 
 );
+
 
 }
