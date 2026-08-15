@@ -72,6 +72,10 @@ export const sidebarMenu: SidebarMenuItem[] = [
         title: "Principal Message",
         href: "/dashboard/home/principal-message",
       },
+      {
+        title: "Campus Life",
+        href: "/dashboard/home/campus-life",
+      },
     ],
   },
 

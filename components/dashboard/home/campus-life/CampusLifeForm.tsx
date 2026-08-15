@@ -728,12 +728,6 @@ Upload the image that will represent this Campus Life card.
 <CampusLifeImageUpload
 
 
-label="
-Campus Life Image
-"
-
-
-
 value={
 formData.image
 }
@@ -748,22 +742,6 @@ url
 )
 
 }
-
-
-
-onUpload={
-handleUpload
-}
-
-
-
-uploading={
-uploading
-}
-
-
-
-required
 
 />
 

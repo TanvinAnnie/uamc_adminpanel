@@ -513,8 +513,8 @@ xl:top-6
 
 
 <div
-
 className="
+relative
 rounded-2xl
 border
 border-slate-200
@@ -523,7 +523,6 @@ p-4
 shadow-sm
 sm:p-5
 "
-
 >
 
 
@@ -561,20 +560,102 @@ bg-[#008B45]
 
 
 
-<h2
+<div
+className="
+mb-5
+flex
+items-start
+justify-between
+"
+>
 
+
+<div>
+
+<div
+className="
+flex
+items-center
+gap-2
+"
+>
+
+<span
+className="
+h-2
+w-2
+rounded-full
+bg-emerald-500
+"
+/>
+
+
+<h2
 className="
 text-lg
 font-semibold
 text-slate-800
 "
-
 >
-
 Live Preview
-
 </h2>
 
+
+</div>
+
+
+
+<p
+className="
+mt-1
+text-sm
+text-slate-500
+"
+>
+Changes appear instantly while editing.
+</p>
+
+
+</div>
+
+
+
+
+
+<button
+
+type="button"
+
+onClick={()=>router.back()}
+
+className="
+absolute
+right-5
+top-5
+inline-flex
+items-center
+gap-2
+rounded-xl
+border
+border-slate-200
+bg-white
+px-4
+py-2
+text-sm
+font-semibold
+text-slate-600
+shadow-sm
+transition
+hover:bg-slate-50
+"
+
+>
+← Back
+</button>
+
+
+
+</div>
 
 
 </div>

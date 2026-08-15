@@ -6,69 +6,139 @@ import {
 } from "lucide-react";
 
 
-
 import type {
   CampusLifeFormData,
 } from "./CampusLifeForm";
 
 
 
-// =========================================================
-// PROPS
-// =========================================================
+interface Props {
 
-
-interface CampusLifePreviewProps {
-
-  data: CampusLifeFormData;
+data:CampusLifeFormData;
 
 }
 
 
 
-
-
-
-// =========================================================
-// COMPONENT
-// =========================================================
-
-
 export default function CampusLifePreview({
-
-  data,
-
-}:CampusLifePreviewProps){
+data
+}:Props){
 
 
 
 return (
 
-<section
+
+<div
 
 className="
 overflow-hidden
 rounded-3xl
-bg-[#008B45]
-px-5
-py-10
-sm:px-8
-sm:py-14
+border
+border-slate-200
+bg-white
+shadow-sm
 "
 
 >
 
 
-{/* =====================================================
-    HEADER
-===================================================== */}
+{/* HEADER */}
+
+<div
+
+className="
+border-b
+border-slate-200
+px-6
+py-5
+"
+
+>
 
 
 <div
 
 className="
-mx-auto
-max-w-3xl
+flex
+items-center
+gap-2
+"
+
+>
+
+<span
+
+className="
+h-2
+w-2
+rounded-full
+bg-emerald-500
+"
+
+/>
+
+
+<h2
+
+className="
+text-lg
+font-semibold
+text-slate-800
+"
+
+>
+
+Live Preview
+
+</h2>
+
+
+</div>
+
+
+<p
+
+className="
+mt-1
+text-sm
+text-slate-500
+"
+
+>
+
+Changes appear instantly while editing.
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+{/* PREVIEW CARD */}
+
+
+<div
+
+className="
+m-5
+overflow-hidden
+rounded-3xl
+bg-[#008B45]
+"
+
+>
+
+
+<div
+
+className="
+px-6
+py-10
 text-center
 "
 
@@ -81,34 +151,19 @@ className="
 text-3xl
 font-bold
 text-white
-sm:text-4xl
 "
 
 >
 
-Campus Life
+{
+
+data.title ||
+
+"Campus Life"
+
+}
 
 </h2>
-
-
-
-<p
-
-className="
-mt-4
-text-sm
-leading-7
-text-emerald-50
-sm:text-base
-"
-
->
-
-Explore the vibrant campus experience,
-student activities and unforgettable
-moments.
-
-</p>
 
 
 
@@ -119,65 +174,16 @@ moments.
 
 
 
-{/* =====================================================
-    CARDS
-===================================================== */}
-
-
-<div
-
-className="
-mt-10
-grid
-grid-cols-1
-gap-6
-md:grid-cols-2
-xl:grid-cols-3
-"
-
-></div>
-{/* =====================================================
-    CARD LIST
-===================================================== */}
-
-
-<div
-
-className="
-rounded-3xl
-"
-
->
-
-
-
-{/* CARD */}
-
-
-<div
-
-className="
-group
-overflow-hidden
-rounded-3xl
-bg-white
-shadow-xl
-transition
-hover:-translate-y-1
-"
-
->
-
-
-
 {/* IMAGE */}
 
 
 <div
 
 className="
-h-56
+mx-6
+h-64
 overflow-hidden
+rounded-2xl
 bg-slate-100
 "
 
@@ -185,35 +191,27 @@ bg-slate-100
 
 
 {
-data.image ? (
+
+data.image
+
+?
 
 <img
 
-src={
-data.image
-}
+src={data.image}
 
-alt={
-data.title ||
-"Campus Life"
-}
+alt={data.title}
 
 className="
 h-full
 w-full
 object-cover
-transition
-duration-500
-group-hover:scale-105
 "
 
 />
 
-)
 
 :
-
-(
 
 <div
 
@@ -232,8 +230,6 @@ No Image
 
 </div>
 
-)
-
 }
 
 
@@ -245,18 +241,17 @@ No Image
 
 
 
-
-
 {/* CONTENT */}
-
 
 <div
 
 className="
+bg-white
 p-6
 "
 
 >
+
 
 
 <h3
@@ -269,16 +264,15 @@ text-slate-800
 
 >
 
-
 {
+
 data.title ||
+
 "Campus Life Title"
+
 }
 
-
 </h3>
-
-
 
 
 
@@ -287,7 +281,6 @@ data.title ||
 
 className="
 mt-3
-line-clamp-3
 text-sm
 leading-6
 text-slate-500
@@ -295,12 +288,13 @@ text-slate-500
 
 >
 
-
 {
-data.shortDescription ||
-"Campus Life description will appear here."
-}
 
+data.shortDescription ||
+
+"Campus Life description will appear here."
+
+}
 
 </p>
 
@@ -308,17 +302,12 @@ data.shortDescription ||
 
 
 
-
-
-{/* BUTTON */}
-
-
 <button
 
 type="button"
 
 className="
-mt-6
+mt-5
 inline-flex
 items-center
 gap-2
@@ -329,47 +318,41 @@ py-3
 text-sm
 font-semibold
 text-white
-transition
-hover:bg-[#00763B]
 "
 
 >
 
 
 {
+
 data.buttonText ||
+
 "Learn More"
+
 }
 
 
-
-<ArrowRight
-
-size={17}
-
-/>
-
+<ArrowRight size={16}/>
 
 
 </button>
 
 
+</div>
+
+
+
+
 
 </div>
 
 
 
 
-</div>
-
-
 
 
 </div>
 
-
-
-</section>
 
 
 );

@@ -5,214 +5,298 @@ import mongoose, {
 } from "mongoose";
 
 
+
+// =========================================================
+// FACILITY ITEM TYPE
+// =========================================================
+
 export interface IFacilityItem {
-  name: string;
 
-  title: string;
+  name:string;
 
-  description: string;
+  title:string;
 
-  detailsText: string;
+  description:string;
 
-  detailsLink: string;
+  detailsText:string;
 
-  isActive: boolean;
+  detailsLink:string;
 
-  order: number;
+  isActive:boolean;
+
+  order:number;
+
 }
 
+
+
+
 // =========================================================
-// FACILITIES INTERFACE
+// MAIN INTERFACE
 // =========================================================
 
-export interface IFacilities
-  extends Document {
-  tagline: string;
 
-  title: string;
+export interface IFacilities extends Document {
 
-  image: string;
 
-  facilities: IFacilityItem[];
+  tagline:string;
 
-  programButtonText: string;
+  title:string;
 
-  programButtonLink: string;
+  image:string;
 
-  isActive: boolean;
 
-  createdAt: Date;
+  facilities:IFacilityItem[];
 
-  updatedAt: Date;
+
+  programButtonText:string;
+
+
+  programButtonLink:string;
+
+
+  isActive:boolean;
+
+
+  createdAt:Date;
+
+  updatedAt:Date;
+
+
 }
+
+
+
+
 
 // =========================================================
 // FACILITY ITEM SCHEMA
 // =========================================================
 
+
 const FacilityItemSchema =
-  new Schema<IFacilityItem>(
-    {
-      // =====================================================
-      // FACILITY NAME
-      // =====================================================
+new Schema<IFacilityItem>(
 
-      name: {
-        type: String,
-        required: true,
-        trim: true,
-      },
 
-      // =====================================================
-      // FACILITY TITLE
-      // =====================================================
+{
 
-      title: {
-        type: String,
-        required: true,
-        trim: true,
-      },
+name:{
+type:String,
+default:"",
+trim:true,
+},
 
-      // =====================================================
-      // DESCRIPTION
-      // =====================================================
 
-      description: {
-        type: String,
-        required: true,
-        trim: true,
-      },
 
-      // =====================================================
-      // DETAILS TEXT
-      // =====================================================
+title:{
+type:String,
+default:"",
+trim:true,
+},
 
-      detailsText: {
-        type: String,
-        default: "View Details",
-        trim: true,
-      },
 
-      // =====================================================
-      // DETAILS LINK
-      // =====================================================
 
-      detailsLink: {
-        type: String,
-        default: "#",
-        trim: true,
-      },
+description:{
+type:String,
+default:"",
+trim:true,
+},
 
-      // =====================================================
-      // ACTIVE STATUS
-      // =====================================================
 
-      isActive: {
-        type: Boolean,
-        default: true,
-      },
 
-      // =====================================================
-      // ORDER
-      // =====================================================
+detailsText:{
+type:String,
+default:"View Details",
+trim:true,
+},
 
-      order: {
-        type: Number,
-        default: 0,
-      },
-    },
-    {
-      _id: true,
-    }
-  );
+
+
+detailsLink:{
+type:String,
+default:"#",
+trim:true,
+},
+
+
+
+isActive:{
+type:Boolean,
+default:true,
+},
+
+
+
+order:{
+type:Number,
+default:0,
+},
+
+
+},
+
+{
+_id:true,
+}
+
+);
+
+
+
+
+
+
 
 // =========================================================
-// MAIN FACILITIES SCHEMA
+// FACILITIES SCHEMA
 // =========================================================
+
+
 
 const FacilitiesSchema =
-  new Schema<IFacilities>(
-    {
-      // =====================================================
-      // SECTION TAGLINE
-      // =====================================================
+new Schema<IFacilities>(
 
-      tagline: {
-        type: String,
-        required: true,
-        trim: true,
-      },
 
-      // =====================================================
-      // SECTION TITLE
-      // =====================================================
+{
 
-      title: {
-        type: String,
-        required: true,
-        trim: true,
-      },
 
-      // =====================================================
-      // SECTION IMAGE
-      // =====================================================
+tagline:{
 
-      image: {
-        type: String,
-        required: true,
-        trim: true,
-      },
+type:String,
 
-      // =====================================================
-      // FACILITIES LIST
-      // =====================================================
+default:"",
 
-      facilities: {
-        type: [FacilityItemSchema],
-        default: [],
-      },
+trim:true,
 
-      // =====================================================
-      // PROGRAM BUTTON TEXT
-      // =====================================================
+},
 
-      programButtonText: {
-        type: String,
-        default: "View Our Program",
-        trim: true,
-      },
 
-      // =====================================================
-      // PROGRAM BUTTON LINK
-      // =====================================================
 
-      programButtonLink: {
-        type: String,
-        default: "/programs",
-        trim: true,
-      },
 
-      // =====================================================
-      // ACTIVE STATUS
-      // =====================================================
+title:{
 
-      isActive: {
-        type: Boolean,
-        default: true,
-      },
-    },
-    {
-      timestamps: true,
-    }
-  );
+type:String,
+
+default:"",
+
+trim:true,
+
+},
+
+
+
+
+image:{
+
+type:String,
+
+default:"",
+
+trim:true,
+
+},
+
+
+
+
+facilities:{
+
+
+type:[FacilityItemSchema],
+
+
+default:[],
+
+
+},
+
+
+
+
+
+
+programButtonText:{
+
+
+type:String,
+
+
+default:"View Our Program",
+
+
+trim:true,
+
+
+},
+
+
+
+
+
+
+programButtonLink:{
+
+
+type:String,
+
+
+default:"/programs",
+
+
+trim:true,
+
+
+},
+
+
+
+
+
+
+isActive:{
+
+
+type:Boolean,
+
+
+default:true,
+
+
+},
+
+
+
+},
+
+{
+
+timestamps:true,
+
+}
+
+);
+
+
+
+
+
+
+
 
 // =========================================================
-// FACILITIES MODEL
+// MODEL
 // =========================================================
+
+
 
 export const FacilitiesModel =
-  (mongoose.models.Facilities as Model<IFacilities>) ||
-  mongoose.model<IFacilities>(
-    "Facilities",
-    FacilitiesSchema
-  );
+
+(mongoose.models.Facilities as Model<IFacilities>) ||
+
+mongoose.model<IFacilities>(
+
+"Facilities",
+
+FacilitiesSchema
+
+);

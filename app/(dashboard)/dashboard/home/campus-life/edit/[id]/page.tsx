@@ -2,6 +2,7 @@
 
 
 import {
+  useCallback,
   useEffect,
   useState,
 } from "react";
@@ -18,7 +19,6 @@ import {
 } from "sonner";
 
 
-
 import CampusLifeForm, {
 
   type CampusLifeFormData,
@@ -26,9 +26,7 @@ import CampusLifeForm, {
 } from "@/components/dashboard/home/campus-life/CampusLifeForm";
 
 
-
 import CampusLifePreview from "@/components/dashboard/home/campus-life/CampusLifePreview";
-
 
 
 import CampusLifeLoading from "@/components/dashboard/home/campus-life/CampusLifeLoading";
@@ -37,38 +35,43 @@ import CampusLifeLoading from "@/components/dashboard/home/campus-life/CampusLif
 
 
 
+const defaultData: CampusLifeFormData = {
 
-// =========================================================
-// PAGE
-// =========================================================
+  title:"",
+
+  shortDescription:"",
+
+  image:"",
+
+  buttonText:"Learn More",
+
+  buttonLink:"#",
+
+  isActive:true,
+
+};
+
+
+
+
+
+
+
 
 
 export default function CampusLifeEditPage(){
 
 
 
-const router =
-useRouter();
+const router = useRouter();
 
 
-
-const params =
-useParams();
+const params = useParams();
 
 
-
-const id =
-params.id as string;
+const id = params.id as string;
 
 
-
-
-
-
-
-// =========================================================
-// STATES
-// =========================================================
 
 
 
@@ -78,7 +81,7 @@ loading,
 
 setLoading
 
-]=useState(true);
+] = useState(true);
 
 
 
@@ -86,15 +89,13 @@ setLoading
 
 const [
 
-previewData,
+formData,
 
-setPreviewData
+setFormData
 
-]=useState<CampusLifeFormData | null>(
+] = useState<CampusLifeFormData>(defaultData);
 
-null
 
-);
 
 
 
@@ -103,11 +104,11 @@ null
 
 
 // =========================================================
-// FETCH SINGLE DATA
+// FETCH SINGLE CAMPUS LIFE
 // =========================================================
 
 
-const fetchCampusLife = async()=>{
+const fetchCampusLife = useCallback(async()=>{
 
 
 try{
@@ -117,13 +118,15 @@ setLoading(true);
 
 
 
-const response =
-await fetch(
+
+const response = await fetch(
 
 `/api/campus-life/${id}`,
 
 {
+
 cache:"no-store",
+
 }
 
 );
@@ -132,8 +135,9 @@ cache:"no-store",
 
 
 
-const result =
-await response.json();
+
+const result = await response.json();
+
 
 
 
@@ -164,14 +168,14 @@ result.message ||
 
 
 
-const item =
-result.data;
+
+const item = result.data;
 
 
 
 
 
-setPreviewData({
+setFormData({
 
 title:item.title || "",
 
@@ -192,7 +196,8 @@ item.buttonLink || "#",
 
 
 isActive:
-item.isActive,
+item.isActive ?? true,
+
 
 });
 
@@ -200,8 +205,8 @@ item.isActive,
 
 
 
-}
 
+}
 
 catch(error){
 
@@ -227,8 +232,6 @@ toast.error(
 
 }
 
-
-
 finally{
 
 
@@ -239,38 +242,60 @@ setLoading(false);
 
 
 
-};
+},[id]);
 
 
 
 
 
+
+
+
+
+// =========================================================
+// LOAD DATA
+// =========================================================
 
 
 useEffect(()=>{
 
 
-if(id){
-
-fetchCampusLife();
-
-}
+if(!id) return;
 
 
-},[id]);
+const loadData = async()=>{
+
+await fetchCampusLife();
+
+};
+
+
+loadData();
+
+
+},[id,fetchCampusLife]);
+
+
+
+
+
+
+
+
+
 // =========================================================
 // FORM CHANGE
 // =========================================================
 
 
-const handleFormChange = (
+const handleChange = (
 
 data:CampusLifeFormData
 
 )=>{
 
 
-setPreviewData(data);
+setFormData(data);
 
 
 };
@@ -284,7 +309,7 @@ setPreviewData(data);
 
 
 // =========================================================
-// UPDATE SUBMIT
+// UPDATE
 // =========================================================
 
 
@@ -298,9 +323,7 @@ data:CampusLifeFormData
 try{
 
 
-const response =
-
-await fetch(
+const response = await fetch(
 
 `/api/campus-life/${id}`,
 
@@ -308,7 +331,6 @@ await fetch(
 
 
 method:"PATCH",
-
 
 
 headers:{
@@ -328,6 +350,7 @@ body:
 JSON.stringify(data),
 
 
+
 }
 
 );
@@ -337,9 +360,10 @@ JSON.stringify(data),
 
 
 
-const result =
 
-await response.json();
+
+const result = await response.json();
+
 
 
 
@@ -359,7 +383,7 @@ throw new Error(
 
 result.message ||
 
-"Failed to update Campus Life"
+"Update failed"
 
 );
 
@@ -393,9 +417,7 @@ router.push(
 
 
 
-
 router.refresh();
-
 
 
 
@@ -404,14 +426,13 @@ router.refresh();
 
 }
 
-
 catch(error){
 
 
 
 console.error(
 
-"UPDATE CAMPUS LIFE ERROR:",
+"UPDATE ERROR:",
 
 error
 
@@ -423,7 +444,6 @@ error
 
 toast.error(
 
-
 error instanceof Error
 
 ?
@@ -432,14 +452,9 @@ error.message
 
 :
 
-"Failed to update Campus Life"
-
+"Update failed"
 
 );
-
-
-
-throw error;
 
 
 
@@ -448,36 +463,32 @@ throw error;
 
 
 };
+
+
+
+
+
+
+
+
+
 // =========================================================
-// LOADING
+// LOADING SCREEN
 // =========================================================
 
 
-if(loading || !previewData){
+if(loading){
 
 
 return (
-
 
 <main
 
 className="
 min-h-screen
 bg-[#F8FAF9]
-px-4
+px-6
 py-6
-sm:px-6
-lg:px-8
-"
-
->
-
-
-<div
-
-className="
-mx-auto
-max-w-[1600px]
 "
 
 >
@@ -486,11 +497,7 @@ max-w-[1600px]
 <CampusLifeLoading />
 
 
-</div>
-
-
 </main>
-
 
 );
 
@@ -506,7 +513,7 @@ max-w-[1600px]
 
 
 // =========================================================
-// RENDER
+// PAGE
 // =========================================================
 
 
@@ -541,17 +548,8 @@ max-w-[1600px]
 
 
 
-{/* ================= HEADER ================= */}
 
-
-
-<div
-
-className="
-mb-8
-"
-
->
+<div className="mb-8">
 
 
 <p
@@ -578,10 +576,9 @@ Homepage
 
 className="
 mt-2
-text-2xl
+text-3xl
 font-bold
 text-slate-900
-sm:text-3xl
 "
 
 >
@@ -598,19 +595,15 @@ Edit Campus Life
 
 className="
 mt-2
-max-w-2xl
 text-sm
-leading-6
 text-slate-500
 "
 
 >
 
-Update campus life information,
-images and button settings.
+Update campus life section information.
 
 </p>
-
 
 
 
@@ -624,16 +617,11 @@ images and button settings.
 
 
 
-{/* ================= FORM + PREVIEW ================= */}
-
-
-
 <div
 
 className="
 grid
 grid-cols-1
-items-start
 gap-6
 xl:grid-cols-2
 "
@@ -646,44 +634,21 @@ xl:grid-cols-2
 
 
 
-{/* ================= FORM ================= */}
-
-
-
-<div
-
-className="
-min-w-0
-w-full
-"
-
->
+<div>
 
 
 <CampusLifeForm
 
 
-initialData={
-
-previewData
-
-}
+initialData={formData}
 
 
 
-onChange={
-
-handleFormChange
-
-}
+onChange={handleChange}
 
 
 
-onSubmit={
-
-handleSubmit
-
-}
+onSubmit={handleSubmit}
 
 
 
@@ -696,7 +661,7 @@ title="Campus Life"
 
 
 description="
-Manage and update campus life section data.
+Manage campus life content.
 "
 
 
@@ -706,20 +671,13 @@ Manage and update campus life section data.
 
 
 </div>
-{/* ================= PREVIEW ================= */}
 
 
 
-<div
 
-className="
-min-w-0
-w-full
-xl:sticky
-xl:top-6
-"
 
->
+
+
 
 
 <div
@@ -729,46 +687,16 @@ rounded-2xl
 border
 border-slate-200
 bg-white
-p-4
-shadow-sm
-sm:p-5
+p-5
+xl:sticky
+xl:top-6
+h-fit
 "
 
 >
 
 
-
-<div
-
-className="
-mb-5
-"
-
->
-
-
-<div
-
-className="
-flex
-items-center
-gap-2
-"
-
->
-
-
-<span
-
-className="
-h-2
-w-2
-rounded-full
-bg-[#008B45]
-"
-
-/>
-
+<div className="mb-5">
 
 
 <h2
@@ -787,23 +715,16 @@ Live Preview
 
 
 
-</div>
-
-
-
-
-
 <p
 
 className="
-mt-1
 text-sm
 text-slate-500
 "
 
 >
 
-Changes appear instantly while editing.
+Changes appear instantly.
 
 </p>
 
@@ -820,18 +741,13 @@ Changes appear instantly while editing.
 <CampusLifePreview
 
 
-data={
-
-previewData
-
-}
+data={formData}
 
 
 />
 
 
 
-</div>
 
 
 
@@ -841,7 +757,21 @@ previewData
 
 
 
+
+
+
+
 </div>
+
+
+
+
+
+
+
+</div>
+
+
 
 
 
@@ -850,6 +780,7 @@ previewData
 
 
 );
+
 
 
 }

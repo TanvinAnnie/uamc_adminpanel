@@ -2,35 +2,36 @@
 
 
 import {
-  ImagePlus,
+  useState,
+} from "react";
+
+
+import {
+  UploadCloud,
   Loader2,
-  X,
 } from "lucide-react";
 
 
-
-interface CampusLifeImageUploadProps {
-
-
-  label:string;
+import {
+  toast,
+} from "sonner";
 
 
-  value:string;
 
 
-  onChange:(url:string)=>void;
+
+interface Props {
 
 
-  onUpload:(file:File)=>Promise<void>;
+value:string;
 
 
-  uploading?:boolean;
-
-
-  required?:boolean;
+onChange:(url:string)=>void;
 
 
 }
+
+
 
 
 
@@ -38,81 +39,214 @@ interface CampusLifeImageUploadProps {
 
 export default function CampusLifeImageUpload({
 
-  label,
+value,
 
-  value,
+onChange,
 
-  onChange,
-
-  onUpload,
-
-  uploading=false,
-
-  required=false,
+}:Props){
 
 
-}:CampusLifeImageUploadProps){
+
+const [uploading,setUploading]=useState(false);
 
 
 
 
 
 
-// =========================================================
-// FILE CHANGE
-// =========================================================
+const handleFileChange = async(
 
-
-const handleFileChange = async (
-
-event:
-React.ChangeEvent<HTMLInputElement>
+e:React.ChangeEvent<HTMLInputElement>
 
 )=>{
 
 
-const file =
-event.target.files?.[0];
+const file = e.target.files?.[0];
+
+
+if(!file) return;
 
 
 
-if(!file){
 
-return;
+
+try{
+
+
+setUploading(true);
+
+
+
+
+
+const formData = new FormData();
+
+
+formData.append(
+
+"file",
+
+file
+
+);
+
+
+
+
+
+
+const response = await fetch(
+
+"/api/upload",
+
+{
+
+method:"POST",
+
+body:formData,
+
+}
+
+);
+
+
+
+
+
+
+const result = await response.json();
+
+
+
+
+
+console.log(
+"UPLOAD RESPONSE:",
+result
+);
+
+
+
+
+
+
+if(
+
+!response.ok ||
+
+!result.success
+
+){
+
+
+throw new Error(
+
+result.message ||
+
+"Upload failed"
+
+);
+
 
 }
 
 
 
-await onUpload(file);
 
 
 
-// allow same file selection again
 
-event.target.value="";
+
+// IMPORTANT PART
+
+const imageUrl =
+
+result.data?.url ||
+
+result.url;
+
+
+
+
+
+
+
+if(!imageUrl){
+
+
+throw new Error(
+
+"Image URL not found from server"
+
+);
+
+
+}
+
+
+
+
+
+
+onChange(imageUrl);
+
+
+
+toast.success(
+
+"Image uploaded successfully"
+
+);
+
+
+
+
+
+}
+
+catch(error){
+
+
+
+console.error(
+
+"UPLOAD ERROR:",
+
+error
+
+);
+
+
+
+toast.error(
+
+error instanceof Error
+
+?
+
+error.message
+
+:
+
+"Upload failed"
+
+);
+
+
+
+}
+
+finally{
+
+
+setUploading(false);
+
+
+}
+
 
 
 };
-
-
-
-
-
-
-
-
-// =========================================================
-// REMOVE IMAGE
-// =========================================================
-
-
-const handleRemove = ()=>{
-
-onChange("");
-
-};
-
 
 
 
@@ -123,391 +257,92 @@ onChange("");
 
 return (
 
-<div
-className="w-full"
->
 
 
-
-{/* LABEL */}
-
-<label
-
-className="
-mb-2
-block
-text-sm
-font-semibold
-text-slate-700
-"
-
->
-
-{label}
-
-
-{
-required && (
-
-<span className="ml-1 text-red-500">
-*
-</span>
-
-)
-
-}
-
-
-</label>
-
-
-
-
-
-
-
-
-
-{/* IMAGE PREVIEW */}
-
-
-{
-value ? (
-
-
-
-<div
-
-className="
-relative
-overflow-hidden
-rounded-2xl
-border
-border-slate-200
-bg-slate-50
-"
-
->
-
-
-<div
-
-className="
-flex
-min-h-[240px]
-items-center
-justify-center
-p-5
-"
-
->
-
-
-<img
-
-src={value}
-
-alt={label}
-
-className="
-max-h-[280px]
-max-w-full
-rounded-xl
-object-contain
-"
-
-/>
-
-
-</div>
-
-
-
-
-
-{/* REMOVE */}
-
-
-<button
-
-
-type="button"
-
-
-onClick={handleRemove}
-
-
-disabled={uploading}
-
-
-className="
-absolute
-right-3
-top-3
-flex
-h-9
-w-9
-items-center
-justify-center
-rounded-full
-bg-white
-text-red-500
-shadow
-hover:bg-red-50
-disabled:opacity-50
-"
-
->
-
-
-<X size={18}/>
-
-
-</button>
-
-
-
-
-
-
-
-{/* REPLACE */}
+<div>
 
 
 <label
 
 className="
-absolute
-bottom-3
-right-3
-cursor-pointer
-rounded-xl
-bg-[#008B45]
-px-4
-py-2
-text-sm
-font-semibold
-text-white
-hover:bg-[#00763B]
-"
-
->
-
-
-{
-uploading
-?
-"Uploading..."
-:
-"Replace Image"
-}
-
-
-
-<input
-
-type="file"
-
-accept="image/png,image/jpeg,image/jpg,image/webp"
-
-className="hidden"
-
-disabled={uploading}
-
-onChange={handleFileChange}
-
-/>
-
-
-
-</label>
-
-
-
-
-</div>
-
-
-
-)
-
-:
-
-(
-
-
-
-<label
-
-
-className={`
 flex
-min-h-[240px]
 cursor-pointer
 flex-col
 items-center
 justify-center
 rounded-2xl
-border-2
+border
 border-dashed
 border-slate-300
 bg-slate-50
-px-6
-text-center
+p-8
 transition
-hover:border-[#008B45]
-hover:bg-emerald-50/30
-${
-uploading
-?
-"cursor-not-allowed opacity-70"
-:
-""
-}
-`}
-
+hover:bg-slate-100
+"
 
 >
-
-
-
 
 
 {
-uploading ? (
 
+uploading
 
-
-<>
-
-<div
-
-className="
-flex
-h-14
-w-14
-items-center
-justify-center
-rounded-full
-bg-emerald-50
-"
-
->
+?
 
 <Loader2
 
-size={28}
-
 className="
 animate-spin
-text-[#008B45]
+text-emerald-500
 "
+
+size={35}
 
 />
-
-</div>
-
-
-
-<p
-
-className="
-mt-4
-text-sm
-font-semibold
-text-slate-700
-"
-
->
-
-Uploading image...
-
-</p>
-
-
-
-</>
-
-
-
-)
 
 :
 
-(
-
-
-
-<>
-
-<div
+<UploadCloud
 
 className="
-flex
-h-14
-w-14
-items-center
-justify-center
-rounded-full
-bg-emerald-50
+text-emerald-500
 "
 
->
-
-<ImagePlus
-
-size={28}
-
-className="
-text-[#008B45]
-"
+size={35}
 
 />
 
-</div>
+}
+
+
 
 
 
 <p
 
 className="
-mt-4
+mt-3
 text-sm
-font-semibold
-text-slate-700
-"
-
->
-
-Click to upload image
-
-</p>
-
-
-
-<p
-
-className="
-mt-1
-text-xs
 text-slate-500
 "
 
 >
 
-PNG, JPG, JPEG or WebP
+{
 
-</p>
+uploading
 
+?
 
+"Uploading..."
 
-</>
+:
 
-
-
-)
+"Upload Image"
 
 }
+
+</p>
 
 
 
@@ -515,15 +350,18 @@ PNG, JPG, JPEG or WebP
 
 <input
 
+
 type="file"
 
-accept="image/png,image/jpeg,image/jpg,image/webp"
+
+accept="image/*"
+
 
 className="hidden"
 
-disabled={uploading}
 
 onChange={handleFileChange}
+
 
 />
 
@@ -533,15 +371,38 @@ onChange={handleFileChange}
 
 
 
-)
 
+
+
+
+{
+
+value && (
+
+<img
+
+src={value}
+
+alt="preview"
+
+className="
+mt-4
+h-40
+w-full
+rounded-xl
+object-cover
+"
+
+/>
+
+)
 
 }
 
 
 
-
 </div>
+
 
 
 );
